@@ -9,15 +9,15 @@ const useRouts = (isAuthenticated) => {
     return (
       <Switch>
 
-        <Route path="/links" exact>
+        <Route path="/home" exact>
           <HomePage />
         </Route>
 
-        <Route path="/create" exact>
+        <Route path="/boards" exact>
           <BoardPage />
         </Route>
 
-        <Redirect to="/create" />
+        <Redirect to="/home" />
 
       </Switch>
     );
