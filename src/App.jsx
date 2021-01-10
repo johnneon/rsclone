@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import useRouts from './routes';
+import CustomThemeProvider from './theme/CustomThemeProvider';
 
 function App() {
   /*
@@ -12,11 +13,13 @@ function App() {
   const routes = useRouts(isAuthenticated);
 
   return (
-    <Router>
-      <div className="container">
-        {routes}
-      </div>
-    </Router>
+    <CustomThemeProvider>
+      <Router>
+        <div className="container">
+          {routes}
+        </div>
+      </Router>
+    </CustomThemeProvider>
   );
 }
 
