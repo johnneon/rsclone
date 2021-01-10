@@ -12,10 +12,7 @@ function App() {
     userId,
     ready,
   } = useAuth();
-  /*
-    Тут пока нету бэка если делаем страницу авторизации
-    оставляем значение false, если занимаеся другими, ставим true
-  */
+  
   const isAuthenticated = !!token;
 
   const routes = useRouts(isAuthenticated);
