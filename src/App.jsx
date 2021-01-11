@@ -4,6 +4,7 @@ import AuthContext from './context/AuthContext';
 import useRouts from './routes';
 import CustomThemeProvider from './theme/CustomThemeProvider';
 import useAuth from './hooks/auth.hook';
+import Header from './components/Header/Header';
 
 function App() {
   const {
@@ -14,7 +15,8 @@ function App() {
     ready,
   } = useAuth();
 
-  const isAuthenticated = !!token;
+  // const isAuthenticated = !!token;
+  const isAuthenticated = true;
 
   const routes = useRouts(isAuthenticated);
 
@@ -31,6 +33,7 @@ function App() {
       >
         <Router>
           <div className="container">
+            <Header />
             {routes}
           </div>
         </Router>

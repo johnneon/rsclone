@@ -6,6 +6,9 @@ const theme = createMuiTheme({
   root: {
     fontColor: '#f10c0c',
   },
+  container: {
+    paddingTop: '50px',
+  },
   palette: {
     primary: {
       main: '#00c853',
