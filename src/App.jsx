@@ -1,5 +1,6 @@
 import React, { } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { Backdrop, CircularProgress } from '@material-ui/core';
 import AuthContext from './context/AuthContext';
 import useRouts from './routes';
 import CustomThemeProvider from './theme/CustomThemeProvider';
@@ -19,7 +20,11 @@ function App() {
   const routes = useRouts(isAuthenticated);
 
   if (!ready) {
-    console.log('loading');
+    return (
+      <Backdrop variant="outlined" open={ready}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
   }
 
   return (
