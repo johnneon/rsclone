@@ -15,7 +15,7 @@ const HomePage = () => {
 
   return (
     <Container className={classes.paddingTopBig}>
-      <Typography variant="h1" component="h1" className={classes.marginBottomSmall}>Auth page</Typography>
+      <Typography variant="h1" component="h1" className={classes.marginBottomSmall}>Home page</Typography>
       <Divider className={classes.marginBottomMiddle} />
       <Grid
         container
@@ -26,8 +26,14 @@ const HomePage = () => {
         <Grid container item xs={2}>
           <Aside />
         </Grid>
-        <Grid item xs={10} spacing={2}>
-          <Typography variant="h1" component="h2" className={classes.marginBottomSmall}>Welcome, User!</Typography>
+        <Grid item xs={10} className={classes.contentContainer}>
+          <Typography
+            variant="h1"
+            component="h2"
+            className={classes.marginBottomSmall}
+          >
+            Welcome, User!
+          </Typography>
           <Divider />
         </Grid>
       </Grid>

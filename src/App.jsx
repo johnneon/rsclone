@@ -15,8 +15,7 @@ function App() {
     ready,
   } = useAuth();
 
-  // const isAuthenticated = !!token;
-  const isAuthenticated = true;
+  const isAuthenticated = !!token;
 
   const routes = useRouts(isAuthenticated);
 
@@ -33,7 +32,7 @@ function App() {
       >
         <Router>
           <div className="container">
-            <Header />
+            <Header prop={isAuthenticated} />
             {routes}
           </div>
         </Router>

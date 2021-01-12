@@ -21,13 +21,18 @@ const useStyles = makeStyles({
     color: '#3e3a3a',
     textDecoration: 'none',
   },
+  navAside: {
+    width: '100%',
+    paddingTop: '0',
+    paddingBottom: '0',
+  },
 });
 
 const Aside = () => {
   const classes = useStyles();
 
   return (
-    <List component="nav" aria-label="main mailbox folders">
+    <List component="nav" aria-label="main mailbox folders" className={classes.navAside}>
       <Link href="/home" className={classes.navColor}>
         <ListItem button key="home">
           <ListItemIcon>
@@ -37,12 +42,12 @@ const Aside = () => {
         </ListItem>
       </Link>
       <Divider />
-      <Link href="/drafts" className={classes.navColor}>
+      <Link href="/boards" className={classes.navColor}>
         <ListItem button>
           <ListItemIcon>
             <Dashboard />
           </ListItemIcon>
-          <ListItemText primary="Drafts" />
+          <ListItemText primary="Boards" />
         </ListItem>
       </Link>
     </List>

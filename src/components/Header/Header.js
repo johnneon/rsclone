@@ -5,36 +5,57 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+// import IconButton from '@material-ui/core/IconButton';
+// import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1,
+    marginRight: 'auto',
+    color: '#ffffff',
+    textDecoration: 'none',
   },
 }));
 
-function Header() {
+function Header(prop) {
   const classes = useStyles();
+  const isAuthenticated = prop;
 
-  const message = () => console.log('message');
+  const RenderSigns = () => {
+    if (!isAuthenticated) {
+      return (
+        <ButtonGroup color="primary">
+          <Button color="inherit">Sign UP</Button>
+          <Button color="inherit">Sign IN</Button>
+        </ButtonGroup>
+      );
+    }
+    return null;
+  };
+
+  const RenderMenu = () => {
+    if (isAuthenticated) {
+      return (
+        <ButtonGroup color="primary">
+          <Button color="inherit">Settings</Button>
+          <Button color="inherit">User</Button>
+        </ButtonGroup>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h1" className={classes.title}>
+          <Typography variant="h1" component="a" href="/home" className={classes.title}>
             RS Tasktracker
           </Typography>
-          <ButtonGroup color="primary">
-            <Button onClick={message} color="inherit">Sign UP</Button>
-            <Button onClick={message} color="inherit">Sign IN</Button>
-          </ButtonGroup>
+          <RenderSigns />
+          <RenderMenu />
         </Toolbar>
       </AppBar>
     </>

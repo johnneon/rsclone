@@ -1,6 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
+  flex: {
+    display: 'flex',
+  },
   paddingTopBig: {
     paddingTop: '100px',
   },
@@ -16,6 +19,9 @@ const useStyles = makeStyles({
   navColor: {
     color: '#3e3a3a',
     textDecoration: 'none',
+  },
+  contentContainer: {
+    paddingLeft: '50px',
   },
 });
 
