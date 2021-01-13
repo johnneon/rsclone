@@ -6,6 +6,8 @@ import {
   Tab,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import React, {
   useState, useEffect, useContext, useCallback,
 } from 'react';
@@ -27,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
   auth__tabs: {
     maxWidth: '50%',
     minWidth: '40%',
+  },
+  backdrop: {
+    zIndex: theme.zIndex.snackbar + 1,
+    color: '#fff',
   },
 }));
 
@@ -64,7 +70,7 @@ const AuthForm = () => {
 
   const checkFieldValidation = ({ email, password, fullName }, isRegistration) => {
     switch (true) {
-      case !fullName.match(/^[\w!#$%&'*+/=?^_`{|}~\-№"@]+$/) && isRegistration:
+      case !fullName.match(/^[\w!#$%&'*+/=?^_`{|}~\- №"@]+$/) && isRegistration:
         setFieldValidity({ ...fieldValidity, fullName: false });
         return false;
       case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]*(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]{2,}$/):
@@ -140,7 +146,7 @@ const AuthForm = () => {
     if (error) {
       showSnackbar(error, 'error');
     }
-  }, [error, showSnackbar]);
+  }, [error, showSnackbar, loading]);
 
   return (
     <Grid
@@ -224,6 +230,9 @@ const AuthForm = () => {
           {!activeTab ? 'Sign Up' : 'Login'}
         </Button>
       </Grid>
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="primary" />
+      </Backdrop>
     </Grid>
   );
 };

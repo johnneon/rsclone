@@ -40,7 +40,6 @@ const AuthPage = () => {
       }}
     >
       <Container className={classes.auth} maxWidth={false}>
-        <header className={classes.header} />
         <Typography className={classes.auth__title} variant="h1">
           {title}
         </Typography>
