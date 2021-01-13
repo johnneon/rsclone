@@ -1,3 +1,6 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unreachable */
+/* eslint-disable no-console */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react/jsx-closing-tag-location */
@@ -18,12 +21,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import React, { useState, useEffect, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import useHttp from '../hooks/http.hook';
-// import useStyles from '../hooks/style.hook';
 
 const useStyles = makeStyles((theme) => ({
   auth__form: {
-    padding: '0 10px 30px',
-    maxWidth: '350px',
+    padding: '0 20px 30px',
+    maxWidth: '380px',
     borderRadius: '5px',
     boxShadow: `
       0 0 10px ${theme.palette.shadow.main}, 
@@ -38,13 +40,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AuthForm = () => {
+  const [activeTab, setActiveTab] = useState(0);
   const [form, setForm] = useState({
     email: '',
     password: '',
     fullName: '',
+  });  
+  const [fieldValidity, setFieldValidity] = useState({
+    fullName: true,
+    email: true,
+    password: true,
   });
-
-  const classes = useStyles();
 
   const {
     loading,
@@ -55,7 +61,38 @@ const AuthForm = () => {
 
   const auth = useContext(AuthContext);
 
-  // const classes = useStyles();
+  const checkFieldValidation = ({ email, password, fullName }, isRegistration) => {
+    switch (true) {
+      case !fullName.match(/^[\w!#$%&'*+/=?^_`{|}~\-№"@]+$/) && isRegistration: 
+        setFieldValidity({ ...fieldValidity, fullName: false });
+        return false;
+      case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]+(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]+$/): 
+        setFieldValidity({ 
+          ...fieldValidity, 
+          fullName: true, 
+          email: false,
+        });
+        return false;
+      case !password.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/): 
+        setFieldValidity({ 
+          fullName: true,
+          email: true,
+          password: false,
+        });
+        return false;
+      default:
+        setFieldValidity({ 
+          fullName: true,
+          email: true,
+          password: true,
+        });
+        return true;
+    }
+  };
+
+  const changeActiveTabHandler = (event, tabIndex) => {
+    setActiveTab(tabIndex);
+  };
 
   useEffect(() => {
     console.log(error); // Для обработки ошибок,
@@ -63,6 +100,12 @@ const AuthForm = () => {
   }, [error, clearErorr]);
 
   const registerHandler = async () => {
+    const isValid = checkFieldValidation(form, !activeTab);
+    
+    if (!isValid) {
+      return;
+    }
+
     try {
       const formData = {
         url: 'https://rsclone-back-end.herokuapp.com/api/auth/register',
@@ -94,30 +137,24 @@ const AuthForm = () => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
 
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const classes = useStyles();
 
   return (
     <Grid
       container
       className={classes.auth__form}
       direction="column"
-      // justifyContent="center"
       alignItems="stretch"
       spacing={3}
     >
       <Grid item xs={12}>
         <Tabs
           variant="fullWidth"
-          value={value}
+          value={activeTab}
           indicatorColor="primary"
           textColor="inherit"
-          onChange={handleChange}
+          onChange={changeActiveTabHandler}
           scrollButtons="off"
-          // aria-label="disabled tabs example"
         >
           <Tab
             label="Sing Up" 
@@ -129,7 +166,7 @@ const AuthForm = () => {
           />
         </Tabs>
       </Grid>
-      {!value && (
+      {!activeTab && (
         <Grid item xs={12}>
           <TextField
             required
@@ -139,6 +176,8 @@ const AuthForm = () => {
             label="Name"
             type="text"
             name="fullName"
+            helperText={!fieldValidity.fullName ? 'Incorrect entry.' : ' '}
+            error={!fieldValidity.fullName}
             onChange={changeHandler}
           />
         </Grid>
@@ -152,6 +191,8 @@ const AuthForm = () => {
           label="Email"
           type="email"
           name="email"
+          helperText={!fieldValidity.email ? 'Incorrect entry.' : ' '}
+          error={!fieldValidity.email}
           onChange={changeHandler}
         />
       </Grid>        
@@ -162,22 +203,22 @@ const AuthForm = () => {
           size="small"
           variant="outlined"
           label="Password"
-          type="password"
+          // type="password"
           name="password"
-          helperText="Incorrect entry."
-          error={false} /* -----------------   */
+          helperText={!fieldValidity.password ? 'Incorrect entry.' : ' '}
+          error={!fieldValidity.password}
           onChange={changeHandler}
         />
       </Grid>
       <Grid item xs={5}>
         <Button
           variant="contained"
-          onClick={!value ? registerHandler : loginHandler}
+          onClick={!activeTab ? registerHandler : loginHandler}
           disabled={loading}
           fullWidth
           color="primary"
         >
-          {!value ? 'Sign Up' : 'Login'}
+          {!activeTab ? 'Sign Up' : 'Login'}
         </Button>
       </Grid>
     </Grid>
