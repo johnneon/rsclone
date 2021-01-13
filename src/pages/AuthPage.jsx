@@ -1,11 +1,10 @@
 import {
-  // CssBaseline,
   Container,
-  // Grid,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
+import { SnackbarProvider } from 'notistack';
 import AuthForm from '../components/AuthForm';
 import vars from '../variables';
 
@@ -32,12 +31,22 @@ const AuthPage = () => {
   const classes = useStyles();
 
   return (
-    <Container className={classes.auth} maxWidth={false}>
-      <Typography className={classes.auth__title} variant="h1">
-        {title}
-      </Typography>
-      <AuthForm />
-    </Container>
+    <SnackbarProvider
+      maxSnack={3}
+      autoHideDuration={2000}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+    >
+      <Container className={classes.auth} maxWidth={false}>
+        <header className={classes.header} />
+        <Typography className={classes.auth__title} variant="h1">
+          {title}
+        </Typography>
+        <AuthForm />
+      </Container>
+    </SnackbarProvider>
   );
 };
 

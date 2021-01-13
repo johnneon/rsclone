@@ -6,7 +6,10 @@ import {
   Tab,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { useState, useEffect, useContext } from 'react';
+import React, {
+  useState, useEffect, useContext, useCallback,
+} from 'react';
+import { useSnackbar } from 'notistack';
 import AuthContext from '../context/AuthContext';
 import useHttp from '../hooks/http.hook';
 
@@ -48,13 +51,23 @@ const AuthForm = () => {
   } = useHttp();
 
   const auth = useContext(AuthContext);
+  const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const setFormValuesHandler = (event) => {
+    setForm({ ...form, [event.target.name]: event.target.value });
+  };
+
+  const showSnackbar = useCallback((message, variant) => (
+    enqueueSnackbar(message, { variant })
+  ), [enqueueSnackbar]);
 
   const checkFieldValidation = ({ email, password, fullName }, isRegistration) => {
     switch (true) {
       case !fullName.match(/^[\w!#$%&'*+/=?^_`{|}~\-№"@]+$/) && isRegistration:
         setFieldValidity({ ...fieldValidity, fullName: false });
         return false;
-      case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]+(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]+$/):
+      case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]+(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]{2,}$/):
         setFieldValidity({
           ...fieldValidity,
           fullName: true,
@@ -82,11 +95,6 @@ const AuthForm = () => {
     setActiveTab(tabIndex);
   };
 
-  useEffect(() => {
-    console.log(error); // Для обработки ошибок,
-    clearErorr(); // так же можно без эфекта просто в блоки catch распихать
-  }, [error, clearErorr]);
-
   const registerHandler = async () => {
     const isValid = checkFieldValidation(form, !activeTab);
 
@@ -101,7 +109,8 @@ const AuthForm = () => {
         body: { ...form },
       };
       const data = await request(formData);
-      console.log(data.message); // Для обработки ответа что юзер создан
+
+      showSnackbar(data.message, 'success');
     } catch (e) {
       clearErorr();
     }
@@ -127,11 +136,11 @@ const AuthForm = () => {
     }
   };
 
-  const changeHandler = (event) => {
-    setForm({ ...form, [event.target.name]: event.target.value });
-  };
-
-  const classes = useStyles();
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [error, showSnackbar]);
 
   return (
     <Grid
@@ -141,7 +150,7 @@ const AuthForm = () => {
       alignItems="stretch"
       spacing={3}
     >
-      <Grid item xs={12}>
+      <Grid item>
         <Tabs
           variant="fullWidth"
           value={activeTab}
@@ -161,7 +170,7 @@ const AuthForm = () => {
         </Tabs>
       </Grid>
       {!activeTab && (
-        <Grid item xs={12}>
+        <Grid item>
           <TextField
             required
             fullWidth
@@ -172,11 +181,11 @@ const AuthForm = () => {
             name="fullName"
             helperText={!fieldValidity.fullName ? 'Incorrect entry.' : ' '}
             error={!fieldValidity.fullName}
-            onChange={changeHandler}
+            onChange={setFormValuesHandler}
           />
         </Grid>
       )}
-      <Grid item xs={12}>
+      <Grid item>
         <TextField
           required
           fullWidth
@@ -187,21 +196,21 @@ const AuthForm = () => {
           name="email"
           helperText={!fieldValidity.email ? 'Incorrect entry.' : ' '}
           error={!fieldValidity.email}
-          onChange={changeHandler}
+          onChange={setFormValuesHandler}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item>
         <TextField
           required
           fullWidth
           size="small"
           variant="outlined"
           label="Password"
-          // type="password"
+          type="password"
           name="password"
           helperText={!fieldValidity.password ? 'Incorrect entry.' : ' '}
           error={!fieldValidity.password}
-          onChange={changeHandler}
+          onChange={setFormValuesHandler}
         />
       </Grid>
       <Grid item xs={5}>
