@@ -17,8 +17,10 @@ import useHttp from '../hooks/http.hook';
 
 const useStyles = makeStyles((theme) => ({
   auth__form: {
+    marginBottom: '50px',
     padding: '0 20px 30px',
     maxWidth: '380px',
+    backgroundColor: theme.palette.background.main,
     borderRadius: '5px',
     boxShadow: `
       0 0 10px ${theme.palette.shadow.main}, 
@@ -219,7 +221,7 @@ const AuthForm = () => {
           onChange={setFormValuesHandler}
         />
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={6} sm={5}>
         <Button
           variant="contained"
           onClick={!activeTab ? registerHandler : loginHandler}
