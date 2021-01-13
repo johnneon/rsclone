@@ -67,7 +67,7 @@ const AuthForm = () => {
       case !fullName.match(/^[\w!#$%&'*+/=?^_`{|}~\-№"@]+$/) && isRegistration:
         setFieldValidity({ ...fieldValidity, fullName: false });
         return false;
-      case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]+(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]{2,}$/):
+      case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]*(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]{2,}$/):
         setFieldValidity({
           ...fieldValidity,
           fullName: true,
@@ -179,7 +179,7 @@ const AuthForm = () => {
             label="Name"
             type="text"
             name="fullName"
-            helperText={!fieldValidity.fullName ? 'Incorrect entry.' : ' '}
+            helperText={!fieldValidity.fullName ? 'Name is not valid.' : ' '}
             error={!fieldValidity.fullName}
             onChange={setFormValuesHandler}
           />
@@ -194,7 +194,7 @@ const AuthForm = () => {
           label="Email"
           type="email"
           name="email"
-          helperText={!fieldValidity.email ? 'Incorrect entry.' : ' '}
+          helperText={!fieldValidity.email ? 'Email is not valid.' : ' '}
           error={!fieldValidity.email}
           onChange={setFormValuesHandler}
         />
@@ -208,7 +208,7 @@ const AuthForm = () => {
           label="Password"
           type="password"
           name="password"
-          helperText={!fieldValidity.password ? 'Incorrect entry.' : ' '}
+          helperText={!fieldValidity.password ? 'Password is not valid.' : ' '}
           error={!fieldValidity.password}
           onChange={setFormValuesHandler}
         />
