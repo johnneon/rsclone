@@ -1,19 +1,7 @@
-/* eslint-disable max-len */
-/* eslint-disable no-unreachable */
-/* eslint-disable no-console */
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable no-multi-spaces */
-/* eslint-disable no-unused-vars */
 import {
-  Box,
   Grid,
   TextField,
   Button,
-  Container,
-  Paper,
   Tabs,
   Tab,
 } from '@material-ui/core';
@@ -31,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
       0 0 10px ${theme.palette.shadow.main}, 
       0 0 10px ${theme.palette.shadow.main}, 
       0 0 10px ${theme.palette.shadow.main}
-    `,    
+    `,
   },
   auth__tabs: {
     maxWidth: '50%',
@@ -45,7 +33,7 @@ const AuthForm = () => {
     email: '',
     password: '',
     fullName: '',
-  });  
+  });
   const [fieldValidity, setFieldValidity] = useState({
     fullName: true,
     email: true,
@@ -63,25 +51,25 @@ const AuthForm = () => {
 
   const checkFieldValidation = ({ email, password, fullName }, isRegistration) => {
     switch (true) {
-      case !fullName.match(/^[\w!#$%&'*+/=?^_`{|}~\-№"@]+$/) && isRegistration: 
+      case !fullName.match(/^[\w!#$%&'*+/=?^_`{|}~\-№"@]+$/) && isRegistration:
         setFieldValidity({ ...fieldValidity, fullName: false });
         return false;
-      case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]+(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]+$/): 
-        setFieldValidity({ 
-          ...fieldValidity, 
-          fullName: true, 
+      case !email.match(/^[\w!#$%&'*+/=?^_`{|}~]+(?:\.?[\w!#$%&'*+/=?^_`{|}~-]+)@[^.@]+\.[^.@]+$/):
+        setFieldValidity({
+          ...fieldValidity,
+          fullName: true,
           email: false,
         });
         return false;
-      case !password.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/): 
-        setFieldValidity({ 
+      case !password.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/):
+        setFieldValidity({
           fullName: true,
           email: true,
           password: false,
         });
         return false;
       default:
-        setFieldValidity({ 
+        setFieldValidity({
           fullName: true,
           email: true,
           password: true,
@@ -101,7 +89,7 @@ const AuthForm = () => {
 
   const registerHandler = async () => {
     const isValid = checkFieldValidation(form, !activeTab);
-    
+
     if (!isValid) {
       return;
     }
@@ -120,6 +108,12 @@ const AuthForm = () => {
   };
 
   const loginHandler = async () => {
+    const isValid = checkFieldValidation(form, !activeTab);
+
+    if (!isValid) {
+      return;
+    }
+
     try {
       const formData = {
         url: 'https://rsclone-back-end.herokuapp.com/api/auth/login',
@@ -157,11 +151,11 @@ const AuthForm = () => {
           scrollButtons="off"
         >
           <Tab
-            label="Sing Up" 
+            label="Sing Up"
             className={classes.auth__tabs}
           />
           <Tab
-            label="Login"           
+            label="Login"
             className={classes.auth__tabs}
           />
         </Tabs>
@@ -182,7 +176,7 @@ const AuthForm = () => {
           />
         </Grid>
       )}
-      <Grid item xs={12}>          
+      <Grid item xs={12}>
         <TextField
           required
           fullWidth
@@ -195,7 +189,7 @@ const AuthForm = () => {
           error={!fieldValidity.email}
           onChange={changeHandler}
         />
-      </Grid>        
+      </Grid>
       <Grid item xs={12}>
         <TextField
           required
