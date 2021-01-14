@@ -37,7 +37,7 @@ function App() {
       >
         <Router>
           <div className="container">
-            <Header isAuthenticated />
+            <Header />
             {routes}
           </div>
         </Router>

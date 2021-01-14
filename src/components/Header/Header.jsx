@@ -5,10 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-// import AuthContext from '../../context/AuthContext';
 import useAuth from '../../hooks/auth.hook';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -21,9 +18,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Header(prop) {
+function Header() {
   const classes = useStyles();
-  const { isAuthenticated } = prop;
+  const { logout, token } = useAuth();
+  const { isAuthenticated } = !!token;
 
   const RenderSigns = () => {
     if (!isAuthenticated) {
@@ -36,8 +34,6 @@ function Header(prop) {
     }
     return null;
   };
-
-  const { logout } = useAuth();
 
   const logoutNow = () => {
     logout();
