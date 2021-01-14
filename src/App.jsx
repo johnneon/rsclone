@@ -37,7 +37,7 @@ function App() {
       >
         <Router>
           <div className="container">
-            <Header prop={isAuthenticated} />
+            <Header isAuthenticated />
             {routes}
           </div>
         </Router>
