@@ -1,5 +1,5 @@
 import React from 'react';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { unstable_createMuiStrictModeTheme as createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 const theme = createMuiTheme({
@@ -18,12 +18,14 @@ const theme = createMuiTheme({
     background: {
       main: '#fff',
       column: '#fafafa',
+      // auth:#ddfae7
     },
     shadow: {
       main: '#9e9e9e',
     },
     text: {
       main: '#3e3a3a',
+      // auth: '#676868',
     },
     buttons: {
       transparentWhite: '#ffffff3d',

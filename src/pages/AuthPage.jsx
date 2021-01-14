@@ -1,118 +1,47 @@
-import {
-  Box,
-  Container,
-  Grid,
-  TextField,
-  Button,
-} from '@material-ui/core';
-import React, { useState, useEffect, useContext } from 'react';
-import AuthContext from '../context/AuthContext';
-import useHttp from '../hooks/http.hook';
+import React from 'react';
+import { Container, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { SnackbarProvider } from 'notistack';
+import AuthCard from '../components/AuthCard/AuthCard';
+import ValidationRequirements from '../components/ValidationRequirements/ValidationRequirements';
+import vars from '../variables';
+
+const useStyles = makeStyles((theme) => ({
+  auth: {
+    padding: '20px 30px',
+    minHeight: '100vh',
+    backgroundColor: theme.palette.background.main,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    flexDirection: 'column',
+  },
+  auth__title: {
+    marginBottom: '60px',
+    textAlign: 'center',
+  },
+}));
 
 const AuthPage = () => {
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-    fullName: '',
-  });
-
-  const {
-    loading,
-    request,
-    error,
-    clearErorr,
-  } = useHttp();
-
-  const auth = useContext(AuthContext);
-
-  useEffect(() => {
-    console.log(error); // Для обработки ошибки регистрации / входа
-    clearErorr();
-  }, [error, clearErorr]);
-
-  const registerHandler = async () => {
-    try {
-      const formData = {
-        url: 'https://rsclone-back-end.herokuapp.com/api/auth/register',
-        method: 'POST',
-        body: { ...form },
-      };
-      const data = await request(formData);
-      console.log(data.message); // Для обработки ответа что юзер создан
-    } catch (e) {
-      clearErorr();
-    }
-  };
-
-  const loginHandler = async () => {
-    try {
-      const formData = {
-        url: 'https://rsclone-back-end.herokuapp.com/api/auth/login',
-        method: 'POST',
-        body: { ...form },
-      };
-      const { token, userId } = await request(formData);
-      auth.login(token, userId);
-    } catch (e) {
-      clearErorr();
-    }
-  };
-
-  const changeHandler = (event) => {
-    setForm({ ...form, [event.target.name]: event.target.value });
-  };
+  const classes = useStyles();
 
   return (
-    <Container>
-      <h1>Auth page</h1>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
+    <Container className={classes.auth} maxWidth={false}>
+      <Typography className={classes.auth__title} variant="h1">
+        {`Welcome to ${vars.APP_NAME}`}
+      </Typography>
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={2000}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
       >
-        <Grid item xs={6}>
-          <Box bgcolor="green accent-4" color="secondary.contrastText" p={2}>
-            <TextField
-              label="Standard"
-              placeholder="Email"
-              type="email"
-              name="email"
-              onChange={changeHandler}
-            />
-            <TextField
-              label="Standard"
-              placeholder="Full name"
-              type="text"
-              name="fullName"
-              onChange={changeHandler}
-            />
-            <TextField
-              label="Standard"
-              placeholder="Password"
-              type="password"
-              name="password"
-              onChange={changeHandler}
-            />
-          </Box>
-          <Box>
-            <Button
-              variant="contained"
-              onClick={registerHandler}
-              disabled={loading}
-            >
-              Singup
-            </Button>
-            <Button
-              variant="contained"
-              onClick={loginHandler}
-              disabled={loading}
-            >
-              Login
-            </Button>
-          </Box>
-        </Grid>
-      </Grid>
+        <AuthCard />
+      </SnackbarProvider>
+      <ValidationRequirements />
     </Container>
   );
 };
