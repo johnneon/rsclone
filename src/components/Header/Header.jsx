@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -17,12 +18,21 @@ const useStyles = makeStyles((theme) => ({
     color: '#ffffff',
     textDecoration: 'none',
   },
+  avatar: {
+    marginRight: '10px',
+    backgroundColor: '#ffd600',
+  },
 }));
 
 function Header() {
   const classes = useStyles();
   const { logout } = useAuth();
   const { isAuthenticated, fullName } = useContext(AuthContext);
+  let avatarName = null;
+
+  if (fullName) {
+    avatarName = fullName.split(' ').map((word) => word[0].toUpperCase()).join('');
+  }
 
   const logoutNow = () => {
     logout();
@@ -32,11 +42,18 @@ function Header() {
   const RenderHeaderBar = () => {
     if (isAuthenticated) {
       return (
-        <ButtonGroup color="primary">
-          <Button color="inherit">Settings</Button>
-          <Button color="inherit">{fullName}</Button>
-          <Button onClick={logoutNow} color="inherit">logout</Button>
-        </ButtonGroup>
+        <>
+          <Avatar
+            color="primary"
+            className={classes.avatar}
+          >
+            {avatarName}
+          </Avatar>
+          <ButtonGroup color="primary">
+            <Button color="inherit">Settings</Button>
+            <Button onClick={logoutNow} color="inherit">logout</Button>
+          </ButtonGroup>
+        </>
       );
     }
 
