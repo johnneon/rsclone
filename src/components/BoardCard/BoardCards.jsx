@@ -1,5 +1,45 @@
 import React from 'react';
+
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+} from '@material-ui/core';
+
+import {
+  AddCircle,
+} from '@material-ui/icons';
+
+import { makeStyles } from '@material-ui/core/styles';
 import BoardCard from './BoardCard';
+
+const useStyles = makeStyles({
+  navColor: {
+    color: '#3e3a3a',
+    textDecoration: 'none',
+  },
+  cardItem: {
+    display: 'block',
+    width: 'calc(100% / 3 - 14px)',
+    marginRight: '20px',
+    marginBottom: '20px',
+    textDecoration: 'none',
+    border: 'none',
+    backgroundColor: '#0000000a',
+    '&:nth-child(3n)': {
+      marginRight: '0',
+    },
+  },
+  fullHeight: {
+    height: '100%',
+  },
+  circleButton: {
+    display: 'block',
+    margin: '0 auto',
+    width: '50px',
+    height: '50px',
+  },
+});
 
 const testCards = [
   {
@@ -25,6 +65,8 @@ const testCards = [
 ];
 
 const BoardCards = () => {
+  const classes = useStyles();
+
   const cardsTemplates = Object.keys(testCards).map((item) => {
     const currentItem = testCards[item];
     return (
@@ -39,6 +81,13 @@ const BoardCards = () => {
   return (
     <>
       {cardsTemplates}
+      <Card variant="outlined" className={classes.cardItem}>
+        <CardActionArea className={classes.fullHeight}>
+          <CardContent>
+            <AddCircle color="action" className={classes.circleButton} />
+          </CardContent>
+        </CardActionArea>
+      </Card>
     </>
   );
 };

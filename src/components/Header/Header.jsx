@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import AuthContext from '../../context/AuthContext';
 import useAuth from '../../hooks/auth.hook';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,27 +21,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Header() {
   const classes = useStyles();
-  const { logout, token } = useAuth();
-  const { isAuthenticated } = !!token;
-
-  const RenderSigns = () => {
-    if (!isAuthenticated) {
-      return (
-        <ButtonGroup color="primary">
-          <Button color="inherit">Sign UP</Button>
-          <Button color="inherit">Sign IN</Button>
-        </ButtonGroup>
-      );
-    }
-    return null;
-  };
+  const { logout } = useAuth();
+  const { isAuthenticated } = useContext(AuthContext);
 
   const logoutNow = () => {
     logout();
     window.location.reload();
   };
 
-  const RenderMenu = () => {
+  const RenderHeaderBar = () => {
     if (isAuthenticated) {
       return (
         <ButtonGroup color="primary">
@@ -50,18 +39,28 @@ function Header() {
         </ButtonGroup>
       );
     }
-    return null;
+
+    return (
+      <ButtonGroup color="primary">
+        <Button color="inherit">Sign UP</Button>
+        <Button color="inherit">Sign IN</Button>
+      </ButtonGroup>
+    );
   };
 
   return (
     <>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h1" component="a" href="/home" className={classes.title}>
+          <Typography
+            variant="h1"
+            component="a"
+            href="/home"
+            className={classes.title}
+          >
             RS Tasktracker
           </Typography>
-          <RenderSigns />
-          <RenderMenu />
+          <RenderHeaderBar />
         </Toolbar>
       </AppBar>
     </>
