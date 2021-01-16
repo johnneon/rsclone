@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 function Header() {
   const classes = useStyles();
   const { logout } = useAuth();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, fullName } = useContext(AuthContext);
 
   const logoutNow = () => {
     logout();
@@ -34,7 +34,7 @@ function Header() {
       return (
         <ButtonGroup color="primary">
           <Button color="inherit">Settings</Button>
-          <Button color="inherit">User</Button>
+          <Button color="inherit">{fullName}</Button>
           <Button onClick={logoutNow} color="inherit">logout</Button>
         </ButtonGroup>
       );

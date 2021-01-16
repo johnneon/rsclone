@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import {
   Container,
@@ -6,12 +6,14 @@ import {
   Typography,
   Divider,
 } from '@material-ui/core';
+import AuthContext from '../context/AuthContext';
 
 import Aside from '../components/Aside/Aside';
 import useStyles from '../hooks/styles.hook';
 
 const HomePage = () => {
   const classes = useStyles();
+  const { fullName } = useContext(AuthContext);
 
   return (
     <Container className={classes.paddingTopBig}>
@@ -32,7 +34,7 @@ const HomePage = () => {
             component="h2"
             className={classes.marginBottomSmall}
           >
-            Welcome, User!
+            {`Welcome, ${fullName} !`}
           </Typography>
           <Divider />
         </Grid>

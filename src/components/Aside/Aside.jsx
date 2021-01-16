@@ -38,7 +38,7 @@ const Aside = () => {
           <ListItemIcon>
             <Home />
           </ListItemIcon>
-          <ListItemText primary="Home page" />
+          <ListItemText primary="Home" />
         </ListItem>
       </Link>
       <Divider />
