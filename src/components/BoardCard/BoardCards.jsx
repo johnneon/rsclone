@@ -11,7 +11,8 @@ import {
 } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles';
-import BoardCard from './BoardCard';
+import BoardCreatePopup from '../BoardCreatePopup/BoardCreatePopup';
+// import BoardCard from './BoardCard';
 
 const useStyles = makeStyles({
   navColor: {
@@ -41,33 +42,20 @@ const useStyles = makeStyles({
   },
 });
 
-const testCards = [
-  {
-    title: 'Test 1',
-    link: '/test',
-    image: 'https://i.picsum.photos/id/378/200/200.jpg?hmac=p3D7bBkZrx1JzS7apkMa8wGrQ-IaD9aNykMbpZ0DHDU',
-  },
-  {
-    title: 'Test 2',
-    link: '/test2',
-    image: 'https://i.picsum.photos/id/821/200/200.jpg?hmac=xmadfEZKXLrqLIgmvr2YTIFvhOms4m95Y-KXrpF_VhI',
-  },
-  {
-    title: 'Test 3',
-    link: '/test3',
-    image: 'https://i.picsum.photos/id/789/200/200.jpg?hmac=7x3gF1b3I8Yu8nItiG1H2GYq6GcipkMPET8y2sqov5s',
-  },
-  {
-    title: 'Test 4',
-    link: '/test4',
-    image: 'https://i.picsum.photos/id/43/200/200.jpg?hmac=gMoEYpdjrHoRnKoyIdtTknuqyCQDTC8exwLaKHpMv6E',
-  },
-];
-
 const BoardCards = () => {
   const classes = useStyles();
 
-  const cardsTemplates = Object.keys(testCards).map((item) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  /* const cardsTemplates = Object.keys(testCards).map((item) => {
     const currentItem = testCards[item];
     return (
       <BoardCard
@@ -76,18 +64,18 @@ const BoardCards = () => {
         image={currentItem.image}
       />
     );
-  });
+  }); */
 
   return (
     <>
-      {cardsTemplates}
-      <Card variant="outlined" className={classes.cardItem}>
+      <Card onClick={handleClickOpen} variant="outlined" className={classes.cardItem}>
         <CardActionArea className={classes.fullHeight}>
           <CardContent>
             <AddCircle color="action" className={classes.circleButton} />
           </CardContent>
         </CardActionArea>
       </Card>
+      <BoardCreatePopup isOpen={open} close={handleClose} />
     </>
   );
 };
