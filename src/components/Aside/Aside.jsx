@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import {
   List,
@@ -6,7 +7,6 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  Link,
 } from '@material-ui/core';
 
 import {
@@ -33,23 +33,23 @@ const Aside = () => {
 
   return (
     <List component="nav" aria-label="main mailbox folders" className={classes.navAside}>
-      <Link href="/home" className={classes.navColor}>
+      <NavLink to="/home" className={classes.navColor}>
         <ListItem button key="home">
           <ListItemIcon>
             <Home />
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-      </Link>
+      </NavLink>
       <Divider />
-      <Link href="/boards" className={classes.navColor}>
+      <NavLink to="/boards" className={classes.navColor}>
         <ListItem button>
           <ListItemIcon>
             <Dashboard />
           </ListItemIcon>
           <ListItemText primary="Boards" />
         </ListItem>
-      </Link>
+      </NavLink>
     </List>
   );
 };

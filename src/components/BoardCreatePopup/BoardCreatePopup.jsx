@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
-import useHttp from '../../hooks/http.hook';
 
 const useStyles = makeStyles({
   popup: {
@@ -22,10 +21,8 @@ const useStyles = makeStyles({
   },
 });
 
-const BoardCreatePopup = ({ isOpen, close }) => {
+const BoardCreatePopup = ({ isOpen, close, createAction }) => {
   const classes = useStyles();
-  const { request } = useHttp();
-
   const [formData, setFormData] = useState({
     name: '',
   });
@@ -36,22 +33,6 @@ const BoardCreatePopup = ({ isOpen, close }) => {
 
   const setFormDataHandler = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
-  };
-
-  const createNewBoard = async (data) => {
-    try {
-      const requestOptions = {
-        url: 'https://rsclone-back-end.herokuapp.com/board/',
-        method: 'POST',
-        header: { Authorization: 'Bearer TOKEN' },
-        body: { ...data },
-      };
-
-      const datas = await request(requestOptions);
-      console.log(datas);
-    } catch (e) {
-      console.log(e.message, 'error');
-    }
   };
 
   const checkFormValidity = () => {
@@ -73,7 +54,9 @@ const BoardCreatePopup = ({ isOpen, close }) => {
       return;
     }
 
-    createNewBoard(formData);
+    createAction(formData);
+
+    close();
   };
 
   return (
@@ -115,6 +98,7 @@ const BoardCreatePopup = ({ isOpen, close }) => {
 BoardCreatePopup.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
+  createAction: PropTypes.func.isRequired,
 };
 
 export default BoardCreatePopup;

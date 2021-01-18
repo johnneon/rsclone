@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import {
   Card,
@@ -11,8 +11,10 @@ import {
 } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles';
+import AuthContext from '../../context/AuthContext';
 import BoardCreatePopup from '../BoardCreatePopup/BoardCreatePopup';
-// import BoardCard from './BoardCard';
+import useHttp from '../../hooks/http.hook';
+import BoardCard from './BoardCard';
 
 const useStyles = makeStyles({
   navColor: {
@@ -44,8 +46,10 @@ const useStyles = makeStyles({
 
 const BoardCards = () => {
   const classes = useStyles();
-
-  const [open, setOpen] = React.useState(false);
+  const { token, userId } = useContext(AuthContext);
+  const { request } = useHttp();
+  const [open, setOpen] = useState(false);
+  const [cards, setCards] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,27 +59,91 @@ const BoardCards = () => {
     setOpen(false);
   };
 
-  /* const cardsTemplates = Object.keys(testCards).map((item) => {
-    const currentItem = testCards[item];
+  const getCardsData = async (id, tok, req) => {
+    const requestOptions = {
+      url: `https://rsclone-back-end.herokuapp.com/api/board/all/${id}`,
+      method: 'GET',
+      headers: { Authorization: `Bearer ${tok}` },
+    };
+
+    const data = await req(requestOptions);
+
+    setCards(data);
+  };
+
+  const createNewBoard = async (data) => {
+    try {
+      const requestOptions = {
+        url: 'https://rsclone-back-end.herokuapp.com/api/board/',
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: { ...data },
+      };
+
+      const boardsData = await request(requestOptions);
+      const totalNum = Object.keys(cards).length + 1;
+      const total = { ...cards };
+
+      total[totalNum] = boardsData;
+      setCards(total);
+    } catch (e) {
+      console.log(e.message, 'error');
+    }
+  };
+
+  const deleteBoard = async (id) => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/board/${id}`,
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      await request(requestOptions);
+      getCardsData(userId, token, request);
+    } catch (e) {
+      console.log(e.message, 'error');
+    }
+  };
+
+  useEffect(() => {
+    getCardsData(userId, token, request);
+  }, [userId, token, request]);
+
+  const cardsTemplates = Object.keys(cards).map((item) => {
+    const currentItem = cards[item];
+
     return (
       <BoardCard
-        title={currentItem.title}
-        link={currentItem.link}
-        image={currentItem.image}
+        id={currentItem._id}
+        title={currentItem.name}
+        deleteBoard={deleteBoard}
       />
     );
-  }); */
+  });
 
   return (
     <>
-      <Card onClick={handleClickOpen} variant="outlined" className={classes.cardItem}>
+      {cardsTemplates}
+      <Card
+        onClick={handleClickOpen}
+        variant="outlined"
+        className={classes.cardItem}
+      >
         <CardActionArea className={classes.fullHeight}>
           <CardContent>
-            <AddCircle color="action" className={classes.circleButton} />
+            <AddCircle
+              color="action"
+              className={classes.circleButton}
+            />
           </CardContent>
         </CardActionArea>
       </Card>
-      <BoardCreatePopup isOpen={open} close={handleClose} />
+      <BoardCreatePopup
+        isOpen={open}
+        close={handleClose}
+        createAction={createNewBoard}
+      />
     </>
   );
 };

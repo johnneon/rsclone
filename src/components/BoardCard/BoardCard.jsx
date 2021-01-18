@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Card,
@@ -27,31 +28,41 @@ const useStyles = makeStyles({
   },
   media: {
     height: '200px',
+    backgroundColor: '#f5f5f5',
   },
 });
 
-const BoardCard = (obj) => {
+const BoardCard = ({ id, title, deleteBoard }) => {
   const classes = useStyles();
-  const cProps = { ...obj };
+
+  const deleteThis = (e) => {
+    e.preventDefault();
+    deleteBoard(id);
+  };
 
   return (
-    <a className={classes.cardItem} href={cProps.link}>
+    <a onClick={deleteThis} className={classes.cardItem} href={`/card_${id}`}>
       <Card variant="outlined" className={classes.navAside}>
         <CardActionArea>
           <CardMedia
             className={classes.media}
-            image={cProps.image}
-            title={cProps.title}
+            title
           />
           <CardContent>
             <Typography className={classes.title} color="textSecondary">
-              {cProps.title}
+              {title}
             </Typography>
           </CardContent>
         </CardActionArea>
       </Card>
     </a>
   );
+};
+
+BoardCard.propTypes = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  deleteBoard: PropTypes.func.isRequired,
 };
 
 export default BoardCard;
