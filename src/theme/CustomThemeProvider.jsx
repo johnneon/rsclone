@@ -17,7 +17,8 @@ const theme = createMuiTheme({
     },
     background: {
       main: '#fff',
-      column: '#fafafa',
+      card: '#fafafa',
+      column: '#eceff1',
       // auth:#ddfae7
     },
     shadow: {
