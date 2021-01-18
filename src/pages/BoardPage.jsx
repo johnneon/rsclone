@@ -9,7 +9,7 @@ import {
 
 import Aside from '../components/Aside/Aside';
 import BoardCards from '../components/BoardCard/BoardCards';
-import useStyles from '../hooks/styles.hook';
+import useStyles from '../hooks/style.hook';
 
 const HomePage = () => {
   const classes = useStyles();

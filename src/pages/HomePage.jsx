@@ -9,7 +9,7 @@ import {
 import AuthContext from '../context/AuthContext';
 
 import Aside from '../components/Aside/Aside';
-import useStyles from '../hooks/styles.hook';
+import useStyles from '../hooks/style.hook';
 
 const HomePage = () => {
   const classes = useStyles();
