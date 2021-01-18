@@ -11,10 +11,4 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  rules: {
-    'linebreak-style': ['error', 'windows'],
-    'react/jsx-filename-extension': [1, { 'extensions': ['.js', '.jsx'] }],
-    'react/jsx-props-no-spreading': 'off',
-    'no-underscore-dangle': 'off',
-  },
 };
