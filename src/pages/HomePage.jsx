@@ -23,7 +23,6 @@ const HomePage = () => {
         container
         direction="row"
         justify="space-between"
-        alignItems="start"
       >
         <Grid container item xs={2}>
           <Aside />

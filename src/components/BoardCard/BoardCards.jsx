@@ -113,13 +113,18 @@ const BoardCards = () => {
   const cardsTemplates = Object.keys(cards).map((item) => {
     const currentItem = cards[item];
 
-    return (
-      <BoardCard
-        id={currentItem._id}
-        title={currentItem.name}
-        deleteBoard={deleteBoard}
-      />
-    );
+    if (typeof currentItem === 'object') {
+      return (
+        <BoardCard
+          id={currentItem._id}
+          title={currentItem.name}
+          deleteBoard={deleteBoard}
+          key={item}
+        />
+      );
+    }
+
+    return null;
   });
 
   return (
