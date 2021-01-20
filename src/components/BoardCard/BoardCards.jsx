@@ -46,7 +46,7 @@ const useStyles = makeStyles({
 
 const BoardCards = () => {
   const classes = useStyles();
-  const { token, userId } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const [open, setOpen] = useState(false);
   const [cards, setCards] = useState([]);
@@ -59,9 +59,9 @@ const BoardCards = () => {
     setOpen(false);
   };
 
-  const getCardsData = async (id, tok, req) => {
+  const getCardsData = async (tok, req) => {
     const requestOptions = {
-      url: `https://rsclone-back-end.herokuapp.com/api/board/all/${id}`,
+      url: 'https://rsclone-back-end.herokuapp.com/api/board/',
       method: 'GET',
       headers: { Authorization: `Bearer ${tok}` },
     };
@@ -100,15 +100,15 @@ const BoardCards = () => {
       };
 
       await request(requestOptions);
-      getCardsData(userId, token, request);
+      getCardsData(token, request);
     } catch (e) {
       console.log(e.message, 'error');
     }
   };
 
   useEffect(() => {
-    getCardsData(userId, token, request);
-  }, [userId, token, request]);
+    getCardsData(token, request);
+  }, [token, request]);
 
   const cardsTemplates = Object.keys(cards).map((item) => {
     const currentItem = cards[item];
