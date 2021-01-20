@@ -1,3 +1,8 @@
+/* eslint-disable max-len */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/jsx-tag-spacing */
 /* eslint-disable no-unreachable */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-console */
@@ -11,128 +16,50 @@
 /* eslint-disable react/style-prop-object */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Box, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BoardColumn from '../BoardColumn/BoardColumn';
+import Placeholder from '../Placeholder/Placeholder';
 
-const columnsArr = [{ title: 'first', key: '1' }, { title: 'second', key: '2' }, { title: 'third', key: '3' }, { title: 'fourth', key: '4' }];
+const columnsArr = [
+  {
+    title: 'first', key: '1', id: 'firstCol', cards: [{ title: 'firstCol1' }, { title: 'secondCol1' }, { title: 'thirdCol1' }, { title: 'fourthCol1' }], 
+  }, 
+  {
+    title: 'second', key: '2', id: 'secondCol', cards: [{ title: 'firstCol2' }, { title: 'secondCol2' }, { title: 'thirdCol2' }, { title: 'fourthCol2' }], 
+  }, 
+  {
+    title: 'third', key: '3', id: 'thirdCol', cards: [{ title: 'firstCol3' }, { title: 'secondCol3' }, { title: 'thirdCol3' }, { title: 'fourthCol3' }], 
+  // }, 
+  // {
+  //   title: 'fourth', key: '4', id: 'fourth', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
+  // }, 
+  // {
+  //   title: 'fifth', key: '5', id: 'fifth', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
+  // }, 
+  // {
+  //   title: 'sixth', key: '6', id: 'sixth', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
+  // }, 
+  // {
+  //   title: 'seventh', key: '7', id: 'seventh', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
+  }];
 
 const useStyles = makeStyles(() => ({
   board__content: {
     padding: '10px',
+    height: '100%',
     display: 'flex',
     position: 'relative',
+    overflowX: 'auto',
+    boxSizing: 'border-box',
   },
 }));
 
 const Board = () => {
   const [columns, setColumns] = useState(columnsArr);
-  const [draggableElement, setDraggableElement] = useState(null);
-  const [isMoved, setIsMoved] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [switchableElement, setSwitchableElement] = useState(null);
 
   const classes = useStyles();
-
-  const onMouseDown = (e) => {
-    if (!e.target.dataset.draggable) {
-      return;
-    }
-
-    let newDraggableElem = e.currentTarget;
-
-    if (newDraggableElem.tagName !== 'DIV') {
-      newDraggableElem = getDraggableElement(newDraggableElem);
-    }
-
-    setDraggableElement(newDraggableElem);
-    setOffset({
-      x: e.pageX - e.currentTarget.offsetLeft,
-      y: e.pageY - e.currentTarget.offsetTop,
-    })
-  }
-
-  const onMouseUp = (e) => {
-    if (!isMoved) {
-      return;
-    }
-
-    setTimeout(() => setIsMoved(false), 0);
-    setColumns((state) => {
-      const newState = [...state];
-      const placeholderIndex = columns.findIndex((column) => column.key === 'placeholder');
-      if (placeholderIndex !== -1) {        
-        newState.splice(placeholderIndex, 1);
-      }
-      return newState;
-    });
-
-    draggableElement.style = '';
-    setDraggableElement(null);
-  }
-
-  const onMouseMove = (e) => {
-    if (!draggableElement) {
-      return;
-    }
-
-    if (!isMoved) {
-      setIsMoved(true);
-      setColumns((state) => {
-        const newState = [...state];
-        if (!columns.find((column) => column.key === 'placeholder')) {
-          newState.splice(draggableElement.dataset.index, 0, { title: 'placeholder', key: 'placeholder' });
-        }
-        return newState;
-      });
-    }
-
-    const hoveredElement = getDraggableElement(e);
-
-    if (hoveredElement !== switchableElement) {
-      setSwitchableElement(hoveredElement);
-
-      if (hoveredElement) {
-        setColumns((state) => {
-          const { index } = hoveredElement.dataset;
-          const placeholderIndex = columns.findIndex((column) => column.key === 'placeholder');
-          const newState = [...state];
-
-          if (newState[index].key !== 'placeholder' && placeholderIndex !== -1) {
-            const placeholder = newState.splice(placeholderIndex, 2);
-            newState.splice(+index, 0, ...placeholder);
-          }
-
-          return newState;
-        });
-      }
-    }
-    
-    draggableElement.style.position = 'absolute';
-    draggableElement.style.zIndex = '10';
-    draggableElement.style.left = `${e.pageX - offset.x}px`;
-    draggableElement.style.top = `${e.pageY - offset.y}px`;
-    return;
-  }
-
-  function getDraggableElement(event) {
-    draggableElement.hidden = true;
-    const elem = document.elementFromPoint(event.clientX, event.clientY);
-
-    draggableElement.hidden = false;
-  
-    if (elem == null) {
-      return null;
-    }
-
-    return elem.closest('[data-draggable="column"]');
-  }
-
-  const onClick = (e) => {
-    if (isMoved) {
-      return;
-    }
-  }
 
   const btnClick = () => {
     setColumns((state) => {      
@@ -143,31 +70,138 @@ const Board = () => {
     })
   }
 
+  const reorderColumns = (list, sourceIndex, destinalionIndex) => {
+    const result = [...list];
+    const [removed] = result.splice(sourceIndex, 1);
+    result.splice(destinalionIndex, 0, removed);
+    
+    return result;
+  };
+
+  const reorderCrads = (list, source, destination) => {
+    const result = [...list];
+    const sourceColumn = result.find(({ id }) => id === source.droppableId);
+    const destinationColumn = result.find(({ id }) => id === destination.droppableId);
+    
+    const [draggableItem] = sourceColumn.cards.splice(source.index, 1);
+    destinationColumn.cards.splice(destination.index, 0, draggableItem);
+
+    return result;
+  }
+
+  const onDragEnd = (result) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    console.log(result)
+
+    let items = [...columns];
+
+    if (result.type === 'column') {      
+      items = reorderColumns(
+        columns,
+        result.source.index,
+        result.destination.index,
+      );
+    }
+
+    if (result.type === 'tasks') {
+      items = reorderCrads(columns, result.source, result.destination)
+    }
+
+    // console.log(JSON.stringify(items), 'items')
+
+    setColumns(items);
+
+    // console.log('drag end')
+  }
+
+  const getListStyle = (isDraggingOver) => ({
+    // background: isDraggingOver ? 'lightblue' : 'lightgrey',
+    
+    height: '100%',
+    // padding: grid,
+    // width: 250
+  });
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: 'none',
+  
+    // change background colour if dragging
+    // background: isDragging ? 'lightgreen' : 'grey',
+  
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{ height: '50px', backgroundColor: 'green' }}>
         Header
       </div>
-      <main style={{ height: '100%', backgroundColor: '#88adfb' }} onDragStart={(e) => e.preventDefault()}>
+      <main
+        style={{
+          height: '100%', backgroundColor: '#88adfb', display: 'flex', flexDirection: 'column', 
+        }}
+        onDragStart={(e) => e.preventDefault()}
+      >
         <div style={{ height: '30px', backgroundColor: 'lightgrey' }}>
           Settings
         </div>
-        <Box
-          className={classes.board__content}
-        >
-          {columns.map((column, index) => (
-            <BoardColumn
-              data={column}
-              key={column.key}
-              onMouseDown={onMouseDown}
-              onMouseUp={onMouseUp}
-              onMouseMove={onMouseMove}
-              onClick={onClick}
-              index={index}
-            />
-          ))}
-          <button type="button" onClick={btnClick}>Add new column</button>
-        </Box>
+
+
+
+
+
+
+
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable 
+            droppableId="board" 
+            type="column"
+            direction="horizontal" 
+          >
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}                
+                style={getListStyle(snapshot.isDraggingOver)}
+                {...provided.droppableProps}
+                className={classes.board__content}
+              >
+                {/* <Box
+                  className={classes.board__content}
+                > */}
+                {columns.map((item, index) => (
+                  <Draggable key={item.id} draggableId={item.id} index={index} type="column">
+                    {(provided2, snapshot) => (
+                      <div                                                              
+                        ref={provided2.innerRef}
+                        {...provided2.draggableProps}
+                        // {...provided2.dragHandleProps}                        
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided2.draggableProps.style,
+                        )}
+                      >                      
+                      <BoardColumn
+                        data={item}
+                        index={index}
+                        dragHandleProps={provided2.dragHandleProps}
+                      />                      
+                      </div>
+                    )}
+                  </Draggable>
+                ))}                
+                {provided.placeholder}                
+                <button type="button" onClick={btnClick}>Add new column</button>
+                {/* </Box> */}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </main>
     </div>
 
