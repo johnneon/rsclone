@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
 import {
   Card,
@@ -58,17 +59,16 @@ const BoardCard = ({ id, title, deleteBoard }) => {
   };
 
   const locate = (e) => {
-    if (!e.target.closest('svg')) {
-      window.location = e.target.getAttribute('data-href');
+    if (e.target.closest('svg')) {
+      e.preventDefault();
     }
   };
 
   return (
-    <button
-      type="button"
+    <NavLink
       onClick={locate}
       className={classes.cardItem}
-      data-href={`/card_${id}`}
+      to={`/card_${id}`}
     >
       <Card variant="outlined" className={classes.navAside}>
         <CardActionArea>
@@ -78,7 +78,7 @@ const BoardCard = ({ id, title, deleteBoard }) => {
           />
           <CardMedia
             className={classes.media}
-            title
+            title={title}
           />
           <CardContent>
             <Typography className={classes.title} color="textSecondary">
@@ -87,7 +87,7 @@ const BoardCard = ({ id, title, deleteBoard }) => {
           </CardContent>
         </CardActionArea>
       </Card>
-    </button>
+    </NavLink>
   );
 };
 

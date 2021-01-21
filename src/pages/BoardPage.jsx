@@ -7,6 +7,7 @@ import {
   Divider,
 } from '@material-ui/core';
 
+import { SnackbarProvider } from 'notistack';
 import Aside from '../components/Aside/Aside';
 import BoardCards from '../components/BoardCard/BoardCards';
 import useStyles from '../hooks/style.hook';
@@ -15,33 +16,44 @@ const HomePage = () => {
   const classes = useStyles();
 
   return (
-    <Container className={classes.paddingTopBig}>
-      <Typography
-        variant="h1"
-        component="h1"
-        className={classes.marginBottomSmall}
-      >
-        Board page
-      </Typography>
-      <Divider className={classes.marginBottomMiddle} />
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-      >
-        <Grid container item xs={2}>
-          <Aside />
-        </Grid>
+    <>
+      <Container className={classes.paddingTopBig}>
+        <Typography
+          variant="h1"
+          component="h1"
+          className={classes.marginBottomSmall}
+        >
+          Board page
+        </Typography>
+        <Divider className={classes.marginBottomMiddle} />
         <Grid
           container
-          item
-          xs={10}
-          className={classes.contentContainer}
+          direction="row"
+          justify="space-between"
         >
-          <BoardCards />
+          <Grid container item xs={2}>
+            <Aside />
+          </Grid>
+          <Grid
+            container
+            item
+            xs={10}
+            className={classes.contentContainer}
+          >
+            <SnackbarProvider
+              maxSnack={3}
+              autoHideDuration={2000}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+            >
+              <BoardCards />
+            </SnackbarProvider>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </>
   );
 };
 

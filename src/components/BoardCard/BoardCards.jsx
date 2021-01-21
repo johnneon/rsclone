@@ -1,63 +1,29 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-} from '@material-ui/core';
-
-import {
-  AddCircle,
-} from '@material-ui/icons';
-
-import { makeStyles } from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
+import CreateButton from '../CreateButton/CreateButton';
 import AuthContext from '../../context/AuthContext';
-import BoardCreatePopup from '../BoardCreatePopup/BoardCreatePopup';
 import useHttp from '../../hooks/http.hook';
 import BoardCard from './BoardCard';
 
-const useStyles = makeStyles({
-  navColor: {
-    color: '#3e3a3a',
-    textDecoration: 'none',
-  },
-  cardItem: {
-    display: 'block',
-    width: 'calc(100% / 3 - 14px)',
-    marginRight: '20px',
-    marginBottom: '20px',
-    textDecoration: 'none',
-    border: 'none',
-    backgroundColor: '#0000000a',
-    '&:nth-child(3n)': {
-      marginRight: '0',
-    },
-  },
-  fullHeight: {
-    height: '100%',
-  },
-  circleButton: {
-    display: 'block',
-    margin: '0 auto',
-    width: '50px',
-    height: '50px',
-  },
-});
-
 const BoardCards = () => {
-  const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
-  const [open, setOpen] = useState(false);
   const [cards, setCards] = useState([]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const createCard = (data) => {
+    setCards([...cards, data]);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const showSnackbar = useCallback((message, variant) => (
+    enqueueSnackbar(message, { variant })
+  ), [enqueueSnackbar]);
 
   const getCardsData = async (tok, req) => {
     const requestOptions = {
@@ -67,28 +33,7 @@ const BoardCards = () => {
     };
 
     const data = await req(requestOptions);
-
     setCards(data);
-  };
-
-  const createNewBoard = async (data) => {
-    try {
-      const requestOptions = {
-        url: 'https://rsclone-back-end.herokuapp.com/api/board/',
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: { ...data },
-      };
-
-      const boardsData = await request(requestOptions);
-      const totalNum = Object.keys(cards).length + 1;
-      const total = { ...cards };
-
-      total[totalNum] = boardsData;
-      setCards(total);
-    } catch (e) {
-      console.log(e.message, 'error');
-    }
   };
 
   const deleteBoard = async (id) => {
@@ -101,8 +46,9 @@ const BoardCards = () => {
 
       await request(requestOptions);
       getCardsData(token, request);
+      showSnackbar('Board deleted!', 'success');
     } catch (e) {
-      console.log(e.message, 'error');
+      showSnackbar(e.message, 'error');
     }
   };
 
@@ -110,8 +56,8 @@ const BoardCards = () => {
     getCardsData(token, request);
   }, [token, request]);
 
-  const cardsTemplates = Object.keys(cards).map((item) => {
-    const currentItem = cards[item];
+  const cardsTemplates = cards.map((item) => {
+    const currentItem = item;
 
     if (typeof currentItem === 'object') {
       return (
@@ -119,7 +65,7 @@ const BoardCards = () => {
           id={currentItem._id}
           title={currentItem.name}
           deleteBoard={deleteBoard}
-          key={item}
+          key={currentItem._id}
         />
       );
     }
@@ -130,24 +76,9 @@ const BoardCards = () => {
   return (
     <>
       {cardsTemplates}
-      <Card
-        onClick={handleClickOpen}
-        variant="outlined"
-        className={classes.cardItem}
-      >
-        <CardActionArea className={classes.fullHeight}>
-          <CardContent>
-            <AddCircle
-              color="action"
-              className={classes.circleButton}
-            />
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      <BoardCreatePopup
-        isOpen={open}
-        close={handleClose}
-        createAction={createNewBoard}
+      <CreateButton
+        setCards={setCards}
+        createCard={createCard}
       />
     </>
   );
