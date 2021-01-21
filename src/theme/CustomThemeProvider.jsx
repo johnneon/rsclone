@@ -26,10 +26,12 @@ const theme = createMuiTheme({
     },
     text: {
       main: '#3e3a3a',
+      white: '#fff',
       // auth: '#676868',
     },
     buttons: {
       transparentWhite: '#ffffff3d',
+      transparentWhiteHover: '#ffffff57',
     },
   },
   typography: {

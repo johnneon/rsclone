@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable no-shadow */
@@ -17,10 +18,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Box, Container } from '@material-ui/core';
+import { Box, Container, Button, Fade } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BoardColumn from '../BoardColumn/BoardColumn';
 import Placeholder from '../Placeholder/Placeholder';
+import ColumnCreator from '../ColumnCreator/ColumnCreator';
 
 const columnsArr = [
   {
@@ -31,12 +33,12 @@ const columnsArr = [
   }, 
   {
     title: 'third', key: '3', id: 'thirdCol', cards: [{ title: 'firstCol3' }, { title: 'secondCol3' }, { title: 'thirdCol3' }, { title: 'fourthCol3' }], 
-  // }, 
-  // {
-  //   title: 'fourth', key: '4', id: 'fourth', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
-  // }, 
-  // {
-  //   title: 'fifth', key: '5', id: 'fifth', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
+  }, 
+  {
+    title: 'fourth', key: '4', id: 'fourthCol', cards: [{ title: 'firstCol4' }, { title: 'secondCol4' }, { title: 'thirdCol4' }, { title: 'fourthCol4' }], 
+  }, 
+  {
+    title: 'fifth', key: '5', id: 'fifthCol', cards: [{ title: 'firstCol5' }, { title: 'secondCol5' }, { title: 'thirdCol5' }, { title: 'fourthCol5' }], 
   // }, 
   // {
   //   title: 'sixth', key: '6', id: 'sixth', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
@@ -45,7 +47,7 @@ const columnsArr = [
   //   title: 'seventh', key: '7', id: 'seventh', cards: [{ title: 'first' }, { title: 'second' }, { title: 'third' }, { title: 'fourth' }], 
   }];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   board__content: {
     padding: '10px',
     height: '100%',
@@ -54,21 +56,23 @@ const useStyles = makeStyles(() => ({
     overflowX: 'auto',
     boxSizing: 'border-box',
   },
+  board__button: {
+    padding: '10px 20px',
+    height: 'fit-content',
+    minWidth: '270px',
+    boxSizing: 'border-box',
+    backgroundColor: theme.palette.buttons.transparentWhite,
+    '&:hover': {
+      backgroundColor: theme.palette.buttons.transparentWhiteHover,
+    },
+  },
 }));
 
 const Board = () => {
   const [columns, setColumns] = useState(columnsArr);
+  const [isColumnCreatorVisible, setColumnCreatorVisibility] = useState(false);
 
   const classes = useStyles();
-
-  const btnClick = () => {
-    setColumns((state) => {      
-      const newColumns = [...state];    
-      const first = newColumns.shift();
-      newColumns.push(first);
-      return newColumns;
-    })
-  }
 
   const reorderColumns = (list, sourceIndex, destinalionIndex) => {
     const result = [...list];
@@ -90,12 +94,11 @@ const Board = () => {
   }
 
   const onDragEnd = (result) => {
-    // dropped outside the list
     if (!result.destination) {
       return;
     }
 
-    console.log(result)
+    console.log(result);
 
     let items = [...columns];
 
@@ -107,15 +110,11 @@ const Board = () => {
       );
     }
 
-    if (result.type === 'tasks') {
+    if (result.type === 'card') {
       items = reorderCrads(columns, result.source, result.destination)
     }
 
-    // console.log(JSON.stringify(items), 'items')
-
     setColumns(items);
-
-    // console.log('drag end')
   }
 
   const getListStyle = (isDraggingOver) => ({
@@ -125,6 +124,10 @@ const Board = () => {
     // padding: grid,
     // width: 250
   });
+
+  const addNewColumn = () => {
+    setColumnCreatorVisibility(true);
+  }
 
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
@@ -144,20 +147,13 @@ const Board = () => {
       </div>
       <main
         style={{
-          height: '100%', backgroundColor: '#88adfb', display: 'flex', flexDirection: 'column', 
+          height: '100%', backgroundColor: '#88adfb', display: 'flex', flexDirection: 'column', boxSizing: 'border-box',
         }}
         onDragStart={(e) => e.preventDefault()}
       >
         <div style={{ height: '30px', backgroundColor: 'lightgrey' }}>
           Settings
         </div>
-
-
-
-
-
-
-
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable 
             droppableId="board" 
@@ -165,22 +161,18 @@ const Board = () => {
             direction="horizontal" 
           >
             {(provided, snapshot) => (
-              <div
+              <Box
                 ref={provided.innerRef}                
                 style={getListStyle(snapshot.isDraggingOver)}
                 {...provided.droppableProps}
                 className={classes.board__content}
               >
-                {/* <Box
-                  className={classes.board__content}
-                > */}
                 {columns.map((item, index) => (
                   <Draggable key={item.id} draggableId={item.id} index={index} type="column">
                     {(provided2, snapshot) => (
                       <div                                                              
                         ref={provided2.innerRef}
-                        {...provided2.draggableProps}
-                        // {...provided2.dragHandleProps}                        
+                        {...provided2.draggableProps}                      
                         style={getItemStyle(
                           snapshot.isDragging,
                           provided2.draggableProps.style,
@@ -195,10 +187,9 @@ const Board = () => {
                     )}
                   </Draggable>
                 ))}                
-                {provided.placeholder}                
-                <button type="button" onClick={btnClick}>Add new column</button>
-                {/* </Box> */}
-              </div>
+                {provided.placeholder}            
+                <ColumnCreator columns={columns} setColumns={setColumns} />
+              </Box>
             )}
           </Droppable>
         </DragDropContext>
