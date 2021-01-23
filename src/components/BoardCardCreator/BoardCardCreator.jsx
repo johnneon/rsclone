@@ -33,12 +33,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
   },
   creator__card_visible: {
+    margin: '5px',
     padding: '5px',
     width: '100%',
-    maxWidth: '260px',
+    maxWidth: '250px',
     maxHeight: '100%',
     height: 'fit-content',
-    backgroundColor: theme.palette.background.card,
+    backgroundColor: theme.palette.background.column,
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   creator__input: {
     // marginBottom: '5px',
-    padding: '10px',
+    padding: '12px',
     width: '100%',
     backgroundColor: theme.palette.background.main,
     borderRadius: '4px',
@@ -66,24 +67,13 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.buttons.transparentWhiteHover,
     },
   },
-  creator__addNewCardButton: {
-    padding: '5px',
-    height: 'fit-content',
-    width: '100%',
-    // color: theme.palette.text.white,
-    boxSizing: 'border-box',
-    backgroundColor: theme.palette.buttons.grey,
-    '&:hover': {
-      backgroundColor: theme.palette.buttons.greyHover,
-    },
-  },
 }));
 
 const BoardElementCreator = ({ sourceState, setState, containerId, request, type }) => {
   const [isBoardElementCreatorVisible, setBoardElementCreatorVisibility] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  // const inputRef = useRef(null);
+  const inputRef = useRef(null);
   const classes = useStyles();
 
   const showBoardElementCreator = () => {
@@ -95,7 +85,7 @@ const BoardElementCreator = ({ sourceState, setState, containerId, request, type
       return;
     }
 
-    // console.log(inputValue, sourceState, sourceState.length, containerId);
+    console.log(inputValue, sourceState, sourceState.length, containerId);
 
     const requestBody = type === 'column' 
       ? { 
@@ -132,7 +122,7 @@ const BoardElementCreator = ({ sourceState, setState, containerId, request, type
 
   return (
     <Paper className={isBoardElementCreatorVisible ? classes[`creator__${type}_visible`] : classes.creator}>
-      <Collapse in={isBoardElementCreatorVisible} collapsedHeight={type === 'column' ? 45 : 34}>
+      <Collapse in={isBoardElementCreatorVisible} collapsedHeight={45}>
         {isBoardElementCreatorVisible
           ? (
             <>
@@ -142,7 +132,7 @@ const BoardElementCreator = ({ sourceState, setState, containerId, request, type
                   className={classes.creator__inputWrapper}
                   inputProps={{ className: classes.creator__input }}
                   size="small"
-                  placeholder="Add header..."
+                  placeholder="Add column header..."
                   // inputRef={inputRef}
                   margin="dense"
                   value={inputValue}
@@ -168,11 +158,7 @@ const BoardElementCreator = ({ sourceState, setState, containerId, request, type
           ) : (
             <Button
               variant="contained"
-              className={
-                type === 'column' 
-                  ? classes.creator__addNewColButton 
-                  : classes.creator__addNewCardButton
-              }
+              className={classes.creator__addNewColButton}
               onClick={showBoardElementCreator}
             >
               {`Add new ${type}`}

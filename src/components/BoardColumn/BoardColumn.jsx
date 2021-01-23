@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-closing-bracket-location */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable no-shadow */
@@ -6,10 +7,16 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable semi */
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Paper, Typography, Box } from '@material-ui/core';
+import React, { useState, useContext } from 'react';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
+import {
+  Paper, Typography, Box, InputBase,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import BoardCard from '../BoardCard/BoardCard';
+import ColumnCreator from '../ColumnCreator/ColumnCreator';
+import AuthContext from '../../context/AuthContext';
+import useHttp from '../../hooks/http.hook';
 
 const useStyles = makeStyles((theme) => ({
   board__column: {
@@ -23,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
+    userSelect: 'none',
   },
   board__column_draggable: {
     margin: '5px',
@@ -36,23 +44,52 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 10,
   },
   board__header: {
-    padding: '5px',
+    padding: '0px',
+    fontWeight: 700,
+    fontSize: theme.typography.h4.fontSize,
   },
-  board__card: {
-    marginBottom: '5px',
-    padding: '5px',
-    minHeight: '30px',
-    backgroundColor: theme.palette.background.main,
-    borderRadius: '5px',
+  board__headerInput: {
+    padding: '2px 5px',
+    fontWeight: 700,
+    fontSize: theme.typography.h4.fontSize,
+    // userSelect: 'none',
   },
+  // board__card: {
+  //   marginBottom: '5px',
+  //   padding: '5px',
+  //   minHeight: '30px',
+  //   backgroundColor: theme.palette.background.main,
+  //   borderRadius: '5px',
+  // },
 }));
 
 const BoardColumn = ({
-  data, index, dragHandleProps,
+  data: { cards: cardsData, name, _id }, index, dragHandleProps,
 }) => {
+  const [cards, setCards] = useState(cardsData);
+  const [isHeaderEditable, setHeaderEditable] = useState(false)
   const classes = useStyles();
+  const { token } = useContext(AuthContext);
+  const { request } = useHttp();
+  console.log(cards)
 
-  const { title, id, cards } = data;
+  // const { name, _id } = data;
+
+  const sendAddCardRequest = async (data) => {
+    try {
+      const requestOptions = {
+        url: 'https://rsclone-back-end.herokuapp.com/api/cards/',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: data,
+      };
+      const response = await request(requestOptions);
+      return response;
+    } catch (e) {
+      console.log(e.message, 'error');
+      return null;
+    }
+  };
 
   const getListStyle = (draggableStyle) => ({
     userSelect: 'none',
@@ -63,12 +100,24 @@ const BoardColumn = ({
     ...draggableStyle,
   });
 
+  const editHeader = () => {
+    //
+  }
+
   return (
     <Paper className={classes.board__column}>
-      <Box className={classes.board__header} data-draggable="column-header" {...dragHandleProps}>
-        <Typography variant="h2" data-draggable="column-header">{title}</Typography>
+      <Box className={classes.board__header} {...dragHandleProps}>
+        <Typography variant="h2">{name}</Typography>
+        {/* <InputBase
+          className={classes.board__headerInput}
+          value={name}
+          inputProps={{ 'aria-label': 'naked' }}
+          disabled={!isHeaderEditable}
+          fullWidth
+          onClick={editHeader}
+        /> */}
       </Box>
-      <Droppable droppableId={`${id}`} type="card" ignoreContainerClipping>
+      <Droppable droppableId={_id} type="card" ignoreContainerClipping>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -77,16 +126,17 @@ const BoardColumn = ({
           >
             <Box>
               {cards.map((card, ind) => (
-                <Draggable key={card.title} draggableId={card.title} index={ind} type="card">
+                <Draggable key={card._id} draggableId={card._id} index={ind} type="card">
                   {(provided2, snapshot) => (
                     <div
                       ref={provided2.innerRef}
                       {...provided2.draggableProps}
                       {...provided2.dragHandleProps}
                     >
-                      <Box className={classes.board__card} key={title + ind}>
-                        <Typography variant="h5" component="h3">{card.title}</Typography>
-                      </Box>
+                      <BoardCard
+                        card={card}
+                        key={card._id}
+                      />
                     </div>
                   )}
                 </Draggable>
@@ -96,7 +146,13 @@ const BoardColumn = ({
           </div>
         )}
       </Droppable>
-              <button type="button">Add card</button>
+      <ColumnCreator
+        sourceState={cards}
+        setState={setCards}
+        containerId={_id}
+        request={sendAddCardRequest}
+        type="card"
+      />
     </Paper>
   );
 };

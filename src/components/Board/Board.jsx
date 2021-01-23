@@ -1,3 +1,6 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 /* eslint-disable object-curly-newline */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-indent */
@@ -16,13 +19,16 @@
 /* eslint-disable semi */
 /* eslint-disable react/style-prop-object */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Box, Container, Button, Fade } from '@material-ui/core';
+import { Box, Container, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
 import BoardColumn from '../BoardColumn/BoardColumn';
-import Placeholder from '../Placeholder/Placeholder';
+// import Placeholder from '../Placeholder/Placeholder';
 import ColumnCreator from '../ColumnCreator/ColumnCreator';
+import useHttp from '../../hooks/http.hook';
+import AuthContext from '../../context/AuthContext';
 
 const columnsArr = [
   {
@@ -68,11 +74,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Board = () => {
-  const [columns, setColumns] = useState(columnsArr);
-  const [isColumnCreatorVisible, setColumnCreatorVisibility] = useState(false);
+const Board = ({ id }) => {
+  const [columns, setColumns] = useState([]);
+  const [boardData, setBoardData] = useState({});
+  
+  const { token } = useContext(AuthContext); 
+  const { request } = useHttp();  
+  // const { enqueueSnackbar } = useSnackbar();
 
   const classes = useStyles();
+
+  // const showSnackbar = useCallback((message, variant) => (
+  //   enqueueSnackbar(message, { variant })
+  // ), [enqueueSnackbar]);
+
+
+
+  const getBoardData = useCallback(async () => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/board/${'60099858a40f6400173a66e5'}`,
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      };
+      const response = await request(requestOptions);
+      // console.log(response);
+
+      setColumns(response.columns);
+      setBoardData(response);
+
+      // console.log(response, 'success')
+
+      // showSnackbar(response.message, 'success');
+    } catch (e) {
+      // showSnackbar(e.message, 'error');
+      // console.log(e.message, 'error');
+    }
+  }, [id, request, token]);
+
+  useEffect(() => {
+    getBoardData();
+  }, [getBoardData])
 
   const reorderColumns = (list, sourceIndex, destinalionIndex) => {
     const result = [...list];
@@ -93,12 +135,57 @@ const Board = () => {
     return result;
   }
 
-  const onDragEnd = (result) => {
+  const updateCardPosition = useCallback(async (id, position) => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json', 
+          Authorization: `Bearer ${token}`,
+        },
+        body: { position },
+      };
+      const response = await request(requestOptions);
+      console.log(response)
+
+      // showSnackbar(response.message, 'success');
+      return response;
+    } catch (e) {
+      console.log(e.message)
+      // showSnackbar(e.message, 'error');
+      return null;
+    }
+  });  
+
+  const sendAddColumnRequest = async (data) => {
+    try {
+      const requestOptions = {
+        url: 'https://rsclone-back-end.herokuapp.com/api/column/',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: data,
+      };
+      const response = await request(requestOptions);
+      return response;
+    } catch (e) {
+      console.log(e.message, 'error');
+      return null;
+    }
+  };
+
+  const onDragEnd = async (result) => {
     if (!result.destination) {
       return;
     }
 
     console.log(result);
+
+    const resp = await updateCardPosition(result.draggableId, result.destination.index);
+
+    if (!resp) {
+      return;
+    }
 
     let items = [...columns];
 
@@ -118,25 +205,11 @@ const Board = () => {
   }
 
   const getListStyle = (isDraggingOver) => ({
-    // background: isDraggingOver ? 'lightblue' : 'lightgrey',
-    
     height: '100%',
-    // padding: grid,
-    // width: 250
   });
 
-  const addNewColumn = () => {
-    setColumnCreatorVisibility(true);
-  }
-
   const getItemStyle = (isDragging, draggableStyle) => ({
-    // some basic styles to make the items look a bit nicer
     userSelect: 'none',
-  
-    // change background colour if dragging
-    // background: isDragging ? 'lightgreen' : 'grey',
-  
-    // styles we need to apply on draggables
     ...draggableStyle,
   });
 
@@ -168,7 +241,7 @@ const Board = () => {
                 className={classes.board__content}
               >
                 {columns.map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index} type="column">
+                  <Draggable key={item._id} draggableId={item._id} index={index} type="column">
                     {(provided2, snapshot) => (
                       <div                                                              
                         ref={provided2.innerRef}
@@ -188,7 +261,13 @@ const Board = () => {
                   </Draggable>
                 ))}                
                 {provided.placeholder}            
-                <ColumnCreator columns={columns} setColumns={setColumns} />
+                <ColumnCreator 
+                  sourceState={columns} 
+                  setState={setColumns} 
+                  containerId={boardData._id} 
+                  request={sendAddColumnRequest}
+                  type="column"
+                />
               </Box>
             )}
           </Droppable>

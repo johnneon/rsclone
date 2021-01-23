@@ -31,7 +31,9 @@ const theme = createMuiTheme({
     },
     buttons: {
       transparentWhite: '#ffffff3d',
-      transparentWhiteHover: '#ffffff57',
+      transparentWhiteHover: '#ffffff70',
+      grey: '#dcdcdc',
+      greyHover: '#b3b3b3',
     },
   },
   typography: {
