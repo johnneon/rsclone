@@ -4,14 +4,20 @@ const storageName = 'userData';
 
 const useAuth = () => {
   const [token, setToken] = useState(null);
+  const [refreshToken, setRefreshToken] = useState(null);
   const [ready, setReady] = useState(false);
   const [userId, setUserId] = useState(null);
 
-  const login = useCallback((jwtToken, id) => {
+  const login = useCallback((jwtToken, jwtRefreshToken, id) => {
     setToken(jwtToken);
+    setRefreshToken(jwtRefreshToken);
     setUserId(id);
 
-    localStorage.setItem(storageName, JSON.stringify({ token: jwtToken, userId: id }));
+    localStorage.setItem(storageName, JSON.stringify({
+      token: jwtToken,
+      refreshToken: jwtRefreshToken,
+      userId: id,
+    }));
   }, []);
 
   const logout = () => {
@@ -23,9 +29,11 @@ const useAuth = () => {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem(storageName));
-    if (data?.token && data?.userId) {
-      login(data.token, data.userId);
+
+    if (data?.token && data?.userId && data?.refreshToken) {
+      login(data.token, data.userId, data.refreshToken);
     }
+
     setReady(true);
   }, [login, setReady]);
 
@@ -33,6 +41,7 @@ const useAuth = () => {
     login,
     logout,
     token,
+    refreshToken,
     userId,
     ready,
   };
