@@ -10,12 +10,16 @@ import CreateButton from '../CreateButton/CreateButton';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
 import BoardCard from './BoardCard';
+import BoardDeletePopup from '../boardDeletePopup/boardDeletePopup';
 
 const BoardCards = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const [cards, setCards] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [cardDeleteName, setName] = useState();
+  const [cardDeleteId, setId] = useState();
 
   const createCard = (data) => {
     setCards([...cards, data]);
@@ -50,6 +54,21 @@ const BoardCards = () => {
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
+    setOpen(false);
+  };
+
+  const getAskPopup = (id, name) => {
+    setOpen(true);
+    setName(name);
+    setId(id);
+  };
+
+  const agree = () => {
+    deleteBoard(cardDeleteId);
+  };
+
+  const close = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -64,7 +83,7 @@ const BoardCards = () => {
         <BoardCard
           id={currentItem._id}
           title={currentItem.name}
-          deleteBoard={deleteBoard}
+          deleteBoard={getAskPopup}
           key={currentItem._id}
         />
       );
@@ -79,6 +98,12 @@ const BoardCards = () => {
       <CreateButton
         setCards={setCards}
         createCard={createCard}
+      />
+      <BoardDeletePopup
+        isOpen={open}
+        name={cardDeleteName}
+        agree={agree}
+        close={close}
       />
     </>
   );
