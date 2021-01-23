@@ -14,13 +14,13 @@ const useStyles = makeStyles({
   popup: {
     '& .MuiDialog-paperWidthSm': {
       width: '100%',
-      maxWidth: '500px',
+      maxWidth: '400px',
     },
   },
 });
 
 const BoardDeletePopup = ({
-  isOpen, name, agree, close,
+  isOpen, name = null, agree, close,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
