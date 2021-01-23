@@ -17,7 +17,7 @@ const BoardCards = () => {
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const [cards, setCards] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [openAsk, setOpen] = useState(false);
   const [cardDeleteName, setName] = useState();
   const [cardDeleteId, setId] = useState();
 
@@ -100,7 +100,7 @@ const BoardCards = () => {
         createCard={createCard}
       />
       <BoardDeletePopup
-        isOpen={open}
+        isOpen={openAsk}
         name={cardDeleteName}
         agree={agree}
         close={close}
