@@ -100,8 +100,14 @@ const Board = ({ id }) => {
       const response = await request(requestOptions);
       // console.log(response);
 
-      setColumns(response.columns);
+      const columnsData = response.columns;
+      console.log(columnsData)
+      columns.sort((a, b) => a.position - b.position);
+
+      setColumns(columnsData);
       setBoardData(response);
+
+      // console.log(response.columns)
 
       // console.log(response, 'success')
 
@@ -126,8 +132,8 @@ const Board = ({ id }) => {
 
   const reorderCrads = (list, source, destination) => {
     const result = [...list];
-    const sourceColumn = result.find(({ id }) => id === source.droppableId);
-    const destinationColumn = result.find(({ id }) => id === destination.droppableId);
+    const sourceColumn = result.find(({ _id }) => _id === source.droppableId);
+    const destinationColumn = result.find(({ _id }) => _id === destination.droppableId);
     
     const [draggableItem] = sourceColumn.cards.splice(source.index, 1);
     destinationColumn.cards.splice(destination.index, 0, draggableItem);
@@ -135,7 +141,7 @@ const Board = ({ id }) => {
     return result;
   }
 
-  const updateCardPosition = useCallback(async (id, position) => {
+  const updateColumnPosition = useCallback(async (id, position) => {
     try {
       const requestOptions = {
         url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
@@ -154,6 +160,26 @@ const Board = ({ id }) => {
     } catch (e) {
       console.log(e.message)
       // showSnackbar(e.message, 'error');
+      return null;
+    }
+  });  
+
+  const updateCardPosition = useCallback(async (id, position, columnId) => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/cards/${id}`,
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json', 
+          Authorization: `Bearer ${token}`,
+        },
+        body: { position, columnId },
+      };
+      const response = await request(requestOptions);
+      
+      return response;
+    } catch (e) {
+      console.log(e.message);
       return null;
     }
   });  
@@ -181,7 +207,9 @@ const Board = ({ id }) => {
 
     console.log(result);
 
-    const resp = await updateCardPosition(result.draggableId, result.destination.index);
+    const resp = result.type === 'column'
+      ? await updateColumnPosition(result.draggableId, result.destination.index) 
+      : await updateCardPosition(result.draggableId, result.destination.index, result.destination.droppableId); 
 
     if (!resp) {
       return;
@@ -202,6 +230,14 @@ const Board = ({ id }) => {
     }
 
     setColumns(items);
+  }  
+
+  const deleteColumn = (id) => {
+    const sourceData = [...columns];
+    const removedCardIndex = sourceData.findIndex(({ _id }) => _id === id);
+    sourceData.splice(removedCardIndex, 1);
+
+    setColumns(sourceData);
   }
 
   const getListStyle = (isDraggingOver) => ({
@@ -255,6 +291,7 @@ const Board = ({ id }) => {
                         data={item}
                         index={index}
                         dragHandleProps={provided2.dragHandleProps}
+                        deleteColumn={deleteColumn}
                       />                      
                       </div>
                     )}
