@@ -55,7 +55,7 @@ const BoardCard = ({ id, title, deleteBoard }) => {
   const classes = useStyles();
 
   const deleteThis = () => {
-    deleteBoard(id);
+    deleteBoard(id, title);
   };
 
   const locate = (e) => {
