@@ -5,6 +5,7 @@ import AuthContext from './context/AuthContext';
 import useRouts from './routes';
 import CustomThemeProvider from './theme/CustomThemeProvider';
 import useAuth from './hooks/auth.hook';
+import Header from './components/Header/Header';
 
 function App() {
   const {
@@ -13,6 +14,7 @@ function App() {
     logout,
     userId,
     ready,
+    fullName,
   } = useAuth();
 
   const isAuthenticated = !!token;
@@ -31,11 +33,12 @@ function App() {
     <CustomThemeProvider>
       <AuthContext.Provider
         value={{
-          token, login, logout, userId, isAuthenticated,
+          token, login, logout, userId, fullName, isAuthenticated,
         }}
       >
         <Router>
           <div className="container">
+            <Header onReady={ready} />
             {routes}
           </div>
         </Router>

@@ -7,17 +7,23 @@ const useAuth = () => {
   const [refreshToken, setRefreshToken] = useState(null);
   const [ready, setReady] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [fullName, setUserName] = useState(null);
 
-  const login = useCallback((jwtToken, jwtRefreshToken, id) => {
+  const login = useCallback((jwtToken, jwtRefreshToken, id, name) => {
     setToken(jwtToken);
     setRefreshToken(jwtRefreshToken);
     setUserId(id);
+    setUserName(name);
+    console.log(name);
 
-    localStorage.setItem(storageName, JSON.stringify({
-      token: jwtToken,
-      refreshToken: jwtRefreshToken,
-      userId: id,
-    }));
+    localStorage.setItem(storageName, JSON.stringify(
+      {
+        token: jwtToken,
+        userId: id,
+        refreshToken: jwtRefreshToken,
+        fullName: name,
+      },
+    ));
   }, []);
 
   const logout = () => {
@@ -30,8 +36,8 @@ const useAuth = () => {
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem(storageName));
 
-    if (data?.token && data?.userId && data?.refreshToken) {
-      login(data.token, data.userId, data.refreshToken);
+    if (data?.token && data?.userId && data?.fullName && data?.refreshToken) {
+      login(data.token, data.userId, data.fullName, data.refreshToken);
     }
 
     setReady(true);
@@ -42,6 +48,7 @@ const useAuth = () => {
     logout,
     token,
     refreshToken,
+    fullName,
     userId,
     ready,
   };
