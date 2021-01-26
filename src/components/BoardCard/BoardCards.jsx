@@ -27,15 +27,19 @@ const BoardCards = () => {
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
 
-  const getCardsData = async (req) => {
-    const requestOptions = {
-      url: 'https://rsclone-back-end.herokuapp.com/api/board/',
-      method: 'GET',
-    };
+  const getCardsData = useCallback(async () => {
+    try {
+      const requestOptions = {
+        url: 'https://rsclone-back-end.herokuapp.com/api/board/',
+        method: 'GET',
+      };
 
-    const data = await req(requestOptions);
-    setCards(data);
-  };
+      const data = await request(requestOptions);
+      setCards(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [request]);
 
   const deleteBoard = async (id) => {
     try {
@@ -68,8 +72,9 @@ const BoardCards = () => {
   };
 
   useEffect(() => {
-    getCardsData(request);
-  }, [request]);
+    console.log('here');
+    getCardsData();
+  }, [getCardsData]);
 
   const cardsTemplates = cards.map((item) => {
     const currentItem = item;

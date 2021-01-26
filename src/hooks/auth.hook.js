@@ -79,6 +79,7 @@ const useAuth = () => {
   };
 
   useEffect(() => {
+    console.log(123);
     const data = JSON.parse(localStorage.getItem(storageName));
 
     if (data?.token && data?.userId && data?.fullName && data?.refreshToken) {
