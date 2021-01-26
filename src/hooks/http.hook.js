@@ -17,12 +17,10 @@ const useHttp = () => {
       newHeader['Content-Type'] = 'application/json';
 
       const options = { method, headers: newHeader };
-      console.log(body);
+
       if (body) {
         options.body = stringifyedBody;
       }
-
-      // console.log(options, url);
 
       const response = await fetch(url, options);
       const data = await response.json();

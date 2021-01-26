@@ -93,25 +93,14 @@ const Board = ({ id }) => {
   const getBoardData = useCallback(async () => {
     try {
       const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/board/${'60099858a40f6400173a66e5'}`,
+        url: `https://rsclone-back-end.herokuapp.com/api/board/${'600f1074f07eac0017def6ef'}`,
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       };
       const response = await request(requestOptions);
-      // console.log(response);
 
-      const columnsData = response.columns;
-      console.log(columnsData)
-      columns.sort((a, b) => a.position - b.position);
-
-      setColumns(columnsData);
+      setColumns(response.columns);
       setBoardData(response);
-
-      // console.log(response.columns)
-
-      // console.log(response, 'success')
-
-      // showSnackbar(response.message, 'success');
     } catch (e) {
       // showSnackbar(e.message, 'error');
       // console.log(e.message, 'error');
@@ -119,6 +108,7 @@ const Board = ({ id }) => {
   }, [id, request, token]);
 
   useEffect(() => {
+    console.log('effect')
     getBoardData();
   }, [getBoardData])
 
@@ -176,7 +166,7 @@ const Board = ({ id }) => {
         body: { position, columnId },
       };
       const response = await request(requestOptions);
-      
+      console.log(response);
       return response;
     } catch (e) {
       console.log(e.message);
@@ -205,31 +195,34 @@ const Board = ({ id }) => {
       return;
     }
 
+    const { type, destination, source } = result;
+
     console.log(result);
 
-    const resp = result.type === 'column'
-      ? await updateColumnPosition(result.draggableId, result.destination.index) 
-      : await updateCardPosition(result.draggableId, result.destination.index, result.destination.droppableId); 
-
-    if (!resp) {
-      return;
-    }
 
     let items = [...columns];
 
-    if (result.type === 'column') {      
+    if (type === 'column') {      
       items = reorderColumns(
         columns,
-        result.source.index,
-        result.destination.index,
+        source.index,
+        destination.index,
       );
     }
 
-    if (result.type === 'card') {
-      items = reorderCrads(columns, result.source, result.destination)
+    if (type === 'card') {
+      items = reorderCrads(columns, source, destination)
     }
 
     setColumns(items);
+
+    const resp = type === 'column'
+      ? await updateColumnPosition(result.draggableId, result.destination.index) 
+      : await updateCardPosition(result.draggableId, result.destination.index, result.destination.droppableId); 
+
+    // if (!resp) {
+    //   return;
+    // }
   }  
 
   const deleteColumn = (id) => {
@@ -248,6 +241,9 @@ const Board = ({ id }) => {
     userSelect: 'none',
     ...draggableStyle,
   });
+
+  
+  console.log('render')
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
