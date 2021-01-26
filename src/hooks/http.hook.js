@@ -14,15 +14,16 @@ const useHttp = () => {
     try {
       const stringifyedBody = JSON.stringify(body);
       const newHeader = headers;
+
       newHeader['Content-Type'] = 'application/json';
 
-      const options = { method, headers: newHeader };
+      const totalData = { method, headers: newHeader };
 
       if (body) {
-        options.body = stringifyedBody;
+        totalData.body = stringifyedBody;
       }
 
-      const response = await fetch(url, options);
+      const response = await fetch(url, totalData);
       const data = await response.json();
 
       if (!response.ok) {
