@@ -15,7 +15,9 @@ const isExpired = (jwtToken) => {
     return null;
   }
 
-  return Date.now() > exp;
+  const deadline = exp.exp * 1000;
+
+  return Date.now() > deadline;
 };
 
 const useAuth = () => {
@@ -41,7 +43,7 @@ const useAuth = () => {
     ));
   }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
     setRefreshToken(null);
@@ -49,15 +51,13 @@ const useAuth = () => {
 
     localStorage.removeItem(storageName);
     localStorage.removeItem(authToken);
-  };
+  }, []);
 
-  const getToken = async () => {
+  const getToken = useCallback(async () => {
     try {
-      if (!token) {
-        return false;
-      }
-
       if (isExpired(token)) {
+        const data = JSON.parse(localStorage.getItem(storageName));
+
         const url = 'https://rsclone-back-end.herokuapp.com/api/auth/refresh_token';
 
         const headers = {};
@@ -66,20 +66,24 @@ const useAuth = () => {
         const body = JSON.stringify({ refreshToken });
 
         const updatedToken = await fetch(url, { method: 'POST', headers, body })
-          .then((data) => data.json());
+          .then((newToken) => newToken.json());
 
-        setToken(updatedToken);
+        setToken(updatedToken.token);
+
+        if (updatedToken.token && data?.userId && data?.fullName && data?.refreshToken) {
+          login(updatedToken.token, data.refreshToken, data.userId, data.fullName);
+        }
+
+        window.location.reload();
       }
-
-      return token;
     } catch (e) {
-      logout();
+      if (e.message === 'Session timed out,please login again!') {
+        logout();
+      }
     }
-    return token || false;
-  };
+  }, [login, logout, token, refreshToken]);
 
   useEffect(() => {
-    console.log(123);
     const data = JSON.parse(localStorage.getItem(storageName));
 
     if (data?.token && data?.userId && data?.fullName && data?.refreshToken) {
@@ -89,7 +93,7 @@ const useAuth = () => {
     }
 
     setReady(true);
-  }, [login, setReady]);
+  }, [login, logout, setReady]);
 
   return {
     login,

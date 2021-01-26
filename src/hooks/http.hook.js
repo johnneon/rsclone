@@ -11,18 +11,14 @@ const useHttp = () => {
     method = 'GET',
     body = null,
     headers = {},
-    isAuthentication = false,
   }) => {
     setLoading(true);
     try {
+      await getToken();
       const stringifyedBody = JSON.stringify(body);
       const newHeader = headers;
-      const token = await getToken();
 
       newHeader['Content-Type'] = 'application/json';
-      if (!isAuthentication) {
-        newHeader.Authorization = `Bearer ${token}`;
-      }
 
       const totalData = { method, headers: newHeader };
 
@@ -32,7 +28,6 @@ const useHttp = () => {
 
       const response = await fetch(url, totalData);
       const data = await response.json();
-      console.log(data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Failed to get data.');
