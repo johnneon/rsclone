@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import React, {
-  useContext,
   useState,
   useEffect,
   useCallback,
@@ -8,14 +7,12 @@ import React, {
 
 import { useSnackbar } from 'notistack';
 import CreateButton from '../CreateButton/CreateButton';
-import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
 import BoardCard from './BoardCard';
 import BoardDeletePopup from '../boardDeletePopup/boardDeletePopup';
 
 const BoardCards = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const [cards, setCards] = useState([]);
   const [openAsk, setOpen] = useState(false);
@@ -30,11 +27,10 @@ const BoardCards = () => {
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
 
-  const getCardsData = async (tok, req) => {
+  const getCardsData = async (req) => {
     const requestOptions = {
       url: 'https://rsclone-back-end.herokuapp.com/api/board/',
       method: 'GET',
-      headers: { Authorization: `Bearer ${tok}` },
     };
 
     const data = await req(requestOptions);
@@ -46,11 +42,10 @@ const BoardCards = () => {
       const requestOptions = {
         url: `https://rsclone-back-end.herokuapp.com/api/board/${id}`,
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
       };
 
       await request(requestOptions);
-      getCardsData(token, request);
+      getCardsData(request);
       showSnackbar('Board deleted!', 'success');
     } catch (e) {
       showSnackbar(e.message, 'error');
@@ -73,8 +68,8 @@ const BoardCards = () => {
   };
 
   useEffect(() => {
-    getCardsData(token, request);
-  }, [token, request]);
+    getCardsData(request);
+  }, [request]);
 
   const cardsTemplates = cards.map((item) => {
     const currentItem = item;
