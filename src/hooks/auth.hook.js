@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 
 const storageName = 'userData';
 const authToken = 'AUTH_TOKEN';
-// let tokenData = JSON.parse(localStorage.getItem(authToken) || '') || null;
 
 const isExpired = (jwtToken) => {
   if (!jwtToken) {
@@ -73,8 +72,6 @@ const useAuth = () => {
         if (updatedToken.token && data?.userId && data?.fullName && data?.refreshToken) {
           login(updatedToken.token, data.refreshToken, data.userId, data.fullName);
         }
-
-        window.location.reload();
       }
     } catch (e) {
       if (e.message === 'Session timed out,please login again!') {
