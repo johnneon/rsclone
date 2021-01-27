@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const storageName = 'userData';
-const authToken = 'AUTH_TOKEN';
 
 const isExpired = (jwtToken) => {
   if (!jwtToken) {
@@ -42,53 +41,60 @@ const useAuth = () => {
     ));
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    const data = JSON.parse(localStorage.getItem(storageName) || null);
+
+    const url = 'https://rsclone-back-end.herokuapp.com/api/auth/logout';
+
+    const headers = {};
+    headers['Content-Type'] = 'application/json';
+
+    const body = JSON.stringify({ userId: data.userId });
+
+    await fetch(url, { method: 'DELETE', headers, body });
+
     setToken(null);
     setUserId(null);
     setRefreshToken(null);
     setUserName(null);
-
     localStorage.removeItem(storageName);
-    localStorage.removeItem(authToken);
   }, []);
 
   const getToken = useCallback(async () => {
-    try {
-      if (isExpired(token)) {
-        const data = JSON.parse(localStorage.getItem(storageName));
+    const data = JSON.parse(localStorage.getItem(storageName) || null);
+    if (data) {
+      try {
+        if (isExpired(token)) {
+          const url = 'https://rsclone-back-end.herokuapp.com/api/auth/refresh_token';
 
-        const url = 'https://rsclone-back-end.herokuapp.com/api/auth/refresh_token';
+          const headers = {};
+          headers['Content-Type'] = 'application/json';
 
-        const headers = {};
-        headers['Content-Type'] = 'application/json';
+          const body = JSON.stringify({ refreshToken });
 
-        const body = JSON.stringify({ refreshToken });
+          const updatedToken = await fetch(url, { method: 'POST', headers, body })
+            .then((newToken) => newToken.json());
 
-        const updatedToken = await fetch(url, { method: 'POST', headers, body })
-          .then((newToken) => newToken.json());
+          setToken(updatedToken.token);
 
-        setToken(updatedToken.token);
-
-        if (updatedToken.token && data?.userId && data?.fullName && data?.refreshToken) {
-          login(updatedToken.token, data.refreshToken, data.userId, data.fullName);
+          if (updatedToken.token && data?.userId && data?.fullName && data?.refreshToken) {
+            login(updatedToken.token, data.refreshToken, data.userId, data.fullName);
+          }
         }
-      }
-    } catch (e) {
-      if (e.message === 'Session timed out,please login again!') {
-        logout();
+      } catch (e) {
+        if (e.message === 'Session timed out,please login again!') {
+          await logout();
+          window.location.reload();
+        }
       }
     }
   }, [login, logout, token, refreshToken]);
 
   useEffect(() => {
-    getToken();
-
     const data = JSON.parse(localStorage.getItem(storageName));
 
     if (data?.token && data?.userId && data?.fullName && data?.refreshToken) {
       login(data.token, data.refreshToken, data.userId, data.fullName);
-    } else {
-      logout();
     }
 
     setReady(true);

@@ -21,10 +21,12 @@ const useHttp = () => {
       const stringifyedBody = JSON.stringify(body);
       const newHeader = headers;
 
-      const { token } = JSON.parse(localStorage.getItem(storageName));
+      const userData = JSON.parse(localStorage.getItem(storageName) || null);
 
       newHeader['Content-Type'] = 'application/json';
-      newHeader.Authorization = `Bearer ${token}`;
+      if (userData) {
+        newHeader.Authorization = `Bearer ${userData.token}`;
+      }
 
       const totalData = { method, headers: newHeader };
 
