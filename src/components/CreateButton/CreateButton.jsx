@@ -1,4 +1,5 @@
 import React, {
+  useContext,
   useState,
   useCallback,
 } from 'react';
@@ -17,6 +18,7 @@ import {
 
 import { useSnackbar } from 'notistack';
 import { makeStyles } from '@material-ui/core/styles';
+import AuthContext from '../../context/AuthContext';
 import BoardCreatePopup from '../BoardCreatePopup/BoardCreatePopup';
 import useHttp from '../../hooks/http.hook';
 
@@ -51,6 +53,7 @@ const useStyles = makeStyles({
 const CreateButton = ({ createCard }) => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const [open, setOpen] = useState(false);
 
@@ -71,6 +74,7 @@ const CreateButton = ({ createCard }) => {
       const requestOptions = {
         url: 'https://rsclone-back-end.herokuapp.com/api/board/',
         method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
         body: { ...data },
       };
 
