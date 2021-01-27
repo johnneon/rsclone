@@ -13,6 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { makeStyles } from '@material-ui/core/styles';
 // import BoardElementCreator from '../BoardElementCreator/BoardElementCreator';
+import BoardCardMenu from '../BoardCardMenu/BoardCardMenu';
 
 const useStyles = makeStyles((theme) => ({
   creator: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     height: 'fit-content',
   },
   creator_visible: {
+    marginBottom: '5px',
     padding: '5px',
     width: '100%',
     maxWidth: '260px',
@@ -54,9 +56,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardCardCreator = ({ request, type, close, submitBtnText }) => {
+const BoardCardCreator = ({ request, type, close, submitBtnText, value }) => {
   const [isBoardCardCreatorVisible, setBoardCardCreatorVisibility] = useState(type === 'editor');
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(value);
 
   const classes = useStyles();
 
@@ -77,6 +79,7 @@ const BoardCardCreator = ({ request, type, close, submitBtnText }) => {
 
   const cancel = () => {
     setBoardCardCreatorVisibility(false);
+    setInputValue('');
 
     if (close) {
       close();
@@ -88,7 +91,10 @@ const BoardCardCreator = ({ request, type, close, submitBtnText }) => {
   };
 
   return (
-    <Paper className={isBoardCardCreatorVisible ? classes.creator_visible : classes.creator}>
+    <Paper 
+      className={isBoardCardCreatorVisible ? classes.creator_visible : classes.creator} 
+      variant="outlined"
+    >
       <Collapse in={isBoardCardCreatorVisible} collapsedHeight={34}>
         {isBoardCardCreatorVisible
           ? (
@@ -158,6 +164,7 @@ BoardCardCreator.propTypes = {
   type: PropTypes.string, 
   close: PropTypes.func, 
   submitBtnText: PropTypes.string,
+  value: PropTypes.string,
 };
 
 BoardCardCreator.defaultProps = {
@@ -165,6 +172,7 @@ BoardCardCreator.defaultProps = {
   type: '', 
   close: () => {}, 
   submitBtnText: 'Add',
+  value: '',
 };
 
 export default BoardCardCreator;
