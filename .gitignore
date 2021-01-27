@@ -33,3 +33,4 @@ coverage
 .node_history
 .envrc
 .build
+.eslintrc
