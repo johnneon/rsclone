@@ -66,7 +66,6 @@ const AuthCard = () => {
         url: 'https://rsclone-back-end.herokuapp.com/api/auth/login',
         method: 'POST',
         body: { ...data },
-        isAuthentication: true,
       };
 
       const {
