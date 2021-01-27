@@ -84,6 +84,8 @@ const useAuth = () => {
   }, [login, logout, token, refreshToken]);
 
   useEffect(() => {
+    getToken();
+
     const data = JSON.parse(localStorage.getItem(storageName));
 
     if (data?.token && data?.userId && data?.fullName && data?.refreshToken) {
@@ -93,7 +95,7 @@ const useAuth = () => {
     }
 
     setReady(true);
-  }, [login, logout, setReady]);
+  }, [login, logout, getToken, setReady]);
 
   return {
     login,
