@@ -1,13 +1,10 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-console */
-/* eslint-disable no-use-before-define */
-/* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/forbid-prop-types */
 import React, { useState, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import { Typography, Box, IconButton } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
@@ -16,7 +13,7 @@ import useHttp from '../../hooks/http.hook';
 import AuthContext from '../../context/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
-  board__card: {
+  card: {
     marginBottom: '5px',
     padding: '5px',
     minHeight: '30px',
@@ -24,6 +21,19 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '5px',
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    '&:hover [class*=card__edit]': {
+      visibility: 'visible',
+    },
+  },
+  card__header: {
+    padding: '2px',
+    width: '100%',
+    overflowWrap: 'anywhere',
+  },
+  card__edit: {
+    visibility: 'hidden',
+    fontSize: theme.typography.h3.fontSize,
   },
 }));
 
@@ -42,6 +52,14 @@ const TaskCard = ({ data, deleteCard, index }) => {
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
+
+  const openEditor = () => {
+    setEditorState(true);
+  };
+
+  const closeEditor = () => {
+    setEditorState(false);
+  };
 
   const deleteCurrentCard = async () => {
     try {
@@ -89,14 +107,6 @@ const TaskCard = ({ data, deleteCard, index }) => {
     }
   };
 
-  const openEditor = () => {
-    setEditorState(true);
-  };
-
-  const closeEditor = () => {
-    setEditorState(false);
-  };
-
   if (isEditorOpen) {
     return (
       <BoardCardCreator
@@ -106,9 +116,18 @@ const TaskCard = ({ data, deleteCard, index }) => {
         type="editor"
         close={closeEditor}
         value={card.name}
+        deleteCard={deleteCurrentCard}
       />
     );
   }
+
+  let isEditVisible = false;
+
+  const handleOnMouseOver = () => {
+    isEditVisible = true;
+  };
+
+  // console.log(isEditVisible);
 
   return (
     <Draggable draggableId={id} index={index} type="card">
@@ -119,25 +138,26 @@ const TaskCard = ({ data, deleteCard, index }) => {
           {...provided.dragHandleProps}
         >
           <Box
-            className={classes.board__card}
+            className={classes.card}
+            onMouseOver={handleOnMouseOver}
           >
-            <Typography variant="h5" component="h3">
+            <Typography
+              className={classes.card__header}
+              variant="h5"
+              component="h3"
+            >
               {card.name}
             </Typography>
+            {/* {isEditVisible && ( */}
             <IconButton
+              className={classes.card__edit}
               aria-label="edit"
               onClick={openEditor}
               size="small"
             >
-              <EditIcon />
+              <EditIcon fontSize="inherit" />
             </IconButton>
-            <IconButton
-              aria-label="cancel"
-              onClick={deleteCurrentCard}
-              size="small"
-            >
-              <CloseIcon />
-            </IconButton>
+            {/* )} */}
           </Box>
         </div>
       )}

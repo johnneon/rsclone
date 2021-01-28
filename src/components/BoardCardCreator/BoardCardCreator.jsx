@@ -35,8 +35,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
   },
   creator__input: {
-    padding: '10px',
+    padding: '0px',
     width: '100%',
+    fontSize: theme.typography.h6.fontSize,
+    fontWeight: theme.typography.h6.fontWeight,
     backgroundColor: theme.palette.background.main,
     borderRadius: '4px',
   },
@@ -54,16 +56,30 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.buttons.greyHover,
     },
   },
+  creator__submit: {
+    marginRight: '5px',
+    padding: '2px',
+  },
 }));
 
-const BoardCardCreator = ({ request, type, close, submitBtnText, value }) => {
+const BoardCardCreator = ({ request, type, close, submitBtnText, value, deleteCard }) => {
   const [isBoardCardCreatorVisible, setBoardCardCreatorVisibility] = useState(type === 'editor');
   const [inputValue, setInputValue] = useState(value);
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  const anchorRef = useRef(null);
   const classes = useStyles();
 
   const showBoardCardCreator = () => {
     setBoardCardCreatorVisibility(true);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const openMenu = () => {
+    setIsMenuOpen(true);
   };
 
   const add = async () => {
@@ -113,6 +129,7 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value }) => {
                   value={inputValue}
                   onChange={onInputChangeHandler}
                   autoFocus
+                  multiline
                 />
                 <Box>
                   {/* People */}
@@ -121,6 +138,8 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value }) => {
               <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box>
                   <Button
+                    className={classes.creator__submit}
+                    aria-label="submit"
                     variant="contained"
                     color="primary"
                     onClick={add}
@@ -137,9 +156,10 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value }) => {
                   </IconButton>
                 </Box>
                 <IconButton
-                  aria-label="cancel"
-                  onClick={() => {}}
+                  aria-label="options"
+                  onClick={openMenu}
                   size="small"
+                  ref={anchorRef}
                 >
                   <MoreHorizIcon />
                 </IconButton>
@@ -155,6 +175,12 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value }) => {
             </Button>
           )}
       </Collapse>
+      <BoardCardMenu
+        open={isMenuOpen}
+        handleClose={closeMenu}
+        anchorEl={anchorRef.current}
+        deleteCard={deleteCard}
+      />
     </Paper>
   );
 };

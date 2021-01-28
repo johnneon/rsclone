@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardCardCreator = ({ sourceState, setState, containerId, request }) => {
+const BoardCardCreator = ({ sourceState, setState, request }) => {
   const [isBoardCardCreatorVisible, setBoardCardCreatorVisibility] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
@@ -64,25 +64,17 @@ const BoardCardCreator = ({ sourceState, setState, containerId, request }) => {
   };
 
   const add = async () => {
-    if (inputValue === '') {
+    if (!inputValue) {
       return;
     }
 
-    const requestBody = {        
-      name: inputValue,
-    };
-
-    const response = await request(requestBody);
+    const response = await request({ name: inputValue });
 
     if (!response) {
       return;
     }
 
-    setState([ 
-      ...sourceState, 
-      response,
-    ]);
-
+    setState([...sourceState, response]);
     setInputValue('');
   };
 

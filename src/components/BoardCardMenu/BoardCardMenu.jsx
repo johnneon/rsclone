@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
@@ -12,32 +14,67 @@ import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
+  card__menu: {
+    // backgroundColor: 'transparent',
   },
-  paper: {
-    marginRight: theme.spacing(2),
+  card__menuItem: {
+    // backgroundColor: 'grey',
   },
 }));
 
-const BoardCardMenu = ({ open, handleClose, handleOpen }) => {
+const BoardCardMenu = ({
+  open, handleClose, anchorEl, deleteCard,
+}) => {
   // const classes = '';
   const classes = useStyles();
-  const anchorRef = useRef(null);
 
   return (
-    <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+    <Popper
+      open={open}
+      anchorEl={anchorEl}
+      role={undefined}
+      transition
+      disablePortal
+      placement="right-start"
+    >
       {({ TransitionProps, placement }) => (
         <Grow
           {...TransitionProps}
           style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
         >
-          <Paper>
+          <Paper className={classes.card__menu}>
             <ClickAwayListener onClickAway={handleClose}>
               <MenuList autoFocusItem={open} id="menu-list-grow">
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem
+                  className={classes.card__menuItem}
+                  onClick={handleClose}
+                >
+                  Open card
+                </MenuItem>
+                <MenuItem
+                  className={classes.card__menuItem}
+                  onClick={handleClose}
+                >
+                  Edit members
+                </MenuItem>
+                <MenuItem
+                  className={classes.card__menuItem}
+                  onClick={handleClose}
+                >
+                  Change labels
+                </MenuItem>
+                <MenuItem
+                  className={classes.card__menuItem}
+                  onClick={handleClose}
+                >
+                  Change due date
+                </MenuItem>
+                <MenuItem
+                  className={classes.card__menuItem}
+                  onClick={deleteCard}
+                >
+                  Delete
+                </MenuItem>
               </MenuList>
             </ClickAwayListener>
           </Paper>
@@ -50,13 +87,18 @@ const BoardCardMenu = ({ open, handleClose, handleOpen }) => {
 BoardCardMenu.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  handleOpen: PropTypes.func,
+  anchorEl: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.object }),
+  ]),
+  deleteCard: PropTypes.func,
 };
 
 BoardCardMenu.defaultProps = {
   open: false,
   handleClose: () => {},
-  handleOpen: () => {},
+  anchorEl: null,
+  deleteCard: () => {},
 };
 
 export default BoardCardMenu;

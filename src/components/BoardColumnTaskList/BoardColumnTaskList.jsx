@@ -67,13 +67,11 @@ const BoardColumnTaskList = ({ data, columnId }) => {
     setCards(sourceData);
   }
 
-  const getListStyle = (draggableStyle) => ({
+  const getListStyle = () => ({
     userSelect: 'none',
-    overflowY: 'auto',
     maxHeight: '50%',
     height: '100%',
     minHeight: '100%',
-    ...draggableStyle,
   });
 
   return (
@@ -83,7 +81,7 @@ const BoardColumnTaskList = ({ data, columnId }) => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={getListStyle(provided.droppableProps.style)}
+            style={getListStyle()}
           >
             <Box>
               {cards.map((card, ind) => (
