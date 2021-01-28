@@ -68,9 +68,14 @@ const AuthCard = () => {
         body: { ...data },
       };
 
-      const { token, userId, fullName } = await request(requestOptions);
+      const {
+        token,
+        refreshToken,
+        userId,
+        fullName,
+      } = await request(requestOptions);
 
-      auth.login(token, userId, fullName);
+      auth.login(token, refreshToken, userId, fullName);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
