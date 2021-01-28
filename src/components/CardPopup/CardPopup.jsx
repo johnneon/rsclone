@@ -121,7 +121,6 @@ const CardPopup = ({
 
   const changeEdit = ({ target }) => {
     const parent = target.parentNode;
-    console.log(target);
 
     if (target.getAttribute('data-name') === 'name' || parent.getAttribute('data-name') === 'name') {
       setEditName(!isEditName);
