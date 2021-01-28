@@ -42,16 +42,17 @@ const useAuth = () => {
   }, []);
 
   const logout = useCallback(async () => {
-    const data = JSON.parse(localStorage.getItem(storageName) || null);
+    const data = JSON.parse(localStorage.getItem(storageName));
 
     const url = 'https://rsclone-back-end.herokuapp.com/api/auth/logout';
 
-    const headers = {};
-    headers['Content-Type'] = 'application/json';
+    const options = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: data.userId }),
+    };
 
-    const body = JSON.stringify({ userId: data.userId });
-
-    await fetch(url, { method: 'DELETE', headers, body });
+    await fetch(url, options);
 
     setToken(null);
     setUserId(null);
@@ -61,32 +62,33 @@ const useAuth = () => {
   }, []);
 
   const getToken = useCallback(async () => {
-    const data = JSON.parse(localStorage.getItem(storageName) || null);
-    if (data) {
-      try {
-        if (isExpired(token)) {
-          const url = 'https://rsclone-back-end.herokuapp.com/api/auth/refresh_token';
+    const data = JSON.parse(localStorage.getItem(storageName));
 
-          const headers = {};
-          headers['Content-Type'] = 'application/json';
+    if (!data) {
+      return;
+    }
 
-          const body = JSON.stringify({ refreshToken });
+    try {
+      if (isExpired(token)) {
+        const url = 'https://rsclone-back-end.herokuapp.com/api/auth/refresh_token';
 
-          const updatedToken = await fetch(url, { method: 'POST', headers, body })
-            .then((newToken) => newToken.json());
+        const options = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken }),
+        };
 
-          setToken(updatedToken.token);
+        const updatedToken = await fetch(url, options)
+          .then((newToken) => newToken.json())
+          .catch((e) => { throw new Error(e); });
 
-          if (updatedToken.token && data?.userId && data?.fullName && data?.refreshToken) {
-            login(updatedToken.token, data.refreshToken, data.userId, data.fullName);
-          }
-        }
-      } catch (e) {
-        if (e.message === 'Session timed out,please login again!') {
-          await logout();
-          window.location.reload();
-        }
+        setToken(updatedToken.token);
+
+        login(updatedToken.token, data.refreshToken, data.userId, data.fullName);
       }
+    } catch (e) {
+      await logout();
+      window.location.reload();
     }
   }, [login, logout, token, refreshToken]);
 
