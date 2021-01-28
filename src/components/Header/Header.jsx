@@ -34,8 +34,8 @@ function Header() {
     avatarName = fullName.split(' ').map((word) => word[0].toUpperCase()).join('');
   }
 
-  const logoutNow = () => {
-    logout();
+  const logoutNow = async () => {
+    await logout();
     window.location.reload();
   };
 
