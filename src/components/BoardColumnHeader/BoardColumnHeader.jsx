@@ -10,14 +10,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable semi */
 /* eslint-disable no-unused-vars */
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useRef } from 'react';
 import {
   Typography, Box, InputBase, IconButton,
 } from '@material-ui/core';
-// import CloseIcon from '@material-ui/icons/Close';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
+import BoardColumnMenu from '../BoardColumnMenu/BoardColumnMenu';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
 
@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     fontSize: theme.typography.h4.fontSize,
     overflowWrap: 'anywhere',
-    // userSelect: 'none',
   },
 }));
 
@@ -43,43 +42,59 @@ const BoardColumnHeader = ({
 }) => {
   const [header, setHeader] = useState(name);
   const [isHeaderEditable, setHeaderEditable] = useState(false)
-  const classes = useStyles();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
+
+  const anchorRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const classes = useStyles();
 
   const startEditHeader = () => {
     setHeaderEditable(true);
   }
 
   const stopEditHeader = () => {
+    if (!name.trim().length) {
+      inputRef.current.focus();
+      return;
+    }
+
     setHeaderEditable(false);
     updateHeaderName(header);
   }
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const openMenu = () => {
+    setIsMenuOpen(true);
+  };
 
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
 
-  const deleteCurrentColumn = async () => {
-    try {
-      const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await request(requestOptions);
+  // const deleteCurrentColumn = async () => {
+  //   try {
+  //     const requestOptions = {
+  //       url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
+  //       method: 'DELETE',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     };
 
-      deleteColumn(id);
-      console.log(response);
-    } catch (e) {
-      console.log(e.message);
-      showSnackbar(e.message, 'error');
-    }
-  }
+  //     await request(requestOptions);
+  //     deleteColumn(id);
+  //   } catch (e) {
+  //     showSnackbar(e.message, 'error');
+  //   }
+  // }
 
   const onChange = (e) => {
     setHeader(e.target.value)
@@ -91,17 +106,14 @@ const BoardColumnHeader = ({
         url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: { name },
       };
-      console.log(requestOptions)
-      const response = await request(requestOptions);
 
-      console.log(response);
+      await request(requestOptions);
     } catch (e) {
-      console.log(e.message);
+      showSnackbar(e.message, 'error');
     }
   }
 
@@ -114,6 +126,7 @@ const BoardColumnHeader = ({
           value={header}
           inputProps={{ 'aria-label': 'column header' }}
           readOnly={!isHeaderEditable}
+          inputRef={inputRef}
           fullWidth
           autoFocus
           multiline
@@ -131,11 +144,19 @@ const BoardColumnHeader = ({
         )}
       <IconButton
         aria-label="cancel"
-        onClick={deleteCurrentColumn}
+        onClick={openMenu}
         size="small"
+        ref={anchorRef}
       >
         <MoreHorizIcon />
       </IconButton>
+      <BoardColumnMenu
+        open={isMenuOpen}
+        handleClose={closeMenu}
+        anchorEl={anchorRef.current}
+        deleteColumn={deleteColumn}
+        id={id}
+      />
     </Box>
   );
 };

@@ -6,7 +6,7 @@
 /* eslint-disable react/jsx-props-no-multi-spaces */
 /* eslint-disable object-curly-newline */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Paper, Box, Button, Collapse, IconButton, OutlinedInput } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -68,6 +68,7 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value, deleteCa
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const anchorRef = useRef(null);
+  const inputRef = useRef(null);
   const classes = useStyles();
 
   const showBoardCardCreator = () => {
@@ -91,6 +92,10 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value, deleteCa
 
     await request(requestBody);
     setInputValue('');
+
+    if (type !== 'editor') {
+      inputRef.current.focus();
+    }
   };
 
   const cancel = () => {
@@ -123,6 +128,7 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value, deleteCa
                   fullWidth
                   className={classes.creator__inputWrapper}
                   inputProps={{ className: classes.creator__input }}
+                  inputRef={inputRef}
                   size="small"
                   placeholder="Add header..."
                   margin="dense"

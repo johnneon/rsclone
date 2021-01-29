@@ -88,7 +88,6 @@ const BoardContent = ({ columnData, boardId }) => {
 
       return response;
     } catch (e) {
-      console.log(e.message);
       showSnackbar(e.message, 'error');
       return null;
     }
@@ -122,9 +121,15 @@ const BoardContent = ({ columnData, boardId }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: data,
+        body: {
+          position: columns.length,
+          boardId,
+          ...data,
+        },
       };
-      await request(requestOptions);
+      const response = await request(requestOptions);
+
+      setColumns([...columns, response]);
     } catch (e) {
       console.log(e.message, 'error');
       showSnackbar(e.message, 'error');

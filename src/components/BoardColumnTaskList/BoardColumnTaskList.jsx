@@ -42,7 +42,9 @@ const BoardColumnTaskList = ({ data, columnId }) => {
       const requestOptions = {
         url: 'https://rsclone-back-end.herokuapp.com/api/cards/',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: {
           position: cards.length,
           columnId,

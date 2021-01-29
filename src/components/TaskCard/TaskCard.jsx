@@ -72,13 +72,9 @@ const TaskCard = ({ data, deleteCard, index }) => {
         },
       };
 
-      console.log(requestOptions);
       const response = await request(requestOptions);
 
-      console.log('delete card');
-
       deleteCard(id);
-      console.log(response);
     } catch (e) {
       console.log(e.message);
       showSnackbar(e.message, 'error');
@@ -121,14 +117,6 @@ const TaskCard = ({ data, deleteCard, index }) => {
     );
   }
 
-  let isEditVisible = false;
-
-  const handleOnMouseOver = () => {
-    isEditVisible = true;
-  };
-
-  // console.log(isEditVisible);
-
   return (
     <Draggable draggableId={id} index={index} type="card">
       {(provided) => (
@@ -139,7 +127,7 @@ const TaskCard = ({ data, deleteCard, index }) => {
         >
           <Box
             className={classes.card}
-            onMouseOver={handleOnMouseOver}
+            onClick={() => console.log('click')}
           >
             <Typography
               className={classes.card__header}
@@ -148,7 +136,6 @@ const TaskCard = ({ data, deleteCard, index }) => {
             >
               {card.name}
             </Typography>
-            {/* {isEditVisible && ( */}
             <IconButton
               className={classes.card__edit}
               aria-label="edit"
@@ -157,7 +144,6 @@ const TaskCard = ({ data, deleteCard, index }) => {
             >
               <EditIcon fontSize="inherit" />
             </IconButton>
-            {/* )} */}
           </Box>
         </div>
       )}

@@ -10,9 +10,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 import useHttp from '../../hooks/http.hook';
 import AuthContext from '../../context/AuthContext';
+import BoardHeader from '../BoardHeader/BoardHeader';
 import BoardContent from '../BoardContent/BoardContent';
 
 const useStyles = makeStyles((theme) => ({
+  board: {
+    height: '100%',
+    backgroundColor: '#88adfb',
+    display: 'flex',
+    flexDirection: 'column',
+    boxSizing: 'border-box',
+  },
   board__content: {
     padding: '10px',
     height: '100%',
@@ -35,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Board = ({ id }) => {
   const [boardData, setBoardData] = useState({});
+  const { _id: boardId, columns } = boardData;
 
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
@@ -46,7 +55,7 @@ const Board = ({ id }) => {
       const requestOptions = {
         url: `https://rsclone-back-end.herokuapp.com/api/board/${'600f1074f07eac0017def6ef'}`,
         method: 'GET',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       };
       const response = await request(requestOptions);
 
@@ -67,19 +76,19 @@ const Board = ({ id }) => {
         horizontal: 'right',
       }}
     >
-      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <main
-          style={{
-            height: '100%', backgroundColor: '#88adfb', display: 'flex', flexDirection: 'column', boxSizing: 'border-box',
-          }}
-          onDragStart={(e) => e.preventDefault()}
-        >
-          <div style={{ height: '30px', backgroundColor: 'lightgrey' }}>
-            Settings
-          </div>
-          <BoardContent columnData={boardData.columns} boardId={boardData._id} />
-        </main>
-      </div>
+      <main className={classes.board}>
+        <BoardHeader
+          // data={boardData}
+          boardName={boardData.name}
+          boardId={boardId}
+          users={boardData.users}
+        />
+        <BoardContent
+          columnData={columns}
+          boardId={boardId}
+        />
+      </main>
+
     </SnackbarProvider>
   );
 };
