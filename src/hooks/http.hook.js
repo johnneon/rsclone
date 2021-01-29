@@ -1,8 +1,12 @@
 import { useCallback, useState } from 'react';
+import useAuth from './auth.hook';
+
+const storageName = 'userData';
 
 const useHttp = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { getToken } = useAuth();
 
   const request = useCallback(async ({
     url,
@@ -12,10 +16,17 @@ const useHttp = () => {
   }) => {
     setLoading(true);
     try {
+      await getToken();
+
       const stringifyedBody = JSON.stringify(body);
       const newHeader = headers;
 
+      const userData = JSON.parse(localStorage.getItem(storageName) || null);
+
       newHeader['Content-Type'] = 'application/json';
+      if (userData) {
+        newHeader.Authorization = `Bearer ${userData.token}`;
+      }
 
       const totalData = { method, headers: newHeader };
 
@@ -38,7 +49,7 @@ const useHttp = () => {
       setError(e.message);
       throw e;
     }
-  }, []);
+  }, [getToken]);
 
   const clearErorr = useCallback(() => setError(null), []);
 

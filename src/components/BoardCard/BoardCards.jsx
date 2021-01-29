@@ -77,15 +77,15 @@ const BoardCards = () => {
   }, [token, request]);
 
   const cardsTemplates = cards.map((item) => {
-    const currentItem = item;
+    const { _id: itemId, name } = item;
 
-    if (typeof currentItem === 'object') {
+    if (typeof item === 'object') {
       return (
         <BoardCard
-          id={currentItem._id}
-          title={currentItem.name}
+          id={itemId}
+          title={name}
           deleteBoard={getAskPopup}
-          key={currentItem._id}
+          key={itemId}
         />
       );
     }
@@ -109,5 +109,4 @@ const BoardCards = () => {
     </>
   );
 };
-
 export default BoardCards;
