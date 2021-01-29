@@ -1,11 +1,11 @@
 import { Typography, Paper, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(() => ({
   auth__requirements: {
-    width: 'calc(100% - 30px)',
+    width: 'calc(100% - 60px)',
     maxWidth: '800px',
     position: 'absolute',
     top: '50%',
@@ -28,15 +28,10 @@ const useStyles = makeStyles(() => ({
 
 const ValidationModal = ({ isOpen, close }) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
 
   return (
     <Modal
-      open={open}
+      open={isOpen}
       onClose={close}
     >
       <Paper elevation={3} className={classes.auth__requirements}>
