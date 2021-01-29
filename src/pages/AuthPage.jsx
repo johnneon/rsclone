@@ -3,13 +3,12 @@ import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 import AuthCard from '../components/AuthCard/AuthCard';
-import ValidationRequirements from '../components/ValidationRequirements/ValidationRequirements';
 import vars from '../variables';
 
 const useStyles = makeStyles((theme) => ({
   auth: {
     padding: '20px 30px',
-    minHeight: '100vh',
+    minHeight: 'calc(100vh - 64px)',
     backgroundColor: theme.palette.background.main,
     display: 'flex',
     justifyContent: 'center',
@@ -20,6 +19,11 @@ const useStyles = makeStyles((theme) => ({
   auth__title: {
     marginBottom: '60px',
     textAlign: 'center',
+  },
+  authContainer: {
+    width: '100%',
+    maxWidth: '380px',
+    minHeight: '400px',
   },
 }));
 
@@ -39,9 +43,10 @@ const AuthPage = () => {
           horizontal: 'right',
         }}
       >
-        <AuthCard />
+        <div className={classes.authContainer}>
+          <AuthCard />
+        </div>
       </SnackbarProvider>
-      <ValidationRequirements />
     </Container>
   );
 };
