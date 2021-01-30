@@ -15,7 +15,7 @@ const currentStyles = makeStyles((theme) => ({
   },
   year: {
     color: theme.palette.background.main,
-    fontSize: '24px',
+    fontSize: '18px',
   },
   avatar: {
     marginRight: '10px',
@@ -76,7 +76,7 @@ function Footer() {
           <div className={classes.flex}>
             {avatars}
           </div>
-          <span className={classes.year}>2021</span>
+          <span className={classes.year}>Rs tasktracker, 2021</span>
           <div className={`${classes.flex} ${classes.alignItemCenter}`}>
             <a href="https://rs.school/js/" rel="noreferrer" target="_blank">
               <img className={classes.footerLogo} src="assets/images/rs_school_js.svg" alt="rsschool" />
