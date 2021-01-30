@@ -1,47 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import ReactMarkdown from 'react-markdown';
 
 import {
   Typography,
-  TextField,
+  Button,
   Grid,
+  Paper,
+  TextField,
 } from '@material-ui/core';
 
 import {
-  Done,
-  Note,
+  Subtitles,
 } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles';
 import useStyles from '../../hooks/style.hook';
 
 const currentStyles = makeStyles({
-  nameTitle: {
+  paper: {
+    backgroundColor: '#f5f5f5',
+    padding: '10px 15px',
     cursor: 'pointer',
-    wordBreak: 'break-word',
   },
-  nameField: {
-    width: 'calc(100% - 60px)',
+  helper: {
+    display: 'block',
+    textAlign: 'right',
+    fontSize: '12px',
+  },
+  field: {
     '& textarea': {
       lineHeight: '1.7',
     },
   },
-  buttonNameSave: {
-    position: 'absolute',
-    right: '35px',
-  },
-  done: {
-    border: 'none',
-    width: '30px',
-    height: '30px',
-    background: 'none',
-    cursor: 'pointer',
-    padding: 0,
+  content: {
+    wordBreak: 'break-word;',
   },
 });
 
-const CardPopupField = ({
-  name, value, action,
+const CardPopupTextField = ({
+  name, value, title, action,
 }) => {
   const classes = { ...useStyles(), ...currentStyles() };
   const [isEdit, setEdit] = useState(false);
@@ -70,65 +68,83 @@ const CardPopupField = ({
     if (isEdit) {
       return (
         <>
+          <i className={classes.helper}>Set text with markdown markup*</i>
           <TextField
             autoFocus
             fullWidth
-            className={classes.nameField}
+            multiline
+            className={`${classes.marginBottomSmall} ${classes.field}`}
             id={name}
             name={name}
             defaultValue={formData[name]}
             onChange={setFormDataHandler}
             onBlur={saveEdit}
           />
-          <button
-            type="button"
+          <Button
             onClick={saveEdit}
-            className={classes.done}
+            color="primary"
           >
-            <Done color="primary" />
-          </button>
+            Save
+          </Button>
         </>
       );
     }
 
     return (
-      <Typography
-        className={classes.nameTitle}
-        variant="h3"
-        component="h2"
+      <Paper
+        className={classes.paper}
         onClick={changeEdit}
+        elevation={0}
       >
-        {formData[name] !== '' ? formData[name] : 'Enter name'}
-      </Typography>
+        <ReactMarkdown className={classes.content}>
+          {formData[name] !== '' ? formData[name] : 'Click here to enter a content'}
+        </ReactMarkdown>
+      </Paper>
     );
   };
 
   return (
     <>
       <Grid
-        className={classes.marginBottomMiddle}
+        className={classes.marginBottomSmall}
         container
-        wrap="nowrap"
         direction="row"
-        alignItems="flex-start"
+        alignItems="center"
       >
-        <Note className={classes.MarginRightSmall} />
-        {setField()}
+        <Subtitles className={classes.MarginRightSmall} />
+        <Typography
+          variant="h3"
+          component="h2"
+        >
+          {title}
+          {!isEdit ? (
+            <Button
+              className={classes.MarginLeftSmall}
+              onClick={changeEdit}
+              color="primary"
+            >
+              Edit
+            </Button>
+          ) : null}
+        </Typography>
       </Grid>
+      {setField()}
     </>
   );
 };
 
-CardPopupField.defaultProps = {
+CardPopupTextField.defaultProps = {
   name: '',
   value: '',
+  title: 'Description',
   action: () => {},
 };
 
-CardPopupField.propTypes = {
+CardPopupTextField.propTypes = {
   name: PropTypes.string,
   value: PropTypes.string,
+  title: PropTypes.string,
   action: PropTypes.func,
 };
 
-export default CardPopupField;
+export default CardPopupTextField;

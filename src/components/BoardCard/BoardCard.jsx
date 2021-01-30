@@ -91,9 +91,13 @@ const BoardCard = ({ id, title, deleteBoard }) => {
   );
 };
 
+BoardCard.defaultProps = {
+  title: 'Card',
+};
+
 BoardCard.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   deleteBoard: PropTypes.func.isRequired,
 };
 
