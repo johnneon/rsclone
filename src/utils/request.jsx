@@ -1,18 +1,27 @@
+/* eslint-disable no-unused-vars */
 import useHttp from '../hooks/http.hook';
 // import AuthContext from '../../context/AuthContext';
 
 const request = {
   basicURI: 'https://rsclone-back-end.herokuapp.com/api/',
+  boardURI: 'https://rsclone-back-end.herokuapp.com/api/board/',
+  columnURI: 'https://rsclone-back-end.herokuapp.com/api/column/',
+  cardURI: 'https://rsclone-back-end.herokuapp.com/api/cards/',
   token: localStorage.userData.token,
+  // basicRequest: useHttp(),
 
-  async updateBoard(boardId, body) {
+  updateBoard(boardId, body) {
+    // console.log(useHttp);
     const requestOptions = {
-      url: `${this.basicURI}/board/${boardId}`,
+      url: this.basicBoardURI + boardId,
       method: 'PUT',
       headers: { Authorization: `Bearer ${this.token}` },
       body,
     };
-    await useHttp.request(requestOptions);
+
+    // const { request: basicRequest } = useHttp();
+
+    // return useHttp.request(requestOptions);
   },
 };
 

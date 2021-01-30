@@ -1,9 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import React, { useState, useRef, useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -13,19 +8,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
-  card__menu: {
-    // backgroundColor: 'transparent',
-  },
-  card__menuItem: {
-    // backgroundColor: 'grey',
+const useStyles = makeStyles(() => ({
+  menu: {
+    zIndex: 1,
   },
 }));
 
 const BoardCardMenu = ({
   open, handleClose, anchorEl, deleteCard,
 }) => {
-  // const classes = '';
   const classes = useStyles();
 
   return (
@@ -36,10 +27,13 @@ const BoardCardMenu = ({
       transition
       disablePortal
       placement="right-start"
+      className={classes.menu}
     >
       {({ TransitionProps, placement }) => (
         <Grow
-          {...TransitionProps}
+          in={TransitionProps.in}
+          onEnter={TransitionProps.onEnter}
+          onExited={TransitionProps.onExited}
           style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
         >
           <Paper className={classes.card__menu}>
@@ -89,7 +83,7 @@ BoardCardMenu.propTypes = {
   handleClose: PropTypes.func,
   anchorEl: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({ current: PropTypes.object }),
+    PropTypes.shape({ current: PropTypes.node }),
   ]),
   deleteCard: PropTypes.func,
 };

@@ -1,28 +1,14 @@
-/* eslint-disable no-console */
-/* eslint-disable no-use-before-define */
-/* eslint-disable object-curly-newline */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable react/jsx-closing-bracket-location */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable no-shadow */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/prop-types */
-/* eslint-disable semi */
-/* eslint-disable no-unused-vars */
-import React, { useState, useContext, useCallback } from 'react';
+import React, {
+  useState, useContext, useCallback, useEffect,
+} from 'react';
+import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
 import { Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import TaskCard from '../TaskCard/TaskCard';
 import BoardCardCreator from '../BoardCardCreator/BoardCardCreator';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
-
-const useStyles = makeStyles((theme) => ({
-  //
-}));
 
 const BoardColumnTaskList = ({ data, columnId }) => {
   const [cards, setCards] = useState(data);
@@ -31,13 +17,13 @@ const BoardColumnTaskList = ({ data, columnId }) => {
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
 
-  const classes = useStyles();
-
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
 
-  const sendAddCardRequest = async (data) => {
+  useEffect(() => setCards(data), [data]);
+
+  const addCard = async (name) => {
     try {
       const requestOptions = {
         url: 'https://rsclone-back-end.herokuapp.com/api/cards/',
@@ -48,14 +34,13 @@ const BoardColumnTaskList = ({ data, columnId }) => {
         body: {
           position: cards.length,
           columnId,
-          ...data,
+          ...name,
         },
       };
       const response = await request(requestOptions);
 
       setCards([...cards, response]);
     } catch (e) {
-      console.log(e.message, 'error');
       showSnackbar(e.message, 'error');
     }
   };
@@ -67,7 +52,7 @@ const BoardColumnTaskList = ({ data, columnId }) => {
     sourceData.splice(removedCardIndex, 1);
 
     setCards(sourceData);
-  }
+  };
 
   const getListStyle = () => ({
     userSelect: 'none',
@@ -79,35 +64,54 @@ const BoardColumnTaskList = ({ data, columnId }) => {
   return (
     <>
       <Droppable droppableId={columnId} type="card" ignoreContainerClipping>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            style={getListStyle()}
-          >
-            <Box>
-              {cards.map((card, ind) => (
-                <TaskCard
-                  index={ind}
-                  data={card}
-                  key={card._id}
-                  deleteCard={deleteCard}
-                />
-              ))}
-              {provided.placeholder}
-            </Box>
-          </div>
-        )}
+        {(provided) => {
+          const { droppableProps } = provided;
+          return (
+            <div
+              ref={provided.innerRef}
+              data-rbd-droppable-context-id={droppableProps['data-rbd-droppable-context-id']}
+              data-rbd-droppable-id={droppableProps['data-rbd-droppable-id']}
+              style={getListStyle()}
+            >
+              <Box>
+                {cards.map((card, ind) => {
+                  const { _id: id } = card;
+                  return (
+                    <TaskCard
+                      index={ind}
+                      data={card}
+                      key={id}
+                      deleteCard={deleteCard}
+                    />
+                  );
+                })}
+                {provided.placeholder}
+              </Box>
+            </div>
+          );
+        }}
       </Droppable>
       <BoardCardCreator
         sourceState={cards}
         setState={setCards}
         containerId={columnId}
-        request={sendAddCardRequest}
+        request={addCard}
         type="card"
       />
     </>
   );
+};
+
+BoardColumnTaskList.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.objectOf(PropTypes.string),
+  ),
+  columnId: PropTypes.string,
+};
+
+BoardColumnTaskList.defaultProps = {
+  data: [],
+  columnId: '',
 };
 
 export default BoardColumnTaskList;

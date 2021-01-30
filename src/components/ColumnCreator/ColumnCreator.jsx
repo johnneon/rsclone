@@ -1,13 +1,8 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable dot-notation */
-/* eslint-disable consistent-return */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable react/jsx-props-no-multi-spaces */
-/* eslint-disable object-curly-newline */
-/* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
-import { Paper, Box, Button, Collapse, IconButton, OutlinedInput } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import {
+  Paper, Box, Button, Collapse, IconButton, OutlinedInput,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -50,22 +45,22 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: theme.palette.buttons.transparentWhiteHover,
     },
-  },  
+  },
   creator__submit: {
     marginRight: '5px',
     padding: '2px',
   },
 }));
 
-const BoardElementCreator = ({ request, type }) => {
-  const [isBoardElementCreatorVisible, setBoardElementCreatorVisibility] = useState(false);
+const BoardColumnCreator = ({ request, type }) => {
+  const [isBoardColumnCreatorVisible, setBoardColumnCreatorVisibility] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
   const inputRef = useRef(null);
   const classes = useStyles();
 
-  const showBoardElementCreator = () => {
-    setBoardElementCreatorVisibility(true);
+  const showBoardColumnCreator = () => {
+    setBoardColumnCreatorVisibility(true);
   };
 
   const addBoardElement = async () => {
@@ -81,7 +76,7 @@ const BoardElementCreator = ({ request, type }) => {
   };
 
   const cancel = () => {
-    setBoardElementCreatorVisibility(false);
+    setBoardColumnCreatorVisibility(false);
   };
 
   const onInputChangeHandler = (e) => {
@@ -89,9 +84,9 @@ const BoardElementCreator = ({ request, type }) => {
   };
 
   return (
-    <Paper className={isBoardElementCreatorVisible ? classes.creator_visible : classes.creator}>
-      <Collapse in={isBoardElementCreatorVisible} collapsedHeight={45}>
-        {isBoardElementCreatorVisible
+    <Paper className={isBoardColumnCreatorVisible ? classes.creator_visible : classes.creator}>
+      <Collapse in={isBoardColumnCreatorVisible} collapsedHeight={45}>
+        {isBoardColumnCreatorVisible
           ? (
             <>
               <Box className={classes.board__header}>
@@ -129,11 +124,11 @@ const BoardElementCreator = ({ request, type }) => {
             <Button
               variant="contained"
               className={
-                type === 'column' 
-                  ? classes.creator__addNewColButton 
+                type === 'column'
+                  ? classes.creator__addNewColButton
                   : classes.creator__addNewCardButton
               }
-              onClick={showBoardElementCreator}
+              onClick={showBoardColumnCreator}
             >
               {`Add new ${type}`}
             </Button>
@@ -143,4 +138,13 @@ const BoardElementCreator = ({ request, type }) => {
   );
 };
 
-export default BoardElementCreator;
+BoardColumnCreator.propTypes = {
+  request: PropTypes.func,
+  type: PropTypes.string,
+};
+BoardColumnCreator.defaultProps = {
+  request: () => {},
+  type: '',
+};
+
+export default BoardColumnCreator;

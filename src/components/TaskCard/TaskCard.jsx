@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/forbid-prop-types */
 import React, { useState, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
@@ -72,11 +69,9 @@ const TaskCard = ({ data, deleteCard, index }) => {
         },
       };
 
-      const response = await request(requestOptions);
-
+      await request(requestOptions);
       deleteCard(id);
     } catch (e) {
-      console.log(e.message);
       showSnackbar(e.message, 'error');
     }
   };
@@ -98,7 +93,6 @@ const TaskCard = ({ data, deleteCard, index }) => {
       setCard(response);
       closeEditor();
     } catch (e) {
-      console.log(e.message);
       showSnackbar(e.message, 'error');
     }
   };
@@ -119,40 +113,52 @@ const TaskCard = ({ data, deleteCard, index }) => {
 
   return (
     <Draggable draggableId={id} index={index} type="card">
-      {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <Box
-            className={classes.card}
-            onClick={() => console.log('click')}
+      {(provided) => {
+        const { draggableProps, dragHandleProps } = provided;
+        return (
+          <div
+            ref={provided.innerRef}
+            data-rbd-draggable-context-id={draggableProps['data-rbd-draggable-context-id']}
+            data-rbd-draggable-id={draggableProps['data-rbd-draggable-id']}
+            onTransitionEnd={draggableProps.onTransitionEnd}
+            style={draggableProps.style}
+            aria-describedby={dragHandleProps['aria-describedby']}
+            data-rbd-drag-handle-context-id={dragHandleProps['data-rbd-drag-handle-context-id']}
+            data-rbd-drag-handle-draggable-id={dragHandleProps['data-rbd-drag-handle-draggable-id']}
+            draggable={dragHandleProps.draggable}
+            onDragStart={dragHandleProps.onDragStart}
+            role={dragHandleProps.role}
+            tabIndex={dragHandleProps.tabIndex}
           >
-            <Typography
-              className={classes.card__header}
-              variant="h5"
-              component="h3"
+            <Box
+              className={classes.card}
+              onClick={() => console.log('open card')}
             >
-              {card.name}
-            </Typography>
-            <IconButton
-              className={classes.card__edit}
-              aria-label="edit"
-              onClick={openEditor}
-              size="small"
-            >
-              <EditIcon fontSize="inherit" />
-            </IconButton>
-          </Box>
-        </div>
-      )}
+              <Typography
+                className={classes.card__header}
+                variant="h5"
+                component="h3"
+              >
+                {card.name}
+              </Typography>
+              <IconButton
+                className={classes.card__edit}
+                aria-label="edit"
+                onClick={openEditor}
+                size="small"
+              >
+                <EditIcon fontSize="inherit" />
+              </IconButton>
+            </Box>
+          </div>
+        );
+      }}
     </Draggable>
   );
 };
 
 TaskCard.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.objectOf(PropTypes.string),
   deleteCard: PropTypes.func,
   index: PropTypes.number,
 };

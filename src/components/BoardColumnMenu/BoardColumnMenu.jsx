@@ -1,9 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import React, { useContext, useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -12,49 +7,20 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSnackbar } from 'notistack';
-import AuthContext from '../../context/AuthContext';
-import useHttp from '../../hooks/http.hook';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   menu: {
     zIndex: 1,
-  },
-  menu__container: {
-    // zIndex: 2000,
-  },
-  menu__Item: {
-    // backgroundColor: 'grey',
   },
 }));
 
 const BoardColumnMenu = ({
   open, handleClose, anchorEl, deleteColumn, id,
 }) => {
-  const { token } = useContext(AuthContext);
-  const { request } = useHttp();
-  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
-  const showSnackbar = useCallback((message, variant) => (
-    enqueueSnackbar(message, { variant })
-  ), [enqueueSnackbar]);
-
   const deleteCurrentColumn = async () => {
-    try {
-      const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      await request(requestOptions);
-      deleteColumn(id);
-    } catch (e) {
-      showSnackbar(e.message, 'error');
-    }
+    deleteColumn(id);
   };
 
   return (
@@ -69,7 +35,9 @@ const BoardColumnMenu = ({
     >
       {({ TransitionProps, placement }) => (
         <Grow
-          {...TransitionProps}
+          in={TransitionProps.in}
+          onEnter={TransitionProps.onEnter}
+          onExited={TransitionProps.onExited}
           style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
         >
           <Paper className={classes.menu__container}>
@@ -121,16 +89,18 @@ const BoardColumnMenu = ({
 };
 
 BoardColumnMenu.propTypes = {
+  id: PropTypes.string,
   open: PropTypes.bool,
   handleClose: PropTypes.func,
   anchorEl: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({ current: PropTypes.object }),
+    PropTypes.shape({ current: PropTypes.node }),
   ]),
   deleteColumn: PropTypes.func,
 };
 
 BoardColumnMenu.defaultProps = {
+  id: '',
   open: false,
   handleClose: () => {},
   anchorEl: null,

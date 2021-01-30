@@ -1,14 +1,8 @@
-/* eslint-disable no-console */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable object-curly-newline */
-/* eslint-disable no-unused-vars */
 import React, {
   useState, useContext, useEffect, useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
@@ -107,7 +101,6 @@ const BoardContent = ({ columnData, boardId }) => {
 
       return response;
     } catch (e) {
-      console.log(e.message);
       showSnackbar(e.message, 'error');
       return null;
     }
@@ -131,21 +124,39 @@ const BoardContent = ({ columnData, boardId }) => {
 
       setColumns([...columns, response]);
     } catch (e) {
-      console.log(e.message, 'error');
       showSnackbar(e.message, 'error');
     }
   };
 
-  const deleteColumn = (id) => {
-    const sourceData = [...columns];
-    const removedCardIndex = sourceData.findIndex(({ _id }) => _id === id);
-    sourceData.splice(removedCardIndex, 1);
+  const deleteColumn = async (id) => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-    setColumns(sourceData);
+      await request(requestOptions);
+
+      const sourceData = [...columns];
+      const removedCardIndex = sourceData.findIndex(({ _id }) => _id === id);
+      sourceData.splice(removedCardIndex, 1);
+
+      setColumns(sourceData);
+    } catch (e) {
+      showSnackbar(e.message, 'error');
+    }
   };
 
   const onDragEnd = async (result) => {
-    const { type, destination, source, draggableId } = result;
+    const {
+      type,
+      destination,
+      source,
+      draggableId,
+    } = result;
 
     if (!destination) {
       return;
@@ -177,38 +188,54 @@ const BoardContent = ({ columnData, boardId }) => {
         type="column"
         direction="horizontal"
       >
-        {(provided) => (
-          <Box
-            ref={provided.innerRef}
-            style={{ height: '100%' }}
-            {...provided.droppableProps}
-            className={classes.board__content}
-          >
-            {columns.map((column, index) => (
-              <BoardColumn
-                key={column._id}
-                data={column}
-                index={index}
-                deleteColumn={deleteColumn}
+        {(provided) => {
+          const { droppableProps } = provided;
+          return (
+            <Box
+              ref={provided.innerRef}
+              style={{ height: '100%' }}
+              data-rbd-droppable-context-id={droppableProps['data-rbd-droppable-context-id']}
+              data-rbd-droppable-id={droppableProps['data-rbd-droppable-id']}
+              className={classes.board__content}
+            >
+              {columns.map((column, index) => {
+                const { _id: id } = column;
+                return (
+                  <BoardColumn
+                    key={id}
+                    data={column}
+                    index={index}
+                    deleteColumn={deleteColumn}
+                  />
+                );
+              })}
+              {provided.placeholder}
+              <ColumnCreator
+                sourceState={columns}
+                setState={setColumns}
+                containerId={boardId}
+                request={addColumn}
+                type="column"
               />
-            ))}
-            {provided.placeholder}
-            <ColumnCreator
-              sourceState={columns}
-              setState={setColumns}
-              containerId={boardId}
-              request={addColumn}
-              type="column"
-            />
-          </Box>
-        )}
+            </Box>
+          );
+        }}
       </Droppable>
     </DragDropContext>
   );
 };
 
 BoardContent.propTypes = {
-  columnData: PropTypes.array,
+  columnData: PropTypes.arrayOf(
+    PropTypes.shape({
+      boardId: PropTypes.string,
+      name: PropTypes.string,
+      _id: PropTypes.string,
+      cards: PropTypes.arrayOf(
+        PropTypes.objectOf(PropTypes.string),
+      ),
+    }),
+  ),
   boardId: PropTypes.string,
 };
 

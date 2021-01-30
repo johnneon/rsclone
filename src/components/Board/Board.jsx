@@ -1,11 +1,8 @@
-/* eslint-disable no-console */
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React, {
   useState, useContext, useEffect, useCallback,
 } from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 import useHttp from '../../hooks/http.hook';
@@ -78,7 +75,6 @@ const Board = ({ id }) => {
     >
       <main className={classes.board}>
         <BoardHeader
-          // data={boardData}
           boardName={boardData.name}
           boardId={boardId}
           users={boardData.users}
@@ -91,6 +87,14 @@ const Board = ({ id }) => {
 
     </SnackbarProvider>
   );
+};
+
+Board.propTypes = {
+  id: PropTypes.string,
+};
+
+Board.defaultProps = {
+  id: '',
 };
 
 export default Board;

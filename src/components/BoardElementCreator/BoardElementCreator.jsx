@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -7,7 +6,6 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 
 const BoardElementCreator = ({
-  inputField,
   addElement,
   invisibleStyle,
   wrapperStyle,
@@ -71,7 +69,6 @@ const BoardElementCreator = ({
 };
 
 BoardElementCreator.propTypes = {
-  inputField: PropTypes.node,
   addElement: PropTypes.func,
   invisibleStyle: PropTypes.string,
   wrapperStyle: PropTypes.string,
@@ -82,7 +79,6 @@ BoardElementCreator.propTypes = {
 };
 
 BoardElementCreator.defaultProps = {
-  inputField: {},
   addElement: () => {},
   invisibleStyle: '',
   wrapperStyle: '',

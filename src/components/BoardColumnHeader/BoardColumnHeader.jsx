@@ -1,16 +1,7 @@
-/* eslint-disable no-console */
-/* eslint-disable no-use-before-define */
-/* eslint-disable object-curly-newline */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable react/jsx-closing-bracket-location */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable no-shadow */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/prop-types */
-/* eslint-disable semi */
-/* eslint-disable no-unused-vars */
-import React, { useState, useContext, useCallback, useRef } from 'react';
+import React, {
+  useState, useContext, useCallback, useRef,
+} from 'react';
+import PropTypes from 'prop-types';
 import {
   Typography, Box, InputBase, IconButton,
 } from '@material-ui/core';
@@ -41,7 +32,7 @@ const BoardColumnHeader = ({
   name, id, dragHandleProps, deleteColumn,
 }) => {
   const [header, setHeader] = useState(name);
-  const [isHeaderEditable, setHeaderEditable] = useState(false)
+  const [isHeaderEditable, setHeaderEditable] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { token } = useContext(AuthContext);
@@ -53,9 +44,34 @@ const BoardColumnHeader = ({
 
   const classes = useStyles();
 
+  const showSnackbar = useCallback((message, variant) => (
+    enqueueSnackbar(message, { variant })
+  ), [enqueueSnackbar]);
+
+  const updateHeaderName = async (value) => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: { name: value },
+      };
+
+      await request(requestOptions);
+    } catch (e) {
+      showSnackbar(e.message, 'error');
+    }
+  };
+
   const startEditHeader = () => {
     setHeaderEditable(true);
-  }
+  };
+
+  const onChange = (e) => {
+    setHeader(e.target.value);
+  };
 
   const stopEditHeader = () => {
     if (!name.trim().length) {
@@ -65,7 +81,7 @@ const BoardColumnHeader = ({
 
     setHeaderEditable(false);
     updateHeaderName(header);
-  }
+  };
 
   const closeMenu = () => {
     setIsMenuOpen(false);
@@ -75,64 +91,31 @@ const BoardColumnHeader = ({
     setIsMenuOpen(true);
   };
 
-  const showSnackbar = useCallback((message, variant) => (
-    enqueueSnackbar(message, { variant })
-  ), [enqueueSnackbar]);
-
-  // const deleteCurrentColumn = async () => {
-  //   try {
-  //     const requestOptions = {
-  //       url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
-  //       method: 'DELETE',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     };
-
-  //     await request(requestOptions);
-  //     deleteColumn(id);
-  //   } catch (e) {
-  //     showSnackbar(e.message, 'error');
-  //   }
-  // }
-
-  const onChange = (e) => {
-    setHeader(e.target.value)
-  }
-
-  const updateHeaderName = async (name) => {
-    try {
-      const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: { name },
-      };
-
-      await request(requestOptions);
-    } catch (e) {
-      showSnackbar(e.message, 'error');
-    }
-  }
-
   return (
-    <Box className={classes.board__header} {...dragHandleProps}>
+    <Box
+      className={classes.board__header}
+      aria-describedby={dragHandleProps['aria-describedby']}
+      data-rbd-drag-handle-context-id={dragHandleProps['data-rbd-drag-handle-context-id']}
+      data-rbd-drag-handle-draggable-id={dragHandleProps['data-rbd-drag-handle-draggable-id']}
+      draggable={dragHandleProps.draggable}
+      onDragStart={dragHandleProps.onDragStart}
+      role={dragHandleProps.role}
+      tabIndex={dragHandleProps.tabIndex}
+    >
       {isHeaderEditable
         ? (
-        <InputBase
-          className={classes.board__headerInput}
-          value={header}
-          inputProps={{ 'aria-label': 'column header' }}
-          readOnly={!isHeaderEditable}
-          inputRef={inputRef}
-          fullWidth
-          autoFocus
-          multiline
-          onBlur={stopEditHeader}
-          onChange={onChange}
-        />
+          <InputBase
+            className={classes.board__headerInput}
+            value={header}
+            inputProps={{ 'aria-label': 'column header' }}
+            readOnly={!isHeaderEditable}
+            inputRef={inputRef}
+            fullWidth
+            autoFocus
+            multiline
+            onBlur={stopEditHeader}
+            onChange={onChange}
+          />
         ) : (
           <Typography
             className={classes.board__headerInput}
@@ -159,6 +142,28 @@ const BoardColumnHeader = ({
       />
     </Box>
   );
+};
+
+BoardColumnHeader.propTypes = {
+  name: PropTypes.string,
+  id: PropTypes.string,
+  dragHandleProps: PropTypes.shape({
+    'aria-describedby': PropTypes.string,
+    'data-rbd-drag-handle-context-id': PropTypes.string,
+    'data-rbd-drag-handle-draggable-id': PropTypes.string,
+    draggable: PropTypes.bool,
+    onDragStart: PropTypes.func,
+    role: PropTypes.string,
+    tabIndex: PropTypes.number,
+  }),
+  deleteColumn: PropTypes.func,
+};
+
+BoardColumnHeader.defaultProps = {
+  name: '',
+  id: '',
+  dragHandleProps: {},
+  deleteColumn: () => {},
 };
 
 export default BoardColumnHeader;

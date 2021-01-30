@@ -1,5 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
@@ -31,32 +29,44 @@ const BoardColumn = ({ data, index, deleteColumn }) => {
   return (
 
     <Draggable draggableId={id} index={index} type="column">
-      {(columnProvided) => (
-        <div
-          ref={columnProvided.innerRef}
-          {...columnProvided.draggableProps}
-          style={columnProvided.draggableProps.style}
-        >
-          <Paper className={classes.board__column}>
-            <BoardColumnHeader
-              name={name}
-              id={id}
-              dragHandleProps={columnProvided.dragHandleProps}
-              deleteColumn={deleteColumn}
-            />
-            <BoardColumnTaskList
-              data={cards}
-              columnId={id}
-            />
-          </Paper>
-        </div>
-      )}
+      {(providedColumn) => {
+        const { draggableProps } = providedColumn;
+        return (
+          <div
+            ref={providedColumn.innerRef}
+            data-rbd-draggable-context-id={draggableProps['data-rbd-draggable-context-id']}
+            data-rbd-draggable-id={draggableProps['data-rbd-draggable-id']}
+            onTransitionEnd={draggableProps.onTransitionEnd}
+            style={draggableProps.style}
+          >
+            <Paper className={classes.board__column}>
+              <BoardColumnHeader
+                name={name}
+                id={id}
+                dragHandleProps={providedColumn.dragHandleProps}
+                deleteColumn={deleteColumn}
+              />
+              <BoardColumnTaskList
+                data={cards}
+                columnId={id}
+              />
+            </Paper>
+          </div>
+        );
+      }}
     </Draggable>
   );
 };
 
 BoardColumn.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.shape({
+    boardId: PropTypes.string,
+    cards: PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.string),
+    ),
+    name: PropTypes.string,
+    _id: PropTypes.string,
+  }),
   index: PropTypes.number,
   deleteColumn: PropTypes.func,
 };

@@ -1,18 +1,11 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable dot-notation */
-/* eslint-disable consistent-return */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable react/jsx-props-no-multi-spaces */
-/* eslint-disable object-curly-newline */
-/* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Paper, Box, Button, Collapse, IconButton, OutlinedInput } from '@material-ui/core';
+import {
+  Paper, Box, Button, Collapse, IconButton, OutlinedInput,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { makeStyles } from '@material-ui/core/styles';
-// import BoardElementCreator from '../BoardElementCreator/BoardElementCreator';
 import BoardCardMenu from '../BoardCardMenu/BoardCardMenu';
 
 const useStyles = makeStyles((theme) => ({
@@ -62,11 +55,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardCardCreator = ({ request, type, close, submitBtnText, value, deleteCard }) => {
+const BoardCardCreator = ({
+  request, type, close, submitBtnText, value, deleteCard,
+}) => {
   const [isBoardCardCreatorVisible, setBoardCardCreatorVisibility] = useState(type === 'editor');
   const [inputValue, setInputValue] = useState(value);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   const anchorRef = useRef(null);
   const inputRef = useRef(null);
   const classes = useStyles();
@@ -112,8 +107,8 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value, deleteCa
   };
 
   return (
-    <Paper 
-      className={isBoardCardCreatorVisible ? classes.creator_visible : classes.creator} 
+    <Paper
+      className={isBoardCardCreatorVisible ? classes.creator_visible : classes.creator}
       variant="outlined"
     >
       <Collapse in={isBoardCardCreatorVisible} collapsedHeight={34}>
@@ -192,19 +187,21 @@ const BoardCardCreator = ({ request, type, close, submitBtnText, value, deleteCa
 };
 
 BoardCardCreator.propTypes = {
-  request: PropTypes.func, 
-  type: PropTypes.string, 
-  close: PropTypes.func, 
+  request: PropTypes.func,
+  type: PropTypes.string,
+  close: PropTypes.func,
   submitBtnText: PropTypes.string,
   value: PropTypes.string,
+  deleteCard: PropTypes.func,
 };
 
 BoardCardCreator.defaultProps = {
-  request: () => {}, 
-  type: '', 
-  close: () => {}, 
+  request: () => {},
+  type: '',
+  close: () => {},
   submitBtnText: 'Add',
   value: '',
+  deleteCard: () => {},
 };
 
 export default BoardCardCreator;
