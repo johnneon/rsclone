@@ -57,10 +57,8 @@ const CardPopupField = ({
 
   const saveEdit = () => {
     changeEdit();
-    const val = formData[name];
-
-    action({ [name]: val });
-    setFormData({ [name]: val });
+    action({ [name]: formData[name] });
+    setFormData({ [name]: formData[name] });
   };
 
   useEffect(() => {
