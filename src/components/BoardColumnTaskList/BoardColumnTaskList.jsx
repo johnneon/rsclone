@@ -4,11 +4,38 @@ import React, {
 import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
 import { Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import TaskCard from '../TaskCard/TaskCard';
 import BoardCardCreator from '../BoardCardCreator/BoardCardCreator';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
+
+const useStyles = makeStyles(() => ({
+  board__tasklList: {
+    padding: '0 5px',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    '&::-webkit-scrollbar': {
+      width: '8px',
+      height: '5px',
+      backgroundColor: '#cecfd1',
+      borderRadius: '10px',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: '#cecfd1',
+      borderRadius: '15px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      borderRadius: '10px',
+      background: '#bbbcbc',
+      transition: 'all 1s linear',
+      '&:hover': {
+        backgroundColor: '#989898',
+      },
+    },
+  },
+}));
 
 const BoardColumnTaskList = ({ data, columnId }) => {
   const [cards, setCards] = useState(data);
@@ -16,6 +43,8 @@ const BoardColumnTaskList = ({ data, columnId }) => {
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
+
+  const classes = useStyles();
 
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
@@ -57,23 +86,25 @@ const BoardColumnTaskList = ({ data, columnId }) => {
   const getListStyle = () => ({
     userSelect: 'none',
     maxHeight: '50%',
-    height: '100%',
+    height: 'fit-content',
     minHeight: '100%',
+    width: '100%',
   });
 
   return (
     <>
+
       <Droppable droppableId={columnId} type="card" ignoreContainerClipping>
         {(provided) => {
           const { droppableProps } = provided;
           return (
-            <div
-              ref={provided.innerRef}
-              data-rbd-droppable-context-id={droppableProps['data-rbd-droppable-context-id']}
-              data-rbd-droppable-id={droppableProps['data-rbd-droppable-id']}
-              style={getListStyle()}
-            >
-              <Box>
+            <Box className={classes.board__tasklList}>
+              <div
+                ref={provided.innerRef}
+                data-rbd-droppable-context-id={droppableProps['data-rbd-droppable-context-id']}
+                data-rbd-droppable-id={droppableProps['data-rbd-droppable-id']}
+                style={{ ...getListStyle() }}
+              >
                 {cards.map((card, ind) => {
                   const { _id: id } = card;
                   return (
@@ -86,8 +117,8 @@ const BoardColumnTaskList = ({ data, columnId }) => {
                   );
                 })}
                 {provided.placeholder}
-              </Box>
-            </div>
+              </div>
+            </Box>
           );
         }}
       </Droppable>

@@ -1,8 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   useState, useContext, useEffect, useCallback,
 } from 'react';
-import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 import useHttp from '../../hooks/http.hook';
@@ -38,7 +37,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Board = ({ id }) => {
+const Board = () => {
+  const { id } = useParams();
+
   const [boardData, setBoardData] = useState({});
   const { _id: boardId, columns } = boardData;
 
@@ -50,7 +51,7 @@ const Board = ({ id }) => {
   const getBoardData = useCallback(async () => {
     try {
       const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/board/${'600f1074f07eac0017def6ef'}`,
+        url: `https://rsclone-back-end.herokuapp.com/api/board/${id}`,
         method: 'GET',
         headers: { Authorization: `Bearer ${token}` },
       };
@@ -87,14 +88,6 @@ const Board = ({ id }) => {
 
     </SnackbarProvider>
   );
-};
-
-Board.propTypes = {
-  id: PropTypes.string,
-};
-
-Board.defaultProps = {
-  id: '',
 };
 
 export default Board;

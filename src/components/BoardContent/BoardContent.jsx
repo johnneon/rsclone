@@ -13,11 +13,35 @@ import AuthContext from '../../context/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
   board__content: {
-    padding: '10px',
+    height: '100%',
+    maxHeight: 'calc(100vh - 115px)',
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    boxSizing: 'border-box',
+    '&::-webkit-scrollbar': {
+      width: '5px',
+      height: '8px',
+      backgroundColor: '#cecfd1',
+      borderRadius: '15px',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: '#cecfd1',
+      borderRadius: '15px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      borderRadius: '15px',
+      background: '#bbbcbc',
+      transition: 'all 1s linear',
+      '&:hover': {
+        backgroundColor: '#989898',
+      },
+    },
+  },
+  board__contentWrapper: {
+    padding: '10px 10px 20px',
+    width: 'fit-content',
     height: '100%',
     display: 'flex',
-    position: 'relative',
-    overflowX: 'auto',
     boxSizing: 'border-box',
   },
   board__button: {
@@ -181,6 +205,13 @@ const BoardContent = ({ columnData, boardId }) => {
     }
   };
 
+  const getDroppableStyles = () => ({
+    height: '100%',
+    width: 'fit-content',
+    display: 'flex',
+    boxSizing: 'border-box',
+  });
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable
@@ -192,31 +223,36 @@ const BoardContent = ({ columnData, boardId }) => {
           const { droppableProps } = provided;
           return (
             <Box
-              ref={provided.innerRef}
-              style={{ height: '100%' }}
-              data-rbd-droppable-context-id={droppableProps['data-rbd-droppable-context-id']}
-              data-rbd-droppable-id={droppableProps['data-rbd-droppable-id']}
               className={classes.board__content}
             >
-              {columns.map((column, index) => {
-                const { _id: id } = column;
-                return (
-                  <BoardColumn
-                    key={id}
-                    data={column}
-                    index={index}
-                    deleteColumn={deleteColumn}
-                  />
-                );
-              })}
-              {provided.placeholder}
-              <ColumnCreator
-                sourceState={columns}
-                setState={setColumns}
-                containerId={boardId}
-                request={addColumn}
-                type="column"
-              />
+              <Box className={classes.board__contentWrapper}>
+                <div
+                  ref={provided.innerRef}
+                  style={getDroppableStyles()}
+                  data-rbd-droppable-context-id={droppableProps['data-rbd-droppable-context-id']}
+                  data-rbd-droppable-id={droppableProps['data-rbd-droppable-id']}
+                >
+                  {columns.map((column, index) => {
+                    const { _id: id } = column;
+                    return (
+                      <BoardColumn
+                        key={id}
+                        data={column}
+                        index={index}
+                        deleteColumn={deleteColumn}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+                <ColumnCreator
+                  sourceState={columns}
+                  setState={setColumns}
+                  containerId={boardId}
+                  request={addColumn}
+                  type="column"
+                />
+              </Box>
             </Box>
           );
         }}

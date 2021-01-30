@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     userSelect: 'none',
+    overflowY: 'hidden',
   },
 }));
 

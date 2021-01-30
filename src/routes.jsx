@@ -18,7 +18,7 @@ const useRouts = (isAuthenticated) => {
           <BoardPage />
         </Route>
 
-        <Route path="/board" exact>
+        <Route path="/board_:id" exact>
           <Board />
         </Route>
 
