@@ -20,12 +20,24 @@ const useStyles = makeStyles({
   marginBottomMiddle: {
     marginBottom: '50px',
   },
+  MarginLeftSmall: {
+    marginLeft: '15px',
+  },
+  MarginRightSmall: {
+    marginRight: '15px',
+  },
   navColor: {
     color: '#3e3a3a',
     textDecoration: 'none',
   },
   contentContainer: {
     paddingLeft: '50px',
+  },
+  popup: {
+    '& .MuiDialog-paperWidthSm': {
+      width: '100%',
+      maxWidth: '500px',
+    },
   },
 });
 

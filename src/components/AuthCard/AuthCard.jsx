@@ -11,7 +11,6 @@ import AuthFormTabs from '../AuthFormTabs/AuthFormTabs';
 
 const useStyles = makeStyles((theme) => ({
   auth__form: {
-    marginBottom: '50px',
     padding: '0 20px 20px',
     maxWidth: '380px',
     backgroundColor: theme.palette.background.main,

@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 });
 
 const BoardDeletePopup = ({
-  isOpen, name = null, agree, close,
+  isOpen, name, agree, close,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -60,9 +60,13 @@ const BoardDeletePopup = ({
   );
 };
 
+BoardDeletePopup.defaultProps = {
+  name: 'Card',
+};
+
 BoardDeletePopup.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   agree: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
 };

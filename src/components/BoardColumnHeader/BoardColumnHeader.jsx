@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Typography, Box, InputBase, IconButton,
+  Typography, Box, OutlinedInput, IconButton,
 } from '@material-ui/core';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,17 +14,26 @@ import useHttp from '../../hooks/http.hook';
 
 const useStyles = makeStyles((theme) => ({
   board__header: {
-    padding: '0px',
+    padding: '3px',
     fontWeight: 700,
     fontSize: theme.typography.h4.fontSize,
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   board__headerInput: {
-    padding: '2px 5px',
+    padding: '5px',
+    width: '100%',
     fontWeight: 700,
     fontSize: theme.typography.h4.fontSize,
     overflowWrap: 'anywhere',
+    alignSelf: 'baseline',
+    '& textarea': {
+      padding: '0px',
+      height: '100%',
+      lineHeight: '1.2',
+      alignSelf: 'baseline',
+    },
   },
 }));
 
@@ -104,11 +113,10 @@ const BoardColumnHeader = ({
     >
       {isHeaderEditable
         ? (
-          <InputBase
+          <OutlinedInput
             className={classes.board__headerInput}
             value={header}
             inputProps={{ 'aria-label': 'column header' }}
-            readOnly={!isHeaderEditable}
             inputRef={inputRef}
             fullWidth
             autoFocus
@@ -124,6 +132,7 @@ const BoardColumnHeader = ({
           >
             {header}
           </Typography>
+
         )}
       <IconButton
         aria-label="cancel"

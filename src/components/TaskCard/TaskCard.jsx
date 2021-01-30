@@ -6,6 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import BoardCardCreator from '../BoardCardCreator/BoardCardCreator';
+import CardPopup from '../CardPopup/CardPopup';
 import useHttp from '../../hooks/http.hook';
 import AuthContext from '../../context/AuthContext';
 
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const TaskCard = ({ data, deleteCard, index }) => {
   const [card, setCard] = useState(data);
   const [isEditorOpen, setEditorState] = useState(false);
+  const [isCardOpen, setIsCardOpen] = useState(false);
 
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
@@ -50,12 +52,17 @@ const TaskCard = ({ data, deleteCard, index }) => {
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
 
-  const openEditor = () => {
+  const openEditor = (e) => {
+    e.stopPropagation();
     setEditorState(true);
   };
 
   const closeEditor = () => {
     setEditorState(false);
+  };
+
+  const toggleCardPopup = () => {
+    setIsCardOpen(!isCardOpen);
   };
 
   const deleteCurrentCard = async () => {
@@ -97,6 +104,10 @@ const TaskCard = ({ data, deleteCard, index }) => {
     }
   };
 
+  const updateCardData = (value) => {
+    setCard({ ...card, ...value });
+  };
+
   if (isEditorOpen) {
     return (
       <BoardCardCreator
@@ -112,48 +123,57 @@ const TaskCard = ({ data, deleteCard, index }) => {
   }
 
   return (
-    <Draggable draggableId={id} index={index} type="card">
-      {(provided) => {
-        const { draggableProps, dragHandleProps } = provided;
-        return (
-          <div
-            ref={provided.innerRef}
-            data-rbd-draggable-context-id={draggableProps['data-rbd-draggable-context-id']}
-            data-rbd-draggable-id={draggableProps['data-rbd-draggable-id']}
-            onTransitionEnd={draggableProps.onTransitionEnd}
-            style={draggableProps.style}
-            aria-describedby={dragHandleProps['aria-describedby']}
-            data-rbd-drag-handle-context-id={dragHandleProps['data-rbd-drag-handle-context-id']}
-            data-rbd-drag-handle-draggable-id={dragHandleProps['data-rbd-drag-handle-draggable-id']}
-            draggable={dragHandleProps.draggable}
-            onDragStart={dragHandleProps.onDragStart}
-            role={dragHandleProps.role}
-            tabIndex={dragHandleProps.tabIndex}
-          >
-            <Box
-              className={classes.card}
-              onClick={() => console.log('open card')}
+    <>
+      <Draggable draggableId={id} index={index} type="card">
+        {(provided) => {
+          const { draggableProps, dragHandleProps } = provided;
+          return (
+            <div
+              ref={provided.innerRef}
+              data-rbd-draggable-context-id={draggableProps['data-rbd-draggable-context-id']}
+              data-rbd-draggable-id={draggableProps['data-rbd-draggable-id']}
+              onTransitionEnd={draggableProps.onTransitionEnd}
+              style={draggableProps.style}
+              aria-describedby={dragHandleProps['aria-describedby']}
+              data-rbd-drag-handle-context-id={dragHandleProps['data-rbd-drag-handle-context-id']}
+              data-rbd-drag-handle-draggable-id={dragHandleProps['data-rbd-drag-handle-draggable-id']}
+              draggable={dragHandleProps.draggable}
+              onDragStart={dragHandleProps.onDragStart}
+              role={dragHandleProps.role}
+              tabIndex={dragHandleProps.tabIndex}
             >
-              <Typography
-                className={classes.card__header}
-                variant="h5"
-                component="h3"
+              <Box
+                className={classes.card}
+                onClick={toggleCardPopup}
               >
-                {card.name}
-              </Typography>
-              <IconButton
-                className={classes.card__edit}
-                aria-label="edit"
-                onClick={openEditor}
-                size="small"
-              >
-                <EditIcon fontSize="inherit" />
-              </IconButton>
-            </Box>
-          </div>
-        );
-      }}
-    </Draggable>
+                <Typography
+                  className={classes.card__header}
+                  variant="h5"
+                  component="h3"
+                >
+                  {card.name}
+                </Typography>
+                <IconButton
+                  className={classes.card__edit}
+                  aria-label="edit"
+                  onClick={openEditor}
+                  size="small"
+                >
+                  <EditIcon fontSize="inherit" />
+                </IconButton>
+              </Box>
+            </div>
+          );
+        }}
+
+      </Draggable>
+      <CardPopup
+        isOpen={isCardOpen}
+        idCard={id}
+        close={toggleCardPopup}
+        updateCardData={updateCardData}
+      />
+    </>
   );
 };
 

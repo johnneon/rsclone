@@ -63,7 +63,9 @@ const Board = () => {
     }
   }, [id, request, token]);
 
-  useEffect(() => getBoardData(), [getBoardData]);
+  useEffect(() => {
+    getBoardData();
+  }, [getBoardData]);
 
   return (
     <SnackbarProvider

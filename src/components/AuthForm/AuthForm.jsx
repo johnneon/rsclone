@@ -47,6 +47,12 @@ const AuthForm = ({ activeTab, action }) => {
     action(formData);
   };
 
+  const pressHandler = (event) => {
+    if (event.key === 'Enter') {
+      formActionHandler();
+    }
+  };
+
   return (
     <Grid
       container
@@ -67,6 +73,7 @@ const AuthForm = ({ activeTab, action }) => {
             helperText={!formValidity.fullName ? 'Name is not valid.' : ' '}
             error={!formValidity.fullName}
             onChange={setFormDataHandler}
+            onKeyPress={pressHandler}
           />
         </Grid>
       )}
@@ -82,6 +89,7 @@ const AuthForm = ({ activeTab, action }) => {
           helperText={!formValidity.email ? 'Email is not valid.' : ' '}
           error={!formValidity.email}
           onChange={setFormDataHandler}
+          onKeyPress={pressHandler}
         />
       </Grid>
       <Grid item>
@@ -96,6 +104,7 @@ const AuthForm = ({ activeTab, action }) => {
           helperText={!formValidity.password ? 'Password is not valid.' : ' '}
           error={!formValidity.password}
           onChange={setFormDataHandler}
+          onKeyPress={pressHandler}
         />
       </Grid>
       <Grid item xs={6} sm={5}>
@@ -104,6 +113,7 @@ const AuthForm = ({ activeTab, action }) => {
           color="primary"
           fullWidth
           onClick={formActionHandler}
+          onKeyPress={pressHandler}
         >
           {!activeTab ? 'Sign Up' : 'Login'}
         </Button>
