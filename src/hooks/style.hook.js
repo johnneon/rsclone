@@ -8,6 +8,9 @@ const useStyles = makeStyles({
   flex: {
     display: 'flex',
   },
+  alignItemCenter: {
+    alignItems: 'center',
+  },
   paddingTopBig: {
     paddingTop: '100px',
   },
@@ -38,6 +41,11 @@ const useStyles = makeStyles({
       width: '100%',
       maxWidth: '500px',
     },
+  },
+  innerPage: {
+    paddingRight: '30px',
+    paddingLeft: '30px',
+    minHeight: 'calc(100vh - 64px)',
   },
 });
 

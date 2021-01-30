@@ -3,6 +3,7 @@ import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 import AuthCard from '../components/AuthCard/AuthCard';
+import Footer from '../components/Footer/Footer';
 import vars from '../variables';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,23 +35,26 @@ const AuthPage = () => {
   const classes = useStyles();
 
   return (
-    <Container className={classes.auth} maxWidth={false}>
-      <Typography className={classes.auth__title} variant="h1">
-        {`Welcome to ${vars.APP_NAME}`}
-      </Typography>
-      <SnackbarProvider
-        maxSnack={3}
-        autoHideDuration={2000}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-      >
-        <div className={classes.authContainer}>
-          <AuthCard />
-        </div>
-      </SnackbarProvider>
-    </Container>
+    <>
+      <Container className={classes.auth} maxWidth={false}>
+        <Typography className={classes.auth__title} variant="h1">
+          {`Welcome to ${vars.APP_NAME}`}
+        </Typography>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={2000}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+        >
+          <div className={classes.authContainer}>
+            <AuthCard />
+          </div>
+        </SnackbarProvider>
+      </Container>
+      <Footer />
+    </>
   );
 };
 
