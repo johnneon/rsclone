@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   authContainer: {
+    display: 'flex',
+    justifyContent: 'center',
     width: '100%',
     maxWidth: '380px',
     minHeight: '400px',
