@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   authContainer: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'flex-start',
     width: '100%',
     maxWidth: '380px',
     minHeight: '400px',
