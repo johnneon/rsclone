@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from 'react';
+
 import PropTypes from 'prop-types';
 
 import {
@@ -12,6 +18,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 
+import { useSnackbar } from 'notistack';
 import CardPopupField from '../CardPopupField/CardPopupField';
 import CardPopupTextField from '../CardPopupTextField/CardPopupTextField';
 import AuthContext from '../../context/AuthContext';
@@ -85,15 +92,24 @@ const CardPopup = ({
   const [open, setOpen] = useState(false);
   const classes = { ...useStyles(), ...currentStyles() };
 
-  const getCardData = async (id, tok, req) => {
-    const requestOptions = {
-      url: `https://rsclone-back-end.herokuapp.com/api/cards/${id}`,
-      method: 'GET',
-      headers: { Authorization: `Bearer ${tok}` },
-    };
+  const { enqueueSnackbar } = useSnackbar();
+  const showSnackbar = useCallback((message, variant) => (
+    enqueueSnackbar(message, { variant })
+  ), [enqueueSnackbar]);
 
-    const currentData = await req(requestOptions);
-    setData(currentData);
+  const getCardData = async (id, tok, req, alert) => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/cards/${id}`,
+        method: 'GET',
+        headers: { Authorization: `Bearer ${tok}` },
+      };
+
+      const currentData = await req(requestOptions);
+      setData(currentData);
+    } catch (e) {
+      alert(e, 'error');
+    }
   };
 
   const updateCard = async (obj = {}) => {
@@ -108,7 +124,7 @@ const CardPopup = ({
       };
       await request(requestOptions);
     } catch (e) {
-      console.log(e.message, 'error');
+      showSnackbar(e.message, 'error');
     }
   };
 
@@ -117,8 +133,8 @@ const CardPopup = ({
   };
 
   useEffect(() => {
-    getCardData(idCard, token, request);
-  }, [idCard, token, request]);
+    getCardData(idCard, token, request, showSnackbar);
+  }, [idCard, token, request, showSnackbar]);
 
   useEffect(() => {
     setOpen(isOpen);
@@ -144,7 +160,6 @@ const CardPopup = ({
         <CardPopupTextField
           name="content"
           value={data.content}
-          title="Description"
           action={updateCard}
         />
       </DialogContent>

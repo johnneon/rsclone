@@ -45,11 +45,10 @@ const CardPopupField = ({
 }) => {
   const classes = { ...useStyles(), ...currentStyles() };
   const [isEdit, setEdit] = useState(false);
-  const [val, setValue] = useState('');
-  const [formData, setFormData] = useState({}[name] = '');
+  const [formData, setFormData] = useState({ [name]: '' });
 
   const setFormDataHandler = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    setFormData({ [event.target.name]: event.target.value.trim() });
   };
 
   const changeEdit = () => {
@@ -58,17 +57,16 @@ const CardPopupField = ({
 
   const saveEdit = () => {
     changeEdit();
+    const val = formData[name];
 
-    const data = {};
-    data[name] = formData[name];
-
-    action(data);
-    setValue(formData[name]);
+    action({ [name]: val });
+    setFormData({ [name]: val });
   };
 
   useEffect(() => {
-    setValue(value);
-  }, [value]);
+    const val = value ? value.trim() : '';
+    setFormData({ [name]: val });
+  }, [name, value]);
 
   const setField = () => {
     if (isEdit) {
@@ -80,7 +78,7 @@ const CardPopupField = ({
             className={classes.nameField}
             id={name}
             name={name}
-            defaultValue={val}
+            defaultValue={formData[name]}
             onChange={setFormDataHandler}
             onBlur={saveEdit}
           />
@@ -102,7 +100,7 @@ const CardPopupField = ({
         component="h2"
         onClick={changeEdit}
       >
-        {val !== '' ? val : 'Enter name'}
+        {formData[name] !== '' ? formData[name] : 'Enter name'}
       </Typography>
     );
   };
@@ -114,7 +112,7 @@ const CardPopupField = ({
         container
         wrap="nowrap"
         direction="row"
-        alignItems="start"
+        alignItems="flex-start"
       >
         <Note className={classes.MarginRightSmall} />
         {setField()}
@@ -123,10 +121,16 @@ const CardPopupField = ({
   );
 };
 
+CardPopupField.defaultProps = {
+  name: '',
+  value: '',
+  action: () => {},
+};
+
 CardPopupField.propTypes = {
-  name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  action: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  value: PropTypes.string,
+  action: PropTypes.func,
 };
 
 export default CardPopupField;
