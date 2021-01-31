@@ -76,7 +76,7 @@ function Footer() {
           <div className={classes.flex}>
             {avatars}
           </div>
-          <span className={classes.year}>Rs tasktracker, 2021</span>
+          <span className={classes.year}>RS Tasktracker, 2021</span>
           <div className={`${classes.flex} ${classes.alignItemCenter}`}>
             <a href="https://rs.school/js/" rel="noreferrer" target="_blank">
               <img className={classes.footerLogo} src="assets/images/rs_school_js.svg" alt="rsschool" />

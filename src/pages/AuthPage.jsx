@@ -9,7 +9,7 @@ import vars from '../variables';
 const useStyles = makeStyles((theme) => ({
   auth: {
     padding: '20px 30px',
-    minHeight: 'calc(100vh - 64px)',
+    minHeight: 'calc(100vh - 144px);',
     backgroundColor: theme.palette.background.main,
     display: 'flex',
     justifyContent: 'center',
