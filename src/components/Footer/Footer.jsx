@@ -13,14 +13,32 @@ const currentStyles = makeStyles((theme) => ({
     width: '100px',
     height: '30px',
   },
+  footerLogoWrapper: {
+    '@media(max-width: 480px)': {
+      width: '100%',
+      justifyContent: 'center',
+    },
+  },
   year: {
     color: theme.palette.background.main,
     fontSize: '18px',
+    '@media(max-width: 480px)': {
+      width: '100%',
+      marginBottom: '20px',
+      textAlign: 'center',
+    },
   },
   avatar: {
     marginRight: '10px',
     '&:last-child': {
       marginRight: 0,
+    },
+  },
+  avatars: {
+    '@media(max-width: 480px)': {
+      width: '100%',
+      justifyContent: 'center',
+      marginBottom: '20px',
     },
   },
 }));
@@ -68,16 +86,15 @@ function Footer() {
       <Container maxWidth={false}>
         <Grid
           container
-          wrap="nowrap"
           direction="row"
           justify="space-between"
           alignItems="center"
         >
-          <div className={classes.flex}>
+          <div className={`${classes.flex} ${classes.avatars}`}>
             {avatars}
           </div>
           <span className={classes.year}>RS Tasktracker, 2021</span>
-          <div className={`${classes.flex} ${classes.alignItemCenter}`}>
+          <div className={`${classes.flex} ${classes.alignItemCenter} ${classes.footerLogoWrapper}`}>
             <a href="https://rs.school/js/" rel="noreferrer" target="_blank">
               <img className={classes.footerLogo} src="assets/images/rs_school_js.svg" alt="rsschool" />
             </a>
