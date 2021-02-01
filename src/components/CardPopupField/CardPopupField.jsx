@@ -75,7 +75,7 @@ const CardPopupField = ({
             className={classes.nameField}
             id={name}
             name={name}
-            defaultValue={formData[name]}
+            value={formData[name]}
             onChange={setFormDataHandler}
             onBlur={saveEdit}
           />

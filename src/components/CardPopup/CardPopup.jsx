@@ -84,33 +84,21 @@ const currentStyles = makeStyles({
 });
 
 const CardPopup = ({
-  idCard, isOpen,
+  isOpen, close, updateCardData, cardData,
 }) => {
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const [data, setData] = useState([]);
-  const [open, setOpen] = useState(false);
   const classes = { ...useStyles(), ...currentStyles() };
+
+  const { _id: idCard } = data;
 
   const { enqueueSnackbar } = useSnackbar();
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
 
-  const getCardData = async (id, tok, req, alert) => {
-    try {
-      const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/cards/${id}`,
-        method: 'GET',
-        headers: { Authorization: `Bearer ${tok}` },
-      };
-
-      const currentData = await req(requestOptions);
-      setData(currentData);
-    } catch (e) {
-      alert(e, 'error');
-    }
-  };
+  useEffect(() => setData(cardData), [cardData]);
 
   const updateCard = async (obj = {}) => {
     const body = { ...obj };
@@ -123,27 +111,16 @@ const CardPopup = ({
         body,
       };
       await request(requestOptions);
+      updateCardData(body);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
   };
 
-  const close = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    getCardData(idCard, token, request, showSnackbar);
-  }, [idCard, token, request, showSnackbar]);
-
-  useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
-
   return (
     <Dialog
       className={`${classes.popupPadding} ${classes.popup}`}
-      open={open}
+      open={isOpen}
       onClose={close}
       aria-labelledby="alert-dialog-title"
     >
@@ -168,8 +145,13 @@ const CardPopup = ({
 };
 
 CardPopup.propTypes = {
-  idCard: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired,
+  updateCardData: PropTypes.func.isRequired,
+  cardData: PropTypes.objectOf(PropTypes.string),
+};
+CardPopup.defaultProps = {
+  cardData: {},
 };
 
 export default CardPopup;
