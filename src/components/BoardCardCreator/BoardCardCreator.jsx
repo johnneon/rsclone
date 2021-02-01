@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BoardCardCreator = ({
-  request, type, close, submitBtnText, value, deleteCard,
+  request, type, close, value, deleteCard,
 }) => {
   const [isBoardCardCreatorVisible, setBoardCardCreatorVisibility] = useState(type === 'editor');
   const [inputValue, setInputValue] = useState(value);
@@ -79,7 +79,8 @@ const BoardCardCreator = ({
   };
 
   const add = async () => {
-    if (inputValue === '') {
+    if (!inputValue.trim()) {
+      inputRef.current.focus();
       return;
     }
 
@@ -146,7 +147,7 @@ const BoardCardCreator = ({
                     onClick={add}
                     size="small"
                   >
-                    {submitBtnText}
+                    { type === 'editor' ? 'Submit' : 'Add'}
                   </Button>
                   <IconButton
                     aria-label="cancel"
@@ -190,7 +191,6 @@ BoardCardCreator.propTypes = {
   request: PropTypes.func,
   type: PropTypes.string,
   close: PropTypes.func,
-  submitBtnText: PropTypes.string,
   value: PropTypes.string,
   deleteCard: PropTypes.func,
 };
@@ -199,7 +199,6 @@ BoardCardCreator.defaultProps = {
   request: () => {},
   type: '',
   close: () => {},
-  submitBtnText: 'Add',
   value: '',
   deleteCard: () => {},
 };

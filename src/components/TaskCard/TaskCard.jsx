@@ -1,4 +1,6 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, {
+  useState, useContext, useCallback, useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import { Typography, Box, IconButton } from '@material-ui/core';
@@ -9,6 +11,7 @@ import BoardCardCreator from '../BoardCardCreator/BoardCardCreator';
 import CardPopup from '../CardPopup/CardPopup';
 import useHttp from '../../hooks/http.hook';
 import AuthContext from '../../context/AuthContext';
+import { BoardDataContext } from '../../context/BoardDataContext';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -20,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+    cursor: 'pointer',
     '&:hover [class*=card__edit]': {
       visibility: 'visible',
     },
@@ -35,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskCard = ({ data, deleteCard, index }) => {
+const TaskCard = ({ data, index }) => {
   const [card, setCard] = useState(data);
   const [isEditorOpen, setEditorState] = useState(false);
   const [isCardOpen, setIsCardOpen] = useState(false);
@@ -43,10 +47,13 @@ const TaskCard = ({ data, deleteCard, index }) => {
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
+  const { updateBoardData } = useContext(BoardDataContext);
 
   const { _id: id } = card;
 
   const classes = useStyles();
+
+  useEffect(() => setCard(data), [data, setCard]);
 
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
@@ -65,7 +72,7 @@ const TaskCard = ({ data, deleteCard, index }) => {
     setIsCardOpen(!isCardOpen);
   };
 
-  const deleteCurrentCard = async () => {
+  const deleteCard = async () => {
     try {
       const requestOptions = {
         url: `https://rsclone-back-end.herokuapp.com/api/cards/${id}`,
@@ -77,7 +84,7 @@ const TaskCard = ({ data, deleteCard, index }) => {
       };
 
       await request(requestOptions);
-      deleteCard(id);
+      updateBoardData.deleteCard(card);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
@@ -88,16 +95,13 @@ const TaskCard = ({ data, deleteCard, index }) => {
       const requestOptions = {
         url: `https://rsclone-back-end.herokuapp.com/api/cards/${id}`,
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: name,
       };
 
       const response = await request(requestOptions);
 
-      setCard(response);
+      updateBoardData.updateCard(response);
       closeEditor();
     } catch (e) {
       showSnackbar(e.message, 'error');
@@ -105,19 +109,18 @@ const TaskCard = ({ data, deleteCard, index }) => {
   };
 
   const updateCardData = (value) => {
-    setCard({ ...card, ...value });
+    const cardData = ({ ...card, ...value });
+    updateBoardData.updateCard(cardData);
   };
 
   if (isEditorOpen) {
     return (
       <BoardCardCreator
-        sourceState={card}
-        setState={setCard}
         request={updateCard}
         type="editor"
         close={closeEditor}
         value={card.name}
-        deleteCard={deleteCurrentCard}
+        deleteCard={deleteCard}
       />
     );
   }
@@ -151,7 +154,7 @@ const TaskCard = ({ data, deleteCard, index }) => {
                   variant="h5"
                   component="h3"
                 >
-                  {card.name}
+                  {card.name || 'Enter card name'}
                 </Typography>
                 <IconButton
                   className={classes.card__edit}
@@ -172,6 +175,7 @@ const TaskCard = ({ data, deleteCard, index }) => {
         idCard={id}
         close={toggleCardPopup}
         updateCardData={updateCardData}
+        cardData={card}
       />
     </>
   );
@@ -179,13 +183,11 @@ const TaskCard = ({ data, deleteCard, index }) => {
 
 TaskCard.propTypes = {
   data: PropTypes.objectOf(PropTypes.string),
-  deleteCard: PropTypes.func,
   index: PropTypes.number,
 };
 
 TaskCard.defaultProps = {
   data: {},
-  deleteCard: () => {},
   index: 0,
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { SnackbarProvider } from 'notistack';
 import AuthCard from '../components/AuthCard/AuthCard';
 import vars from '../variables';
 
@@ -38,18 +37,9 @@ const AuthPage = () => {
       <Typography className={classes.auth__title} variant="h1">
         {`Welcome to ${vars.APP_NAME}`}
       </Typography>
-      <SnackbarProvider
-        maxSnack={3}
-        autoHideDuration={2000}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-      >
-        <div className={classes.authContainer}>
-          <AuthCard />
-        </div>
-      </SnackbarProvider>
+      <div className={classes.authContainer}>
+        <AuthCard />
+      </div>
     </Container>
   );
 };

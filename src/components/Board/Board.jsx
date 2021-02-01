@@ -3,11 +3,12 @@ import React, {
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { SnackbarProvider } from 'notistack';
+import { useSnackbar } from 'notistack';
 import useHttp from '../../hooks/http.hook';
 import AuthContext from '../../context/AuthContext';
 import BoardHeader from '../BoardHeader/BoardHeader';
 import BoardContent from '../BoardContent/BoardContent';
+import BoardDataContextProvider from '../../context/BoardDataContext';
 
 const useStyles = makeStyles((theme) => ({
   board: {
@@ -45,8 +46,13 @@ const Board = () => {
 
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
+  const { enqueueSnackbar } = useSnackbar();
 
   const classes = useStyles();
+
+  const showSnackbar = useCallback((message, variant) => (
+    enqueueSnackbar(message, { variant })
+  ), [enqueueSnackbar]);
 
   const getBoardData = useCallback(async () => {
     try {
@@ -59,22 +65,18 @@ const Board = () => {
 
       setBoardData(response);
     } catch (e) {
-      console.log(e.message, 'error');
+      showSnackbar(e.message, 'error');
     }
-  }, [id, request, token]);
+  }, [id, request, token, showSnackbar]);
 
   useEffect(() => {
     getBoardData();
   }, [getBoardData]);
 
   return (
-    <SnackbarProvider
-      maxSnack={3}
-      autoHideDuration={2000}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
+    <BoardDataContextProvider
+      boardData={boardData}
+      setBoardData={setBoardData}
     >
       <main className={classes.board}>
         <BoardHeader
@@ -83,12 +85,11 @@ const Board = () => {
           users={boardData.users}
         />
         <BoardContent
-          columnData={columns}
+          columnsData={columns}
           boardId={boardId}
         />
       </main>
-
-    </SnackbarProvider>
+    </BoardDataContextProvider>
   );
 };
 

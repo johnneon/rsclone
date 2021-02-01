@@ -10,6 +10,7 @@ import BoardColumn from '../BoardColumn/BoardColumn';
 import ColumnCreator from '../ColumnCreator/ColumnCreator';
 import useHttp from '../../hooks/http.hook';
 import AuthContext from '../../context/AuthContext';
+import { BoardDataContext } from '../../context/BoardDataContext';
 
 const useStyles = makeStyles((theme) => ({
   board__content: {
@@ -56,16 +57,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardContent = ({ columnData, boardId }) => {
+const BoardContent = ({ columnsData, boardId }) => {
   const [columns, setColumns] = useState([]);
 
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
+  const { updateBoardData } = useContext(BoardDataContext);
 
   const classes = useStyles();
 
-  useEffect(() => setColumns(columnData), [columnData, setColumns]);
+  useEffect(() => setColumns(columnsData), [columnsData, setColumns]);
 
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
@@ -87,6 +89,7 @@ const BoardContent = ({ columnData, boardId }) => {
     ));
 
     const [draggableItem] = sourceColumn.cards.splice(source.index, 1);
+    draggableItem.columnId = destination.droppableId;
     destinationColumn.cards.splice(destination.index, 0, draggableItem);
 
     return result;
@@ -102,12 +105,10 @@ const BoardContent = ({ columnData, boardId }) => {
         },
         body: { position },
       };
-      const response = await request(requestOptions);
 
-      return response;
+      await request(requestOptions);
     } catch (e) {
       showSnackbar(e.message, 'error');
-      return null;
     }
   }, [request, showSnackbar, token]);
 
@@ -121,12 +122,10 @@ const BoardContent = ({ columnData, boardId }) => {
         },
         body: { position, columnId },
       };
-      const response = await request(requestOptions);
 
-      return response;
+      await request(requestOptions);
     } catch (e) {
       showSnackbar(e.message, 'error');
-      return null;
     }
   }, [request, showSnackbar, token]);
 
@@ -146,29 +145,7 @@ const BoardContent = ({ columnData, boardId }) => {
       };
       const response = await request(requestOptions);
 
-      setColumns([...columns, response]);
-    } catch (e) {
-      showSnackbar(e.message, 'error');
-    }
-  };
-
-  const deleteColumn = async (id) => {
-    try {
-      const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      await request(requestOptions);
-
-      const sourceData = [...columns];
-      const removedCardIndex = sourceData.findIndex(({ _id }) => _id === id);
-      sourceData.splice(removedCardIndex, 1);
-
-      setColumns(sourceData);
+      updateBoardData.addColumn(response);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
@@ -187,30 +164,27 @@ const BoardContent = ({ columnData, boardId }) => {
     }
 
     if (type === 'column') {
-      const items = reorderColumns(
-        columns,
-        source.index,
-        destination.index,
-      );
+      const items = reorderColumns(columns, source.index, destination.index);
 
       setColumns(items);
+      updateBoardData.updateColumns(items);
       await updateColumnPosition(draggableId, destination.index);
     }
 
     if (type === 'card') {
       const items = reorderCrads(columns, source, destination);
 
-      setColumns(items);
+      updateBoardData.updateColumns(items);
       await updateCardPosition(draggableId, destination.index, destination.droppableId);
     }
   };
 
-  const getDroppableStyles = () => ({
+  const droppableStyles = {
     height: '100%',
     width: 'fit-content',
     display: 'flex',
     boxSizing: 'border-box',
-  });
+  };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -228,7 +202,7 @@ const BoardContent = ({ columnData, boardId }) => {
               <Box className={classes.board__contentWrapper}>
                 <div
                   ref={provided.innerRef}
-                  style={getDroppableStyles()}
+                  style={droppableStyles}
                   data-rbd-droppable-context-id={droppableProps['data-rbd-droppable-context-id']}
                   data-rbd-droppable-id={droppableProps['data-rbd-droppable-id']}
                 >
@@ -239,19 +213,12 @@ const BoardContent = ({ columnData, boardId }) => {
                         key={id}
                         data={column}
                         index={index}
-                        deleteColumn={deleteColumn}
                       />
                     );
                   })}
                   {provided.placeholder}
                 </div>
-                <ColumnCreator
-                  sourceState={columns}
-                  setState={setColumns}
-                  containerId={boardId}
-                  request={addColumn}
-                  type="column"
-                />
+                <ColumnCreator request={addColumn} />
               </Box>
             </Box>
           );
@@ -262,7 +229,7 @@ const BoardContent = ({ columnData, boardId }) => {
 };
 
 BoardContent.propTypes = {
-  columnData: PropTypes.arrayOf(
+  columnsData: PropTypes.arrayOf(
     PropTypes.shape({
       boardId: PropTypes.string,
       name: PropTypes.string,
@@ -276,7 +243,7 @@ BoardContent.propTypes = {
 };
 
 BoardContent.defaultProps = {
-  columnData: [],
+  columnsData: [],
   boardId: '',
 };
 

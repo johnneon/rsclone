@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardColumnCreator = ({ request, type }) => {
+const BoardColumnCreator = ({ request }) => {
   const [isBoardColumnCreatorVisible, setBoardColumnCreatorVisibility] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
@@ -123,14 +123,10 @@ const BoardColumnCreator = ({ request, type }) => {
           ) : (
             <Button
               variant="contained"
-              className={
-                type === 'column'
-                  ? classes.creator__addNewColButton
-                  : classes.creator__addNewCardButton
-              }
+              className={classes.creator__addNewColButton}
               onClick={showBoardColumnCreator}
             >
-              {`Add new ${type}`}
+              Add new column
             </Button>
           )}
       </Collapse>
@@ -140,11 +136,10 @@ const BoardColumnCreator = ({ request, type }) => {
 
 BoardColumnCreator.propTypes = {
   request: PropTypes.func,
-  type: PropTypes.string,
 };
+
 BoardColumnCreator.defaultProps = {
   request: () => {},
-  type: '',
 };
 
 export default BoardColumnCreator;

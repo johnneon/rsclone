@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack';
 import BoardColumnMenu from '../BoardColumnMenu/BoardColumnMenu';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
+import { BoardDataContext } from '../../context/BoardDataContext';
 
 const useStyles = makeStyles((theme) => ({
   board__header: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BoardColumnHeader = ({
-  name, id, dragHandleProps, deleteColumn,
+  name, id, dragHandleProps,
 }) => {
   const [header, setHeader] = useState(name);
   const [isHeaderEditable, setHeaderEditable] = useState(false);
@@ -47,6 +48,7 @@ const BoardColumnHeader = ({
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
+  const { updateBoardData } = useContext(BoardDataContext);
 
   const anchorRef = useRef(null);
   const inputRef = useRef(null);
@@ -69,6 +71,24 @@ const BoardColumnHeader = ({
       };
 
       await request(requestOptions);
+      updateBoardData.updateColumn({ name: value, _id: id });
+    } catch (e) {
+      showSnackbar(e.message, 'error');
+    }
+  };
+
+  const deleteColumn = async () => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/column/${id}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await request(requestOptions);
+      updateBoardData.deleteColumn(id);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
@@ -165,14 +185,12 @@ BoardColumnHeader.propTypes = {
     role: PropTypes.string,
     tabIndex: PropTypes.number,
   }),
-  deleteColumn: PropTypes.func,
 };
 
 BoardColumnHeader.defaultProps = {
   name: '',
   id: '',
   dragHandleProps: {},
-  deleteColumn: () => {},
 };
 
 export default BoardColumnHeader;

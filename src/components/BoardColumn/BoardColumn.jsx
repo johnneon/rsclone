@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardColumn = ({ data, index, deleteColumn }) => {
+const BoardColumn = ({ data, index }) => {
   const { cards, name, _id: id } = data;
   const classes = useStyles();
 
@@ -45,7 +45,6 @@ const BoardColumn = ({ data, index, deleteColumn }) => {
                 name={name}
                 id={id}
                 dragHandleProps={providedColumn.dragHandleProps}
-                deleteColumn={deleteColumn}
               />
               <BoardColumnTaskList
                 data={cards}
@@ -69,13 +68,11 @@ BoardColumn.propTypes = {
     _id: PropTypes.string,
   }),
   index: PropTypes.number,
-  deleteColumn: PropTypes.func,
 };
 
 BoardColumn.defaultProps = {
   data: {},
   index: 0,
-  deleteColumn: () => {},
 };
 
 export default BoardColumn;

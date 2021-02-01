@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, {
   useState, useContext, useCallback, useEffect,
 } from 'react';
@@ -10,6 +11,7 @@ import TaskCard from '../TaskCard/TaskCard';
 import BoardCardCreator from '../BoardCardCreator/BoardCardCreator';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
+import { BoardDataContext } from '../../context/BoardDataContext';
 
 const useStyles = makeStyles(() => ({
   board__tasklList: {
@@ -43,14 +45,15 @@ const BoardColumnTaskList = ({ data, columnId }) => {
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
+  const { updateBoardData } = useContext(BoardDataContext);
 
   const classes = useStyles();
+
+  useEffect(() => setCards(data), [data, columnId]);
 
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
-
-  useEffect(() => setCards(data), [data]);
 
   const addCard = async (name) => {
     try {
@@ -68,19 +71,10 @@ const BoardColumnTaskList = ({ data, columnId }) => {
       };
       const response = await request(requestOptions);
 
-      setCards([...cards, response]);
+      updateBoardData.addCard(response);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
-  };
-
-  const deleteCard = (cardId) => {
-    const sourceData = [...cards];
-
-    const removedCardIndex = sourceData.findIndex(({ _id: removedId }) => removedId === cardId);
-    sourceData.splice(removedCardIndex, 1);
-
-    setCards(sourceData);
   };
 
   const getListStyle = () => ({
@@ -112,7 +106,6 @@ const BoardColumnTaskList = ({ data, columnId }) => {
                       index={ind}
                       data={card}
                       key={id}
-                      deleteCard={deleteCard}
                     />
                   );
                 })}
@@ -123,11 +116,8 @@ const BoardColumnTaskList = ({ data, columnId }) => {
         }}
       </Droppable>
       <BoardCardCreator
-        sourceState={cards}
-        setState={setCards}
-        containerId={columnId}
         request={addCard}
-        type="card"
+        type="creator"
       />
     </>
   );
