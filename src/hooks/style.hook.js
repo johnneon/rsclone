@@ -50,6 +50,9 @@ const useStyles = makeStyles({
     '& .MuiDialog-paperWidthSm': {
       width: '100%',
       maxWidth: '500px',
+      '@media(max-width: 480px)': {
+        margin: '15px',
+      },
     },
   },
   innerPage: {

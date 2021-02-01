@@ -15,6 +15,9 @@ const useStyles = makeStyles({
     '& .MuiDialog-paperWidthSm': {
       width: '100%',
       maxWidth: '400px',
+      '@media(max-width: 480px)': {
+        margin: '15px',
+      },
     },
   },
 });

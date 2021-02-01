@@ -10,16 +10,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles({
-  popup: {
-    '& .MuiDialog-paperWidthSm': {
-      width: '100%',
-      maxWidth: '500px',
-    },
-  },
-});
+import useStyles from '../../hooks/style.hook';
 
 const BoardCreatePopup = ({ isOpen, close, createAction }) => {
   const classes = useStyles();
