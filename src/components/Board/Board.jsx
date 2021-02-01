@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     boxSizing: 'border-box',
+    flex: 'auto',
   },
   board__content: {
     padding: '10px',
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     overflowX: 'auto',
     boxSizing: 'border-box',
+    flex: 'auto',
   },
   board__button: {
     padding: '10px 20px',

@@ -13,6 +13,9 @@ const useStyles = makeStyles({
   },
   paddingTopBig: {
     paddingTop: '100px',
+    '@media(max-width: 480px)': {
+      paddingTop: '50px',
+    },
   },
   paddingTopMiddle: {
     paddingTop: '50px',
@@ -53,6 +56,10 @@ const useStyles = makeStyles({
     paddingRight: '30px',
     paddingLeft: '30px',
     minHeight: 'calc(100vh - 124px)',
+    '@media(max-width: 480px)': {
+      paddingRight: '15px',
+      paddingLeft: '15px',
+    },
   },
 });
 

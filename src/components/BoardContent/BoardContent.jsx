@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     overflowX: 'auto',
     overflowY: 'hidden',
     boxSizing: 'border-box',
+    flex: 'auto',
     '&::-webkit-scrollbar': {
       width: '5px',
       height: '8px',
