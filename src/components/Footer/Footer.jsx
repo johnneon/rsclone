@@ -5,7 +5,7 @@ import useStyles from '../../hooks/style.hook';
 
 const currentStyles = makeStyles((theme) => ({
   footer: {
-    padding: '20px 0',
+    padding: '10px 0',
     marginTop: 'auto',
     backgroundColor: theme.palette.primary.main,
   },

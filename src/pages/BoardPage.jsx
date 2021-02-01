@@ -13,7 +13,7 @@ import BoardCards from '../components/BoardCard/BoardCards';
 import useStyles from '../hooks/style.hook';
 import Footer from '../components/Footer/Footer';
 
-const HomePage = () => {
+const BoardPage = () => {
   const classes = useStyles();
 
   return (
@@ -59,4 +59,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default BoardPage;
