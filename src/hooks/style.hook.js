@@ -35,6 +35,13 @@ const useStyles = makeStyles({
   },
   contentContainer: {
     paddingLeft: '50px',
+    '@media(max-width: 1024px)': {
+      paddingLeft: '20px',
+    },
+    '@media(max-width: 600px)': {
+      paddingLeft: 0,
+      paddingTop: '40px',
+    },
   },
   popup: {
     '& .MuiDialog-paperWidthSm': {

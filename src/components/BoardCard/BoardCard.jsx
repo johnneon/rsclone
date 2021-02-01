@@ -27,14 +27,31 @@ const useStyles = makeStyles({
     marginRight: '20px',
     marginBottom: '20px',
     textDecoration: 'none',
-    padding: '0',
+    padding: 0,
     border: 'none',
     textAlign: 'left',
     '&:nth-child(3n)': {
-      marginRight: '0',
+      marginRight: 0,
     },
     '&:hover .MuiSvgIcon-root': {
       opacity: '1',
+    },
+    '@media(max-width: 768px)': {
+      width: 'calc(50% - 10px)',
+      justifyContent: 'center',
+      '&:nth-child(3n)': {
+        marginRight: '20px',
+      },
+      '&:nth-child(2n)': {
+        marginRight: 0,
+      },
+    },
+    '@media(max-width: 480px)': {
+      width: '100%',
+      marginRight: 0,
+      '&:nth-child(3n)': {
+        marginRight: 0,
+      },
     },
   },
   media: {

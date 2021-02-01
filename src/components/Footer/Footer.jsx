@@ -8,6 +8,7 @@ const currentStyles = makeStyles((theme) => ({
     padding: '10px 0',
     marginTop: 'auto',
     backgroundColor: theme.palette.primary.main,
+    zIndex: 10,
   },
   footerLogo: {
     width: '100px',
