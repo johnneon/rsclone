@@ -45,7 +45,7 @@ const useStyles = makeStyles({
   innerPage: {
     paddingRight: '30px',
     paddingLeft: '30px',
-    minHeight: 'calc(100vh - 144px)',
+    minHeight: 'calc(100vh - 124px)',
   },
 });
 
