@@ -14,14 +14,14 @@ import { BoardDataContext } from '../../context/BoardDataContext';
 
 const useStyles = makeStyles((theme) => ({
   board__content: {
-    height: '100%',
-    maxHeight: 'calc(100vh - 115px)',
+    // height: '100%',
+    height: 'calc(100vh - 115px)',
     overflowX: 'auto',
     overflowY: 'hidden',
     boxSizing: 'border-box',
     flex: 'auto',
     '@media(max-width: 1024px)': {
-      overflowY: 'auto',
+      height: 'calc(100vh - 100px)',
     },
     '&::-webkit-scrollbar': {
       width: '5px',
