@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
   paddingTopBig: {
     paddingTop: '100px',
-    '@media(max-width: 480px)': {
+    '@media(max-width: 1024px)': {
       paddingTop: '50px',
     },
   },
@@ -62,6 +62,12 @@ const useStyles = makeStyles({
     '@media(max-width: 480px)': {
       paddingRight: '15px',
       paddingLeft: '15px',
+    },
+  },
+  fullButtonMob: {
+    '@media(max-width: 480px)': {
+      maxWidth: 'none',
+      width: '100%',
     },
   },
 });

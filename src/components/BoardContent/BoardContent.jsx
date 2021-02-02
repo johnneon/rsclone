@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     overflowY: 'hidden',
     boxSizing: 'border-box',
     flex: 'auto',
+    '@media(max-width: 1024px)': {
+      overflowY: 'auto',
+    },
     '&::-webkit-scrollbar': {
       width: '5px',
       height: '8px',
