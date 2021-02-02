@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Backdrop, CircularProgress } from '@material-ui/core';
+import { SnackbarProvider } from 'notistack';
 import AuthContext from './context/AuthContext';
 import useRouts from './routes';
 import CustomThemeProvider from './theme/CustomThemeProvider';
@@ -36,12 +37,21 @@ function App() {
           token, login, logout, userId, fullName, isAuthenticated,
         }}
       >
-        <Router>
-          <div className="container">
-            <Header onReady={ready} />
-            {routes}
-          </div>
-        </Router>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={2000}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+        >
+          <Router>
+            <div className="container">
+              <Header onReady={ready} />
+              {routes}
+            </div>
+          </Router>
+        </SnackbarProvider>
       </AuthContext.Provider>
     </CustomThemeProvider>
   );

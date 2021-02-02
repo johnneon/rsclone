@@ -20,7 +20,8 @@ const theme = createMuiTheme({
     },
     background: {
       main: '#fff',
-      column: '#fafafa',
+      card: '#fafafa',
+      column: '#eceff1',
       // auth:#ddfae7
     },
     shadow: {
@@ -28,10 +29,14 @@ const theme = createMuiTheme({
     },
     text: {
       main: '#3e3a3a',
+      white: '#fff',
       // auth: '#676868',
     },
     buttons: {
       transparentWhite: '#ffffff3d',
+      transparentWhiteHover: '#ffffff70',
+      grey: '#dcdcdc',
+      greyHover: '#b3b3b3',
     },
   },
   typography: {

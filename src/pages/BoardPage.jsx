@@ -11,13 +11,14 @@ import { SnackbarProvider } from 'notistack';
 import Aside from '../components/Aside/Aside';
 import BoardCards from '../components/BoardCard/BoardCards';
 import useStyles from '../hooks/style.hook';
+import Footer from '../components/Footer/Footer';
 
-const HomePage = () => {
+const BoardPage = () => {
   const classes = useStyles();
 
   return (
     <>
-      <Container className={classes.paddingTopBig}>
+      <Container className={`${classes.paddingTopBig} ${classes.innerPage}`}>
         <Typography
           variant="h1"
           component="h1"
@@ -53,8 +54,9 @@ const HomePage = () => {
           </Grid>
         </Grid>
       </Container>
+      <Footer />
     </>
   );
 };
 
-export default HomePage;
+export default BoardPage;

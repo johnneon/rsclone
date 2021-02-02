@@ -68,7 +68,7 @@ const BoardCard = ({ id, title, deleteBoard }) => {
     <NavLink
       onClick={locate}
       className={classes.cardItem}
-      to={`/card_${id}`}
+      to={`/board_${id}`}
     >
       <Card variant="outlined" className={classes.navAside}>
         <CardActionArea>
