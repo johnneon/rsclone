@@ -8,9 +8,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Badge from '@material-ui/core/Badge';
 import AuthContext from '../../context/AuthContext';
 import useAuth from '../../hooks/auth.hook';
 import ValidationModal from '../ValidationModal/ValidationModal';
+import DropDown from '../DropDown/DropDown';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -21,20 +23,29 @@ const useStyles = makeStyles((theme) => ({
     color: '#ffffff',
     textDecoration: 'none',
   },
+  avatarBtn: {
+    marginLeft: '10px',
+  },
   avatar: {
-    marginRight: '10px',
     backgroundColor: '#ffd600',
   },
   infoIcon: {
     color: '#ffffff',
+  },
+  navigation: {
+    position: 'relative',
   },
 }));
 
 function Header() {
   const classes = useStyles();
   const { logout } = useAuth();
-  const { isAuthenticated, fullName } = useContext(AuthContext);
+  const { isAuthenticated, fullName, getNotifications } = useContext(AuthContext);
   const [openInfo, setOpenInfo] = useState(false);
+  const [openNots, setOpenNots] = useState(false);
+  const [badge, setBadge] = useState(false);
+  const notifications = getNotifications().length;
+
   let avatarName = null;
 
   if (fullName) {
@@ -49,6 +60,11 @@ function Header() {
     setOpenInfo(true);
   };
 
+  const avatarHandler = () => {
+    setBadge(true);
+    setOpenNots((prev) => !prev);
+  };
+
   const logoutNow = async () => {
     await logout();
     window.location.reload();
@@ -57,18 +73,31 @@ function Header() {
   const RenderHeaderBar = () => {
     if (isAuthenticated) {
       return (
-        <>
-          <Avatar
-            color="primary"
-            className={classes.avatar}
-          >
-            {avatarName}
-          </Avatar>
+        <div className={classes.navigation}>
           <ButtonGroup color="primary">
             <Button color="inherit">Settings</Button>
             <Button onClick={logoutNow} color="inherit">logout</Button>
           </ButtonGroup>
-        </>
+          <IconButton onClick={avatarHandler} className={classes.avatarBtn}>
+            <Badge
+              badgeContent={notifications}
+              color="error"
+              invisible={badge}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <Avatar
+                color="primary"
+                className={classes.avatar}
+              >
+                {avatarName}
+              </Avatar>
+            </Badge>
+          </IconButton>
+          <DropDown isOpen={openNots} />
+        </div>
       );
     }
 

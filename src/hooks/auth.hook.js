@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const storageName = 'userData';
+const notifications = 'notifications';
 
 const isExpired = (jwtToken) => {
   if (!jwtToken) {
@@ -40,6 +41,16 @@ const useAuth = () => {
       },
     ));
   }, []);
+
+  const setNotification = (notice) => {
+    localStorage.setItem(notifications, JSON.stringify({ notice }));
+  };
+
+  const discardNotifications = () => {
+    localStorage.removeItem(notifications);
+  };
+
+  const getNotifications = () => JSON.parse(localStorage.getItem(notifications)).notice;
 
   const logout = useCallback(async () => {
     const data = JSON.parse(localStorage.getItem(storageName));
@@ -110,6 +121,9 @@ const useAuth = () => {
     fullName,
     userId,
     ready,
+    setNotification,
+    discardNotifications,
+    getNotifications,
   };
 };
 
