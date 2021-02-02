@@ -18,13 +18,13 @@ const DropDown = ({ isOpen }) => {
   const notifications = getNotifications();
 
   const notices = notifications.map((item) => {
-    const { from, board } = item;
+    const { from, boardName, boardId } = item;
 
     if (typeof item === 'object') {
       return (
-        <Box key={board}>
+        <Box key={boardId}>
           You have got invite to
-          {board}
+          {boardName}
           from
           {from}
         </Box>
