@@ -79,7 +79,10 @@ const BoardCard = ({ id, title, deleteBoard }) => {
           <CardMedia
             className={classes.media}
             title={title}
-          />
+          >
+            {/* <img src="#" alt="Board backgound" /> */}
+            <div style={{ width: '100%', height: '100%' }} />
+          </CardMedia>
           <CardContent>
             <Typography className={classes.title} color="textSecondary">
               {title}
