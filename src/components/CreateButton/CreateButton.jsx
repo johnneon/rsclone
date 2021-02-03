@@ -51,11 +51,13 @@ const useStyles = makeStyles({
 });
 
 const CreateButton = ({ createCard }) => {
+  const [open, setOpen] = useState(false);
+
   const { enqueueSnackbar } = useSnackbar();
-  const classes = useStyles();
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
-  const [open, setOpen] = useState(false);
+
+  const classes = useStyles();
 
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })

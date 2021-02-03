@@ -1,7 +1,4 @@
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -11,37 +8,56 @@ import {
   TextField,
   DialogActions,
   Box,
-  List,
-  ListItem,
+  Paper,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import BoardCreatePopupMenu from '../BoardCardCreatePopupMenu/BoardCardCreatePopupMenu';
+import BoardCreatePopupMenu from '../BoardCreatePopupMenu/BoardCreatePopupMenu';
 import BackgroundButton from '../BackroundButton/BackgroundButton';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   popup: {
     '& .MuiDialog-paperWidthSm': {
       width: '100%',
       maxWidth: '500px',
       alignSelf: 'flex-start',
+      background: 'transparent',
+      boxShadow: 'none',
+      overflow: 'hidden',
     },
   },
+  form: {
+    marginBottom: 20,
+  },
   content: {
+    display: 'flex',
+    padding: '0',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
+  },
+  wrapper: {
+    minWidth: '55%',
+  },
+  name: {
     padding: '0 24px',
     minWidth: '50%',
     display: 'flex',
     overflowY: 'initial',
   },
-});
+}));
 
 const BoardCreatePopup = ({ isOpen, close, createAction }) => {
   const classes = useStyles();
 
-  const [formData, setFormData] = useState({ name: '' });
+  const [formData, setFormData] = useState({ name: '', background: '#f44336' });
   const [formValidity, setFormValidity] = useState({ name: true });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const popupRef = useRef(null);
+  const onClose = () => {
+    setIsMenuOpen(() => false);
+    setFormData(() => ({ ...formData, background: '#f44336' }));
+    close();
+  };
 
   const setFormDataHandler = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -56,8 +72,7 @@ const BoardCreatePopup = ({ isOpen, close, createAction }) => {
     return isNameValid;
   };
 
-  const formActionHandler = (e) => {
-    e.preventDefault();
+  const formActionHandler = () => {
     const isFormValid = checkFormValidity();
 
     if (!isFormValid) {
@@ -65,74 +80,68 @@ const BoardCreatePopup = ({ isOpen, close, createAction }) => {
     }
 
     createAction(formData);
-
-    close();
+    onClose();
   };
 
-  const handleClick = (event) => {
-    // setAnchorEl(event.currentTarget);
+  const changeBackground = (background) => {
+    setFormData({ ...formData, background });
   };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  console.log(isMenuOpen, popupRef.current);
-
   return (
     <>
       <Dialog
-        // open={isOpen}
-        open
-        onClose={close}
+        open={isOpen}
+        onClose={onClose}
         aria-labelledby="alert-dialog-title"
         className={classes.popup}
         scroll="paper"
-        PaperProps={{ ref: popupRef }}
-        // ref={popupRef}
       >
-        {/* <form type="POST"> */}
-        <Box style={{ display: 'flex', padding: '0' }}>
-          <Box style={{ width: '55%' }}>
-            <DialogTitle id="alert-dialog-slide-title">
-              Create a new board
-            </DialogTitle>
-            <DialogContent className={classes.content}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                name="name"
-                label="Board name"
-                type="text"
-                fullWidth
-                size="small"
-                helperText={!formValidity.name ? 'Name is not valid.' : ' '}
-                error={!formValidity.name}
-                onChange={setFormDataHandler}
-              />
-            </DialogContent>
-          </Box>        
-          <BackgroundButton 
-            openMenu={toggleMenu}
-          />        
-        </Box>
+        <Paper className={classes.form}>
+          <Box className={classes.content}>
+            <Box className={classes.wrapper}>
+              <DialogTitle id="alert-dialog-slide-title">
+                Create a new board
+              </DialogTitle>
+              <DialogContent className={classes.name}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  name="name"
+                  label="Board name"
+                  type="text"
+                  fullWidth
+                  size="small"
+                  helperText={!formValidity.name ? 'Name is not valid.' : ' '}
+                  error={!formValidity.name}
+                  onChange={setFormDataHandler}
+                />
+              </DialogContent>
+            </Box>
+            <BackgroundButton
+              openMenu={toggleMenu}
+              color={formData.background}
+            />
+          </Box>
           <DialogActions>
-            <Button onClick={close} color="primary">
+            <Button onClick={onClose} color="primary">
               Cancel
             </Button>
             <Button type="submit" onClick={formActionHandler} color="primary">
               Create
             </Button>
           </DialogActions>
-        {/* </form> */}
+        </Paper>
+        <BoardCreatePopupMenu
+          isOpen={isMenuOpen}
+          handleClose={toggleMenu}
+          onClick={changeBackground}
+        />
       </Dialog>
-      <BoardCreatePopupMenu 
-        handleClose={toggleMenu}
-        handleClick
-        anchorEl={popupRef.current}
-        isOpen={isMenuOpen}
-      />
     </>
   );
 };

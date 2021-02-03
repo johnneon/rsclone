@@ -59,7 +59,7 @@ const BoardHeader = ({ boardName, users, boardId }) => {
         color="inherit"
         className={classes.boardHeader__element}
       >
-        Menu
+        Background
       </Button>
     </Box>
   );

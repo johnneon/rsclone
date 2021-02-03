@@ -1,33 +1,29 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
-// import BoardCreatePopupMenu from '../BoardCardCreatePopupMenu/BoardCardCreatePopupMenu';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: '14px 24px 24px',
-    width: '50%',
-    minWidth: '190px',
+    minWidth: '45%',
     minHeight: '135px',
-    // minHeight: '300px',
     display: 'flex',
     flexWrap: 'wrap',
     boxSizing: 'border-box',
   },
   image: {
     position: 'relative',
-    height: '100%',
+    width: '100%',
+    minHeight: '100%',
     [theme.breakpoints.down('xs')]: {
-      // width: '100% !important', // Overrides inline-style
-      height: 50,
+      // height: 50,
     },
     '&:hover, &$focusVisible': {
       zIndex: 1,
       '& $imageBackdrop': {
-        opacity: 0.15,
+        opacity: 0.6,
       },
       '& $imageMarked': {
         opacity: 0,
@@ -65,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     bottom: 0,
     backgroundColor: theme.palette.common.black,
-    opacity: 0.4,
+    opacity: 0.45,
     transition: theme.transitions.create('opacity'),
   },
   imageTitle: {
@@ -83,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BackgroundButton({ openMenu }) {
+const BackgroundButton = ({ openMenu, color }) => {
   const classes = useStyles();
 
   return (
@@ -92,17 +88,11 @@ export default function BackgroundButton({ openMenu }) {
         focusRipple
         className={classes.image}
         focusVisibleClassName={classes.focusVisible}
-        style={{
-          width: '100%',
-        }}
         onClick={openMenu}
       >
         <span
           className={classes.imageSrc}
-          style={{
-            // backgroundImage: 'url(#)',
-            backgroundColor: 'red',
-          }}
+          style={{ background: `center / cover no-repeat ${color}` }}
         />
         <span className={classes.imageBackdrop} />
         <span className={classes.imageButton}>
@@ -119,4 +109,16 @@ export default function BackgroundButton({ openMenu }) {
       </ButtonBase>
     </div>
   );
-}
+};
+
+BackgroundButton.propTypes = {
+  openMenu: PropTypes.bool,
+  color: PropTypes.arrayOf(PropTypes.string),
+};
+
+BackgroundButton.defaultProps = {
+  openMenu: false,
+  color: '#f44336',
+};
+
+export default BackgroundButton;
