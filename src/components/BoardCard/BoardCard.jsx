@@ -51,7 +51,9 @@ const useStyles = makeStyles({
   },
 });
 
-const BoardCard = ({ id, title, deleteBoard }) => {
+const BoardCard = ({
+  id, title, deleteBoard, background,
+}) => {
   const classes = useStyles();
 
   const deleteThis = () => {
@@ -79,7 +81,15 @@ const BoardCard = ({ id, title, deleteBoard }) => {
           <CardMedia
             className={classes.media}
             title={title}
-          />
+          >
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                background: `center / cover no-repeat ${background}`,
+              }}
+            />
+          </CardMedia>
           <CardContent>
             <Typography className={classes.title} color="textSecondary">
               {title}
@@ -93,12 +103,14 @@ const BoardCard = ({ id, title, deleteBoard }) => {
 
 BoardCard.defaultProps = {
   title: 'Card',
+  background: '#fbf089',
 };
 
 BoardCard.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string,
   deleteBoard: PropTypes.func.isRequired,
+  background: PropTypes.string,
 };
 
 export default BoardCard;

@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-
 import { useSnackbar } from 'notistack';
 import CreateButton from '../CreateButton/CreateButton';
 import AuthContext from '../../context/AuthContext';
@@ -76,13 +75,14 @@ const BoardCards = () => {
   }, [token, request]);
 
   const cardsTemplates = cards.map((item) => {
-    const { _id: itemId, name } = item;
+    const { _id: itemId, name, background } = item;
 
     if (typeof item === 'object') {
       return (
         <BoardCard
           id={itemId}
           title={name}
+          background={background}
           deleteBoard={getAskPopup}
           key={itemId}
         />
