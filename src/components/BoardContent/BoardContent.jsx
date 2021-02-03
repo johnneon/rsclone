@@ -14,7 +14,6 @@ import { BoardDataContext } from '../../context/BoardDataContext';
 
 const useStyles = makeStyles((theme) => ({
   board__content: {
-    // height: '100%',
     height: 'calc(100vh - 115px)',
     overflowX: 'auto',
     overflowY: 'hidden',

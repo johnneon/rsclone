@@ -91,6 +91,8 @@ const CardPopup = ({
   const [data, setData] = useState([]);
   const classes = { ...useStyles(), ...currentStyles() };
 
+  console.log(data);
+
   const { _id: idCard } = data;
 
   const { enqueueSnackbar } = useSnackbar();

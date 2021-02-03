@@ -55,6 +55,8 @@ const TaskCard = ({ data, index }) => {
 
   useEffect(() => setCard(data), [data, setCard]);
 
+  console.log(data);
+
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
