@@ -1,11 +1,17 @@
-import React from 'react';
+import React, {
+  useState, useRef, useCallback, useContext,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Box, Button } from '@material-ui/core';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
 import BoardHeaderUsers from '../BoardHeaderUsers/BoardHeaderUsers';
 import BoardHeaderName from '../BoardHeaderName/BoardHeaderName';
+import BoardBackgroundMenu from '../BoardBackgroundMenu/BoardBackgroundMenu';
+import useHttp from '../../hooks/http.hook';
+import AuthContext from '../../context/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
   boardHeader: {
@@ -34,7 +40,36 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BoardHeader = ({ boardName, users, boardId }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const anchorEl = useRef(null);
+
+  const { token } = useContext(AuthContext);
+  const { request } = useHttp();
+  const { enqueueSnackbar } = useSnackbar();
+
   const classes = useStyles();
+
+  const showSnackbar = useCallback((message, variant) => (
+    enqueueSnackbar(message, { variant })
+  ), [enqueueSnackbar]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const updateBoardData = async (data) => {
+    try {
+      const requestOptions = {
+        url: `https://rsclone-back-end.herokuapp.com/api/board/${boardId}`,
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` },
+        body: data,
+      };
+      await request(requestOptions);
+    } catch (e) {
+      showSnackbar(e.message, 'error');
+    }
+  };
 
   return (
     <Box className={classes.boardHeader}>
@@ -53,15 +88,27 @@ const BoardHeader = ({ boardName, users, boardId }) => {
         >
           Boards
         </Button>
-        <BoardHeaderName boardId={boardId} boardName={boardName} />
+        <BoardHeaderName
+          boardId={boardId}
+          boardName={boardName}
+          request={updateBoardData}
+        />
         <BoardHeaderUsers data={users} />
       </Box>
       <Button
         color="inherit"
         className={classes.boardHeader__element}
+        onClick={toggleMenu}
+        ref={anchorEl}
       >
-        Menu
+        Background
       </Button>
+      <BoardBackgroundMenu
+        anchorEl={anchorEl.current}
+        handleClose={toggleMenu}
+        isOpen={isMenuOpen}
+        request={updateBoardData}
+      />
     </Box>
   );
 };

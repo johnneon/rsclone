@@ -80,7 +80,10 @@ const Board = () => {
       boardData={boardData}
       setBoardData={setBoardData}
     >
-      <main className={classes.board}>
+      <main
+        className={classes.board}
+        style={{ background: `center / cover no-repeat ${boardData.background || '#88adfb'}` }}
+      >
         <BoardHeader
           boardName={boardData.name}
           boardId={boardId}
