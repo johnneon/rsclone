@@ -21,6 +21,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import CardPopupField from '../CardPopupField/CardPopupField';
 import CardPopupTextField from '../CardPopupTextField/CardPopupTextField';
+import UsersLabels from '../UsersLabels/UsersLabels';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
 import useStyles from '../../hooks/style.hook';
@@ -84,7 +85,7 @@ const currentStyles = makeStyles({
 });
 
 const CardPopup = ({
-  isOpen, close, updateCardData, cardData,
+  isOpen, close, updateCardData, cardData, users,
 }) => {
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
@@ -133,6 +134,11 @@ const CardPopup = ({
           value={data.name}
           action={updateCard}
         />
+        <UsersLabels
+          currentUsers={cardData.users}
+          users={users}
+          idCard={data._id}
+        />
         <CardPopupTextField
           name="content"
           value={data.content}
@@ -148,9 +154,11 @@ CardPopup.propTypes = {
   close: PropTypes.func.isRequired,
   updateCardData: PropTypes.func.isRequired,
   cardData: PropTypes.objectOf(PropTypes.string),
+  users: PropTypes.arrayOf(PropTypes.object),
 };
 CardPopup.defaultProps = {
   cardData: {},
+  users: [],
 };
 
 export default CardPopup;

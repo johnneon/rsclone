@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const BoardColumnTaskList = ({ data, columnId }) => {
+const BoardColumnTaskList = ({ data, columnId, users }) => {
   const [cards, setCards] = useState(data);
 
   const { token } = useContext(AuthContext);
@@ -105,6 +105,7 @@ const BoardColumnTaskList = ({ data, columnId }) => {
                       index={ind}
                       data={card}
                       key={id}
+                      users={users}
                     />
                   );
                 })}
@@ -126,11 +127,13 @@ BoardColumnTaskList.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.objectOf(PropTypes.string),
   ),
+  users: PropTypes.arrayOf(PropTypes.object),
   columnId: PropTypes.string,
 };
 
 BoardColumnTaskList.defaultProps = {
   data: [],
+  users: [],
   columnId: '',
 };
 

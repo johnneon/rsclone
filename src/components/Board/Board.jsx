@@ -44,7 +44,7 @@ const Board = () => {
   const { id } = useParams();
 
   const [boardData, setBoardData] = useState({});
-  const { _id: boardId, columns } = boardData;
+  const { _id: boardId, columns, users } = boardData;
 
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
@@ -88,6 +88,7 @@ const Board = () => {
         />
         <BoardContent
           columnsData={columns}
+          usersData={users}
           boardId={boardId}
         />
       </main>

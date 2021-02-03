@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardContent = ({ columnsData, boardId }) => {
+const BoardContent = ({ columnsData, boardId, usersData }) => {
   const [columns, setColumns] = useState([]);
 
   const { token } = useContext(AuthContext);
@@ -216,6 +216,7 @@ const BoardContent = ({ columnsData, boardId }) => {
                         key={id}
                         data={column}
                         index={index}
+                        users={usersData}
                       />
                     );
                   })}
@@ -242,11 +243,13 @@ BoardContent.propTypes = {
       ),
     }),
   ),
+  usersData: PropTypes.arrayOf(PropTypes.object),
   boardId: PropTypes.string,
 };
 
 BoardContent.defaultProps = {
   columnsData: [],
+  usersData: [],
   boardId: '',
 };
 

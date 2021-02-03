@@ -105,7 +105,7 @@ const CardPopupField = ({
   return (
     <>
       <Grid
-        className={classes.marginBottomMiddle}
+        className={classes.marginBottomSmall}
         container
         wrap="nowrap"
         direction="row"

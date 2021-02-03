@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskCard = ({ data, index }) => {
+const TaskCard = ({ data, index, users }) => {
   const [card, setCard] = useState(data);
   const [isEditorOpen, setEditorState] = useState(false);
   const [isCardOpen, setIsCardOpen] = useState(false);
@@ -173,6 +173,7 @@ const TaskCard = ({ data, index }) => {
       <CardPopup
         isOpen={isCardOpen}
         idCard={id}
+        users={users}
         close={toggleCardPopup}
         updateCardData={updateCardData}
         cardData={card}
@@ -183,11 +184,13 @@ const TaskCard = ({ data, index }) => {
 
 TaskCard.propTypes = {
   data: PropTypes.objectOf(PropTypes.string),
+  users: PropTypes.arrayOf(PropTypes.object),
   index: PropTypes.number,
 };
 
 TaskCard.defaultProps = {
   data: {},
+  users: [],
   index: 0,
 };
 

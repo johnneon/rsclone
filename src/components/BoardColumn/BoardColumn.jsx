@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardColumn = ({ data, index }) => {
+const BoardColumn = ({ data, index, users }) => {
   const { cards, name, _id: id } = data;
   const classes = useStyles();
 
@@ -49,6 +49,7 @@ const BoardColumn = ({ data, index }) => {
               <BoardColumnTaskList
                 data={cards}
                 columnId={id}
+                users={users}
               />
             </Paper>
           </div>
@@ -67,11 +68,13 @@ BoardColumn.propTypes = {
     name: PropTypes.string,
     _id: PropTypes.string,
   }),
+  users: PropTypes.arrayOf(PropTypes.object),
   index: PropTypes.number,
 };
 
 BoardColumn.defaultProps = {
   data: {},
+  users: [],
   index: 0,
 };
 
