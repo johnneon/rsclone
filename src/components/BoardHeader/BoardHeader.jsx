@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    overflow: 'auto',
   },
   boardHeader__options: {
     display: 'flex',

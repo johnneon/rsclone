@@ -13,6 +13,9 @@ const useStyles = makeStyles({
   },
   paddingTopBig: {
     paddingTop: '100px',
+    '@media(max-width: 1024px)': {
+      paddingTop: '50px',
+    },
   },
   paddingTopMiddle: {
     paddingTop: '50px',
@@ -35,17 +38,37 @@ const useStyles = makeStyles({
   },
   contentContainer: {
     paddingLeft: '50px',
+    '@media(max-width: 1024px)': {
+      paddingLeft: '20px',
+    },
+    '@media(max-width: 600px)': {
+      paddingLeft: 0,
+      paddingTop: '40px',
+    },
   },
   popup: {
     '& .MuiDialog-paperWidthSm': {
       width: '100%',
       maxWidth: '500px',
+      '@media(max-width: 480px)': {
+        margin: '15px',
+      },
     },
   },
   innerPage: {
     paddingRight: '30px',
     paddingLeft: '30px',
     minHeight: 'calc(100vh - 124px)',
+    '@media(max-width: 480px)': {
+      paddingRight: '15px',
+      paddingLeft: '15px',
+    },
+  },
+  fullButtonMob: {
+    '@media(max-width: 480px)': {
+      maxWidth: 'none',
+      width: '100%',
+    },
   },
 });
 

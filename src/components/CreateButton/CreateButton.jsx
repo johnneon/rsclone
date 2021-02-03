@@ -38,6 +38,23 @@ const useStyles = makeStyles({
     '&:nth-child(3n)': {
       marginRight: '0',
     },
+    '@media(max-width: 768px)': {
+      width: 'calc(50% - 10px)',
+      justifyContent: 'center',
+      '&:nth-child(3n)': {
+        marginRight: '20px',
+      },
+      '&:nth-child(2n)': {
+        marginRight: 0,
+      },
+    },
+    '@media(max-width: 480px)': {
+      width: '100%',
+      marginRight: 0,
+      '&:nth-child(3n)': {
+        marginRight: 0,
+      },
+    },
   },
   fullHeight: {
     height: '100%',
