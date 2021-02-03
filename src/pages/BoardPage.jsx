@@ -1,13 +1,10 @@
 import React from 'react';
-
 import {
   Container,
   Grid,
   Typography,
   Divider,
 } from '@material-ui/core';
-
-import { SnackbarProvider } from 'notistack';
 import Aside from '../components/Aside/Aside';
 import BoardCards from '../components/BoardCard/BoardCards';
 import useStyles from '../hooks/style.hook';
@@ -32,25 +29,24 @@ const BoardPage = () => {
           direction="row"
           justify="space-between"
         >
-          <Grid container item xs={2}>
+          <Grid
+            container
+            item
+            md={2}
+            sm={3}
+            xs={12}
+          >
             <Aside />
           </Grid>
           <Grid
             container
             item
-            xs={10}
+            md={10}
+            sm={9}
+            xs={12}
             className={classes.contentContainer}
           >
-            <SnackbarProvider
-              maxSnack={3}
-              autoHideDuration={2000}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-            >
-              <BoardCards />
-            </SnackbarProvider>
+            <BoardCards />
           </Grid>
         </Grid>
       </Container>

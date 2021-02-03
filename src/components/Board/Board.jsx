@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     boxSizing: 'border-box',
+    flex: 'auto',
   },
   board__content: {
     padding: '10px',
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     overflowX: 'auto',
     boxSizing: 'border-box',
+    flex: 'auto',
   },
   board__button: {
     padding: '10px 20px',
@@ -78,7 +80,10 @@ const Board = () => {
       boardData={boardData}
       setBoardData={setBoardData}
     >
-      <main className={classes.board}>
+      <main
+        className={classes.board}
+        style={{ background: `center / cover no-repeat ${boardData.background || '#88adfb'}` }}
+      >
         <BoardHeader
           boardName={boardData.name}
           boardId={boardId}

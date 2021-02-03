@@ -6,10 +6,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import HelpIcon from '@material-ui/icons/Help';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+
+import {
+  ExitToApp,
+  Help,
+} from '@material-ui/icons';
+
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Badge from '@material-ui/core/Badge';
 import AuthContext from '../../context/AuthContext';
@@ -25,18 +30,27 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     color: '#ffffff',
     textDecoration: 'none',
+    '@media(max-width: 480px)': {
+      fontSize: '18px',
+    },
   },
   avatarBtn: {
     marginLeft: '10px',
   },
   avatar: {
     backgroundColor: '#ffd600',
+    '@media(max-width: 480px)': {
+      width: '35px',
+      height: '35px',
+    },
   },
   infoIcon: {
     color: '#ffffff',
   },
   navigation: {
     position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 
@@ -81,8 +95,9 @@ function Header() {
       return (
         <div className={classes.navigation}>
           <ButtonGroup color="primary">
-            <Button color="inherit">Settings</Button>
-            <Button onClick={logoutNow} color="inherit">logout</Button>
+            <Button onClick={logoutNow} color="inherit">
+              <ExitToApp />
+            </Button>
           </ButtonGroup>
           <IconButton onClick={avatarHandler} className={classes.avatarBtn}>
             <Badge
@@ -112,7 +127,7 @@ function Header() {
         className={classes.infoIcon}
         onClick={infoHandler}
       >
-        <HelpIcon />
+        <Help />
       </IconButton>
     );
   };

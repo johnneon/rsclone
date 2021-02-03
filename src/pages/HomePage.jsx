@@ -26,10 +26,23 @@ const HomePage = () => {
           direction="row"
           justify="space-between"
         >
-          <Grid container item xs={2}>
+          <Grid
+            container
+            item
+            md={2}
+            sm={3}
+            xs={12}
+          >
             <Aside />
           </Grid>
-          <Grid item xs={10} className={classes.contentContainer}>
+          <Grid
+            container
+            item
+            md={10}
+            sm={9}
+            xs={12}
+            className={classes.contentContainer}
+          >
             <Typography
               variant="h1"
               component="h2"

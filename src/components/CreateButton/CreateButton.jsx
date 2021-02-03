@@ -38,6 +38,23 @@ const useStyles = makeStyles({
     '&:nth-child(3n)': {
       marginRight: '0',
     },
+    '@media(max-width: 768px)': {
+      width: 'calc(50% - 10px)',
+      justifyContent: 'center',
+      '&:nth-child(3n)': {
+        marginRight: '20px',
+      },
+      '&:nth-child(2n)': {
+        marginRight: 0,
+      },
+    },
+    '@media(max-width: 480px)': {
+      width: '100%',
+      marginRight: 0,
+      '&:nth-child(3n)': {
+        marginRight: 0,
+      },
+    },
   },
   fullHeight: {
     height: '100%',
@@ -51,11 +68,13 @@ const useStyles = makeStyles({
 });
 
 const CreateButton = ({ createCard }) => {
+  const [open, setOpen] = useState(false);
+
   const { enqueueSnackbar } = useSnackbar();
-  const classes = useStyles();
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
-  const [open, setOpen] = useState(false);
+
+  const classes = useStyles();
 
   const showSnackbar = useCallback((message, variant) => (
     enqueueSnackbar(message, { variant })

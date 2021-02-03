@@ -90,7 +90,6 @@ const CardPopup = ({
   const { request } = useHttp();
   const [data, setData] = useState([]);
   const classes = { ...useStyles(), ...currentStyles() };
-
   const { _id: idCard } = data;
 
   const { enqueueSnackbar } = useSnackbar();
