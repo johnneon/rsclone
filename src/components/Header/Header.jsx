@@ -1,4 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, {
+  useState,
+  useContext,
+} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
@@ -40,11 +43,15 @@ const useStyles = makeStyles((theme) => ({
 function Header() {
   const classes = useStyles();
   const { logout } = useAuth();
-  const { isAuthenticated, fullName, getNotifications } = useContext(AuthContext);
+  const {
+    isAuthenticated,
+    fullName,
+    getNotifications,
+  } = useContext(AuthContext);
   const [openInfo, setOpenInfo] = useState(false);
   const [openNots, setOpenNots] = useState(false);
-  const [badge, setBadge] = useState(false);
   const notifications = getNotifications().length;
+  const [badge, setBadge] = useState(!notifications);
 
   let avatarName = null;
 
@@ -61,8 +68,8 @@ function Header() {
   };
 
   const avatarHandler = () => {
-    setBadge(true);
     setOpenNots((prev) => !prev);
+    setBadge(true);
   };
 
   const logoutNow = async () => {

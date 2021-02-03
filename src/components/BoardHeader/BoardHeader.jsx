@@ -53,7 +53,7 @@ const BoardHeader = ({ boardName, users, boardId }) => {
           Boards
         </Button>
         <BoardHeaderName boardId={boardId} boardName={boardName} />
-        <BoardHeaderUsers data={users} />
+        <BoardHeaderUsers boardId={boardId} data={users} />
       </Box>
       <Button
         color="inherit"
