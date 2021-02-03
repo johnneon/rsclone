@@ -74,7 +74,6 @@ function Header() {
 
   const logoutNow = async () => {
     await logout();
-    window.location.reload();
   };
 
   const RenderHeaderBar = () => {

@@ -121,6 +121,7 @@ const DropDown = ({ isOpen }) => {
 
     return (
       <NotificationCard
+        key={boardId}
         boardId={boardId}
         boardName={boardName}
         from={from}
