@@ -50,8 +50,8 @@ function Header() {
   } = useContext(AuthContext);
   const [openInfo, setOpenInfo] = useState(false);
   const [openNots, setOpenNots] = useState(false);
-  const notifications = getNotifications().length;
-  const [badge, setBadge] = useState(!notifications);
+  const notifications = getNotifications();
+  const [badge, setBadge] = useState(!notifications.length);
 
   let avatarName = null;
 
@@ -87,7 +87,7 @@ function Header() {
           </ButtonGroup>
           <IconButton onClick={avatarHandler} className={classes.avatarBtn}>
             <Badge
-              badgeContent={notifications}
+              badgeContent={notifications.length}
               color="error"
               invisible={badge}
               anchorOrigin={{

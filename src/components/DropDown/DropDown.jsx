@@ -102,7 +102,10 @@ const DropDown = ({ isOpen }) => {
 
   useEffect(() => {
     getNots(token, request);
-  }, [request, token]);
+    return () => {
+      getNots(token, request);
+    };
+  }, [isOpen, request, token]);
 
   const notices = nots.map((item) => {
     const { from, boardName, boardId } = item;
