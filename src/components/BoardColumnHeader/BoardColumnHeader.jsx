@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, {
   useState, useContext, useCallback, useRef,
 } from 'react';
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BoardColumnHeader = ({
-  name, id, dragHandleProps,
+  name, id, dragHandleProps, anchorRef,
 }) => {
   const [header, setHeader] = useState(name);
   const [isHeaderEditable, setHeaderEditable] = useState(false);
@@ -50,7 +51,6 @@ const BoardColumnHeader = ({
   const { enqueueSnackbar } = useSnackbar();
   const { updateBoardData } = useContext(BoardDataContext);
 
-  const anchorRef = useRef(null);
   const inputRef = useRef(null);
 
   const classes = useStyles();
@@ -158,14 +158,13 @@ const BoardColumnHeader = ({
         aria-label="cancel"
         onClick={openMenu}
         size="small"
-        ref={anchorRef}
       >
         <MoreHorizIcon />
       </IconButton>
       <BoardColumnMenu
         open={isMenuOpen}
         handleClose={closeMenu}
-        anchorEl={anchorRef.current}
+        anchorEl={anchorRef}
         deleteColumn={deleteColumn}
         id={id}
       />
@@ -185,12 +184,17 @@ BoardColumnHeader.propTypes = {
     role: PropTypes.string,
     tabIndex: PropTypes.number,
   }),
+  anchorRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.node }),
+  ]),
 };
 
 BoardColumnHeader.defaultProps = {
   name: '',
   id: '',
   dragHandleProps: {},
+  anchorRef: null,
 };
 
 export default BoardColumnHeader;

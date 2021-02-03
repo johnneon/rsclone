@@ -111,6 +111,7 @@ const BoardCardCreator = ({
     <Paper
       className={isBoardCardCreatorVisible ? classes.creator_visible : classes.creator}
       variant="outlined"
+      ref={anchorRef}
     >
       <Collapse in={isBoardCardCreatorVisible} collapsedHeight={34}>
         {isBoardCardCreatorVisible
@@ -161,7 +162,7 @@ const BoardCardCreator = ({
                   aria-label="options"
                   onClick={openMenu}
                   size="small"
-                  ref={anchorRef}
+                  // ref={anchorRef}
                 >
                   <MoreHorizIcon />
                 </IconButton>

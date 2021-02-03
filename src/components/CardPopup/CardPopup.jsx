@@ -148,7 +148,14 @@ CardPopup.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   updateCardData: PropTypes.func.isRequired,
-  cardData: PropTypes.objectOf(PropTypes.string),
+  cardData: PropTypes.shape({
+    columnId: PropTypes.string,
+    name: PropTypes.string,
+    _id: PropTypes.string,
+    labels: PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.string),
+    ),
+  }),
 };
 CardPopup.defaultProps = {
   cardData: {},

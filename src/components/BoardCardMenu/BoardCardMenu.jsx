@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -23,11 +24,24 @@ const BoardCardMenu = ({
     <Popper
       open={open}
       anchorEl={anchorEl}
-      role={undefined}
+      // role={undefined}
       transition
-      disablePortal
-      placement="right-start"
+      // disablePortal={false}
+      placement="left-start"
       className={classes.menu}
+      modifiers={{
+        flip: {
+          enabled: true,
+        },
+        // preventOverflow: {
+        //   enabled: true,
+        //   boundariesElement: 'scrollParent',
+        // },
+        // arrow: {
+        //   enabled: false,
+        //   element: anchorEl,
+        // },
+      }}
     >
       {({ TransitionProps, placement }) => (
         <Grow

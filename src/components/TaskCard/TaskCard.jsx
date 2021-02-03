@@ -182,7 +182,14 @@ const TaskCard = ({ data, index }) => {
 };
 
 TaskCard.propTypes = {
-  data: PropTypes.objectOf(PropTypes.string),
+  data: PropTypes.shape({
+    columnId: PropTypes.string,
+    name: PropTypes.string,
+    _id: PropTypes.string,
+    labels: PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.string),
+    ),
+  }),
   index: PropTypes.number,
 };
 

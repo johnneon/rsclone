@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import { Paper } from '@material-ui/core';
@@ -27,6 +27,8 @@ const BoardColumn = ({ data, index }) => {
   const { cards, name, _id: id } = data;
   const classes = useStyles();
 
+  const anchorRef = useRef(null);
+
   return (
 
     <Draggable draggableId={id} index={index} type="column">
@@ -40,11 +42,12 @@ const BoardColumn = ({ data, index }) => {
             onTransitionEnd={draggableProps.onTransitionEnd}
             style={draggableProps.style}
           >
-            <Paper className={classes.board__column}>
+            <Paper className={classes.board__column} ref={anchorRef}>
               <BoardColumnHeader
                 name={name}
                 id={id}
                 dragHandleProps={providedColumn.dragHandleProps}
+                anchorRef={anchorRef.current}
               />
               <BoardColumnTaskList
                 data={cards}
@@ -62,7 +65,14 @@ BoardColumn.propTypes = {
   data: PropTypes.shape({
     boardId: PropTypes.string,
     cards: PropTypes.arrayOf(
-      PropTypes.objectOf(PropTypes.string),
+      PropTypes.shape({
+        columnId: PropTypes.string,
+        name: PropTypes.string,
+        _id: PropTypes.string,
+        labels: PropTypes.arrayOf(
+          PropTypes.objectOf(PropTypes.string),
+        ),
+      }),
     ),
     name: PropTypes.string,
     _id: PropTypes.string,
