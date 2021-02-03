@@ -72,9 +72,12 @@ const AuthCard = () => {
         refreshToken,
         userId,
         fullName,
+        email,
+        notifications,
       } = await request(requestOptions);
 
-      auth.login(token, refreshToken, userId, fullName);
+      auth.login(token, refreshToken, userId, fullName, email);
+      auth.setNotification(notifications);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }

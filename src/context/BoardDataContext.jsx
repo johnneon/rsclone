@@ -67,6 +67,10 @@ const updateBoardData = (boardData, setBoardData) => ({
 
     setBoardData(changedBoardData);
   },
+  updateBoard(data) {
+    const changedBoardData = { ...boardData, ...data };
+    setBoardData(changedBoardData);
+  },
 });
 
 const BoardDataContext = createContext();
