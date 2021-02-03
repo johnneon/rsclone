@@ -93,7 +93,7 @@ const BoardHeader = ({ boardName, users, boardId }) => {
           boardName={boardName}
           request={updateBoardData}
         />
-        <BoardHeaderUsers data={users} />
+        <BoardHeaderUsers boardId={boardId} data={users} />
       </Box>
       <Button
         color="inherit"

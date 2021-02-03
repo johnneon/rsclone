@@ -16,6 +16,10 @@ function App() {
     userId,
     ready,
     fullName,
+    email,
+    setNotification,
+    discardNotifications,
+    getNotifications,
   } = useAuth();
 
   const isAuthenticated = !!token;
@@ -34,7 +38,16 @@ function App() {
     <CustomThemeProvider>
       <AuthContext.Provider
         value={{
-          token, login, logout, userId, fullName, isAuthenticated,
+          token,
+          login,
+          logout,
+          userId,
+          fullName,
+          email,
+          isAuthenticated,
+          setNotification,
+          discardNotifications,
+          getNotifications,
         }}
       >
         <SnackbarProvider
