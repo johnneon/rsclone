@@ -61,7 +61,7 @@ const useAuth = () => {
   const getNotifications = () => {
     const nots = JSON.parse(localStorage.getItem(notifications || null));
 
-    if (nots?.notice.length > 0) {
+    if (nots?.notice?.length > 0) {
       return nots.notice;
     }
     return [];
