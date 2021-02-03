@@ -1,13 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
+import LabelsMenu from '../LabelsMenu/LabelsMenu';
 
 const useStyles = makeStyles(() => ({
   menu: {
@@ -16,32 +18,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 const BoardCardMenu = ({
-  open, handleClose, anchorEl, deleteCard,
+  open, handleClose, anchorEl, deleteCard, cardId,
 }) => {
+  const [opened, setOpen] = useState('');
   const classes = useStyles();
 
   return (
     <Popper
       open={open}
       anchorEl={anchorEl}
-      // role={undefined}
       transition
-      // disablePortal={false}
-      placement="left-start"
+      placement="right-start"
       className={classes.menu}
-      modifiers={{
-        flip: {
-          enabled: true,
-        },
-        // preventOverflow: {
-        //   enabled: true,
-        //   boundariesElement: 'scrollParent',
-        // },
-        // arrow: {
-        //   enabled: false,
-        //   element: anchorEl,
-        // },
-      }}
     >
       {({ TransitionProps, placement }) => (
         <Grow
@@ -52,38 +40,33 @@ const BoardCardMenu = ({
         >
           <Paper className={classes.card__menu}>
             <ClickAwayListener onClickAway={handleClose}>
-              <MenuList autoFocusItem={open} id="menu-list-grow">
-                <MenuItem
-                  className={classes.card__menuItem}
-                  onClick={handleClose}
-                >
-                  Open card
-                </MenuItem>
-                <MenuItem
-                  className={classes.card__menuItem}
-                  onClick={handleClose}
-                >
-                  Edit members
-                </MenuItem>
-                <MenuItem
-                  className={classes.card__menuItem}
-                  onClick={handleClose}
-                >
-                  Change labels
-                </MenuItem>
-                <MenuItem
-                  className={classes.card__menuItem}
-                  onClick={handleClose}
-                >
-                  Change due date
-                </MenuItem>
-                <MenuItem
-                  className={classes.card__menuItem}
-                  onClick={deleteCard}
-                >
-                  Delete
-                </MenuItem>
-              </MenuList>
+              <Box>
+                {opened === 'menu'
+                  ? (
+                    <MenuList autoFocusItem={open}>
+                      <MenuItem
+                        className={classes.card__menuItem}
+                        onClick={handleClose}
+                      >
+                        Edit members
+                      </MenuItem>
+                      <MenuItem
+                        className={classes.card__menuItem}
+                        onClick={handleClose}
+                      >
+                        Change labels
+                      </MenuItem>
+                      <MenuItem
+                        className={classes.card__menuItem}
+                        onClick={deleteCard}
+                      >
+                        Delete
+                      </MenuItem>
+                    </MenuList>
+                  ) : (
+                    <LabelsMenu onClick={null} cardId={cardId} />
+                  )}
+              </Box>
             </ClickAwayListener>
           </Paper>
         </Grow>
@@ -100,6 +83,7 @@ BoardCardMenu.propTypes = {
     PropTypes.shape({ current: PropTypes.node }),
   ]),
   deleteCard: PropTypes.func,
+  cardId: PropTypes.string,
 };
 
 BoardCardMenu.defaultProps = {
@@ -107,6 +91,7 @@ BoardCardMenu.defaultProps = {
   handleClose: () => {},
   anchorEl: null,
   deleteCard: () => {},
+  cardId: '',
 };
 
 export default BoardCardMenu;

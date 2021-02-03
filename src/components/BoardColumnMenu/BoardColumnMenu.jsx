@@ -30,7 +30,7 @@ const BoardColumnMenu = ({
       role={undefined}
       transition
       disablePortal
-      placement="left-start"
+      placement="right-start"
       className={classes.menu}
     >
       {({ TransitionProps, placement }) => (
