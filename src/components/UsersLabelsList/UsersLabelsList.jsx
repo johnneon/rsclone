@@ -72,11 +72,12 @@ const UsersLabelsList = ({
     const have = target.getAttribute('data-have');
     const user = { ...users[id] };
     const body = {};
+    const { _id: userId } = user;
 
     if (have === '1') {
-      body.kick = user._id;
+      body.kick = userId;
     } else {
-      body.add = user._id;
+      body.add = userId;
     }
 
     updateCardUser(body);
@@ -104,9 +105,10 @@ const UsersLabelsList = ({
               <MenuList autoFocusItem={open} id="menu-list-grow">
                 {users.map((item, idx) => {
                   const user = item;
+                  const { _id: userId } = user;
                   let checked = false;
 
-                  if (usersIdx.indexOf(user._id) !== -1) {
+                  if (usersIdx.indexOf(userId) !== -1) {
                     checked = true;
                   }
 
@@ -116,7 +118,7 @@ const UsersLabelsList = ({
                       onClick={setUser}
                       data-id={idx}
                       data-have={checked ? '1' : '0'}
-                      key={user._id}
+                      key={userId}
                     >
                       {
                       checked

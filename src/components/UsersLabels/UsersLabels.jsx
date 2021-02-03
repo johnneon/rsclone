@@ -46,10 +46,13 @@ const UsersLabels = ({
 
     currentUsers.forEach((item) => {
       const avatar = item;
+      const { _id: avatarId } = avatar;
 
       users.forEach((userItem) => {
-        if (avatar._id === userItem._id) {
-          activesId.push(avatar._id);
+        const { _id: userItemId } = userItem;
+
+        if (avatarId === userItemId) {
+          activesId.push(avatarId);
         }
 
         return true;
@@ -66,10 +69,11 @@ const UsersLabels = ({
 
     const avatars = currentUsers.map((item) => {
       const avatar = item;
+      const { _id: itemId } = item;
 
       return (
         <Avatar
-          key={item._id}
+          key={itemId}
           className={classes.avatar}
           alt={avatar.fullName}
           src="#"

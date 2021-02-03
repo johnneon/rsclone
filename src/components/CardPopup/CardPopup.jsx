@@ -137,7 +137,7 @@ const CardPopup = ({
         <UsersLabels
           currentUsers={cardData.users}
           users={users}
-          idCard={data._id}
+          idCard={idCard}
         />
         <CardPopupTextField
           name="content"
