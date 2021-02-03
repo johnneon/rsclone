@@ -32,14 +32,16 @@ const useStyles = makeStyles((theme) => ({
     },
     '& .MuiList-padding': {
       padding: 0,
+      width: '100%',
     },
     zIndex: theme.zIndex.backdrop + 1,
   },
   accordion: {
     margin: 0,
+    width: '100%',
     border: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
-    minHeight: 0,
+    minHeight: 46,
     display: 'flex',
     flexDirection: 'column',
     '&:not(:last-child)': {
@@ -69,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   palette__wrapper: {
-    paddingBottom: 10,
+    paddingBottom: 20,
     display: 'flex',
     flexDirection: 'column',
     overflowY: 'hidden',
@@ -97,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardCreatePopupMenu = ({ handleClose, onClick, isOpen }) => {
+const BoardCreatePopupMenu = ({ onClick, isOpen }) => {
   const classes = useStyles();
 
   const [expanded, setExpanded] = useState(false);
@@ -110,7 +112,6 @@ const BoardCreatePopupMenu = ({ handleClose, onClick, isOpen }) => {
   return (
     <Box
       elevation={0}
-      onClose={handleClose}
       className={isOpen ? classes.menu : classes.hidden}
     >
       <Accordion
@@ -153,13 +154,11 @@ const BoardCreatePopupMenu = ({ handleClose, onClick, isOpen }) => {
 };
 
 BoardCreatePopupMenu.propTypes = {
-  handleClose: PropTypes.func,
   onClick: PropTypes.func,
   isOpen: PropTypes.bool,
 };
 
 BoardCreatePopupMenu.defaultProps = {
-  handleClose: null,
   onClick: null,
   isOpen: false,
 };

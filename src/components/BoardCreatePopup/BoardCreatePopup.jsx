@@ -138,7 +138,6 @@ const BoardCreatePopup = ({ isOpen, close, createAction }) => {
         </Paper>
         <BoardCreatePopupMenu
           isOpen={isMenuOpen}
-          handleClose={toggleMenu}
           onClick={changeBackground}
         />
       </Dialog>
