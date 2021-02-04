@@ -22,7 +22,6 @@ const theme = createMuiTheme({
       main: '#fff',
       card: '#fafafa',
       column: '#eceff1',
-      // auth:#ddfae7
     },
     shadow: {
       main: '#9e9e9e',
@@ -30,7 +29,6 @@ const theme = createMuiTheme({
     text: {
       main: '#3e3a3a',
       white: '#fff',
-      // auth: '#676868',
     },
     buttons: {
       transparentWhite: '#ffffff3d',
@@ -70,6 +68,9 @@ const theme = createMuiTheme({
     },
     body2: {
       fontSize: '1rem',
+    },
+    subtitle1: {
+      fontSize: '0.875rem',
     },
   },
 });

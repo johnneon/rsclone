@@ -1,12 +1,7 @@
-import React, {
-  useState, useEffect, useCallback, useContext, useRef,
-} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box, InputBase, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSnackbar } from 'notistack';
-import useHttp from '../../hooks/http.hook';
-import AuthContext from '../../context/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
   boardHeader__element: {
@@ -51,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardHeaderName = ({ boardName, boardId }) => {
+const BoardHeaderName = ({ boardName, request }) => {
   const [name, setName] = useState(boardName);
   const [isNameEdited, setIsNameEdited] = useState(false);
   const [nameInputWidth, setNameInputWidth] = useState('0px');
@@ -59,15 +54,7 @@ const BoardHeaderName = ({ boardName, boardId }) => {
   const inputRef = useRef(null);
   const nameTextFieldRef = useRef(null);
 
-  const { token } = useContext(AuthContext);
-  const { request } = useHttp();
-  const { enqueueSnackbar } = useSnackbar();
-
   const classes = useStyles();
-
-  const showSnackbar = useCallback((message, variant) => (
-    enqueueSnackbar(message, { variant })
-  ), [enqueueSnackbar]);
 
   const headerNameChangeHandler = (e) => {
     const { width } = nameTextFieldRef.current.getBoundingClientRect();
@@ -87,18 +74,7 @@ const BoardHeaderName = ({ boardName, boardId }) => {
     }
 
     setIsNameEdited(false);
-
-    try {
-      const requestOptions = {
-        url: `https://rsclone-back-end.herokuapp.com/api/board/${boardId}`,
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}` },
-        body: { name },
-      };
-      await request(requestOptions);
-    } catch (e) {
-      showSnackbar(e.message, 'error');
-    }
+    request({ name });
   };
 
   const onKeyPressHandler = (e) => {
@@ -157,12 +133,12 @@ const BoardHeaderName = ({ boardName, boardId }) => {
 
 BoardHeaderName.propTypes = {
   boardName: PropTypes.string,
-  boardId: PropTypes.string,
+  request: PropTypes.func,
 };
 
 BoardHeaderName.defaultProps = {
   boardName: '',
-  boardId: '',
+  request: null,
 };
 
 export default BoardHeaderName;

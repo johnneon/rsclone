@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -126,11 +125,18 @@ const BoardCardCreator = ({
             <>
               <Box className={classes.board__header}>
                 <Box>
-                  {labels.map(({ color }) => {
+                  {labels && labels.map(({ color }) => {
                     const { textColor, name } = boardData.labels.find((data) => (
                       color === data.color
                     ));
-                    return <Label text={name} color={color} textColor={textColor} />;
+                    return (
+                      <Label
+                        text={name}
+                        color={color}
+                        textColor={textColor}
+                        key={color}
+                      />
+                    );
                   })}
                 </Box>
                 <OutlinedInput
@@ -146,9 +152,6 @@ const BoardCardCreator = ({
                   autoFocus
                   multiline
                 />
-                <Box>
-                  {/* People */}
-                </Box>
               </Box>
               <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box>
@@ -170,13 +173,15 @@ const BoardCardCreator = ({
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                <IconButton
-                  aria-label="options"
-                  onClick={openMenu}
-                  size="small"
-                >
-                  <MoreHorizIcon />
-                </IconButton>
+                {type === 'editor' && (
+                  <IconButton
+                    aria-label="options"
+                    onClick={openMenu}
+                    size="small"
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
+                )}
               </Box>
             </>
           ) : (

@@ -1,16 +1,26 @@
-import React, { useState, useContext } from 'react';
+import React, {
+  useState,
+  useContext,
+} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import HelpIcon from '@material-ui/icons/Help';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+
+import {
+  ExitToApp,
+  Help,
+} from '@material-ui/icons';
+
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Badge from '@material-ui/core/Badge';
 import AuthContext from '../../context/AuthContext';
 import useAuth from '../../hooks/auth.hook';
 import ValidationModal from '../ValidationModal/ValidationModal';
+import DropDown from '../DropDown/DropDown';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -20,21 +30,43 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     color: '#ffffff',
     textDecoration: 'none',
+    '@media(max-width: 480px)': {
+      fontSize: '18px',
+    },
+  },
+  avatarBtn: {
+    marginLeft: '10px',
   },
   avatar: {
-    marginRight: '10px',
     backgroundColor: '#ffd600',
+    '@media(max-width: 480px)': {
+      width: '35px',
+      height: '35px',
+    },
   },
   infoIcon: {
     color: '#ffffff',
+  },
+  navigation: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 
 function Header() {
   const classes = useStyles();
   const { logout } = useAuth();
-  const { isAuthenticated, fullName } = useContext(AuthContext);
+  const {
+    isAuthenticated,
+    fullName,
+    getNotifications,
+  } = useContext(AuthContext);
   const [openInfo, setOpenInfo] = useState(false);
+  const [openNots, setOpenNots] = useState(false);
+  const notifications = getNotifications();
+  const [badge, setBadge] = useState(!notifications.length);
+
   let avatarName = null;
 
   if (fullName) {
@@ -49,26 +81,44 @@ function Header() {
     setOpenInfo(true);
   };
 
+  const avatarHandler = () => {
+    setOpenNots((prev) => !prev);
+    setBadge(true);
+  };
+
   const logoutNow = async () => {
     await logout();
-    window.location.reload();
   };
 
   const RenderHeaderBar = () => {
     if (isAuthenticated) {
       return (
-        <>
-          <Avatar
-            color="primary"
-            className={classes.avatar}
-          >
-            {avatarName}
-          </Avatar>
+        <div className={classes.navigation}>
           <ButtonGroup color="primary">
-            <Button color="inherit">Settings</Button>
-            <Button onClick={logoutNow} color="inherit">logout</Button>
+            <Button onClick={logoutNow} color="inherit">
+              <ExitToApp />
+            </Button>
           </ButtonGroup>
-        </>
+          <IconButton onClick={avatarHandler} className={classes.avatarBtn}>
+            <Badge
+              badgeContent={notifications.length}
+              color="error"
+              invisible={badge}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <Avatar
+                color="primary"
+                className={classes.avatar}
+              >
+                {avatarName}
+              </Avatar>
+            </Badge>
+          </IconButton>
+          <DropDown isOpen={openNots} />
+        </div>
       );
     }
 
@@ -77,7 +127,7 @@ function Header() {
         className={classes.infoIcon}
         onClick={infoHandler}
       >
-        <HelpIcon />
+        <Help />
       </IconButton>
     );
   };

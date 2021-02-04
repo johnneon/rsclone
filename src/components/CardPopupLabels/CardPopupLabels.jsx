@@ -13,6 +13,7 @@ const currentStyles = makeStyles({
   avatars: {
     overflow: 'auto',
     width: 'calc(100% - 70px)',
+    flexWrap: 'wrap',
   },
   avatar: {
     marginRight: '10px',
@@ -48,19 +49,22 @@ const CardPopupLabels = ({ idCard, labels }) => {
       ref={anchorRef}
     >
       <div className={`${classes.avatars} ${classes.flex}`}>
-        {labels.map(({ color }) => {
-          const { textColor, name } = boardData.labels.find((label) => (
-            color === label.color
-          ));
-          return (
-            <Label
-              text={name}
-              color={color}
-              textColor={textColor}
-              key={color}
-            />
-          );
-        })}
+        {labels?.length
+          ? labels.map(({ color }) => {
+            const { textColor, name } = boardData.labels.find((label) => (
+              color === label.color
+            ));
+            return (
+              <Label
+                text={name}
+                color={color}
+                textColor={textColor}
+                key={color}
+              />
+            );
+          }) : (
+            <i>No labels</i>
+          )}
       </div>
       <Button
         className={classes.MarginLeftAuto}

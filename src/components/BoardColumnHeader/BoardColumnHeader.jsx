@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, {
   useState, useContext, useCallback, useRef,
 } from 'react';
@@ -6,10 +5,9 @@ import PropTypes from 'prop-types';
 import {
   Typography, Box, OutlinedInput, IconButton,
 } from '@material-ui/core';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
-import BoardColumnMenu from '../BoardColumnMenu/BoardColumnMenu';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
 import { BoardDataContext } from '../../context/BoardDataContext';
@@ -39,12 +37,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardColumnHeader = ({
-  name, id, dragHandleProps, anchorRef,
-}) => {
+const BoardColumnHeader = ({ name, id, dragHandleProps }) => {
   const [header, setHeader] = useState(name);
   const [isHeaderEditable, setHeaderEditable] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
@@ -112,14 +107,6 @@ const BoardColumnHeader = ({
     updateHeaderName(header);
   };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const openMenu = () => {
-    setIsMenuOpen(true);
-  };
-
   return (
     <Box
       className={classes.board__header}
@@ -156,18 +143,11 @@ const BoardColumnHeader = ({
         )}
       <IconButton
         aria-label="cancel"
-        onClick={openMenu}
+        onClick={deleteColumn}
         size="small"
       >
-        <MoreHorizIcon />
+        <DeleteForeverIcon fontSize="inherit" />
       </IconButton>
-      <BoardColumnMenu
-        open={isMenuOpen}
-        handleClose={closeMenu}
-        anchorEl={anchorRef}
-        deleteColumn={deleteColumn}
-        id={id}
-      />
     </Box>
   );
 };
@@ -184,17 +164,12 @@ BoardColumnHeader.propTypes = {
     role: PropTypes.string,
     tabIndex: PropTypes.number,
   }),
-  anchorRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.node }),
-  ]),
 };
 
 BoardColumnHeader.defaultProps = {
   name: '',
   id: '',
   dragHandleProps: {},
-  anchorRef: null,
 };
 
 export default BoardColumnHeader;

@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     boxSizing: 'border-box',
+    flex: 'auto',
   },
   board__content: {
     padding: '10px',
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     overflowX: 'auto',
     boxSizing: 'border-box',
+    flex: 'auto',
   },
   board__button: {
     padding: '10px 20px',
@@ -42,7 +44,7 @@ const Board = () => {
   const { id } = useParams();
 
   const [boardData, setBoardData] = useState({});
-  const { _id: boardId, columns } = boardData;
+  const { _id: boardId, columns, users } = boardData;
 
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
@@ -78,7 +80,10 @@ const Board = () => {
       boardData={boardData}
       setBoardData={setBoardData}
     >
-      <main className={classes.board}>
+      <main
+        className={classes.board}
+        style={{ background: `center / cover no-repeat ${boardData.background || '#88adfb'}` }}
+      >
         <BoardHeader
           boardName={boardData.name}
           boardId={boardId}
@@ -86,6 +91,7 @@ const Board = () => {
         />
         <BoardContent
           columnsData={columns}
+          usersData={users}
           boardId={boardId}
         />
       </main>

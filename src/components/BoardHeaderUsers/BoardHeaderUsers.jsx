@@ -1,10 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button } from '@material-ui/core';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { deepOrange } from '@material-ui/core/colors';
+import { useSnackbar } from 'notistack';
+import InviteUserPopap from '../InviteUserPopap/InviteUserPopap';
+import useHttp from '../../hooks/http.hook';
+import AuthContext from '../../context/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
   boardHeader__element: {
@@ -31,9 +40,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardHeaderUsers = ({ data }) => {
-  const [users, setUsers] = useState(data);
+const BoardHeaderUsers = ({ data, boardId }) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+  const [users, setUsers] = useState(data);
+  const [open, setOpen] = useState(false);
+  const { token, email } = useContext(AuthContext);
+  const { request } = useHttp();
+
+  const showSnackbar = useCallback((message, variant) => (
+    enqueueSnackbar(message, { variant })
+  ), [enqueueSnackbar]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const inviteUser = async (to) => {
+    try {
+      const requestOptions = {
+        url: 'https://rsclone-back-end.herokuapp.com/api/board/invite',
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: {
+          to: to.email,
+          from: email,
+          boardId,
+        },
+      };
+
+      const response = await request(requestOptions);
+
+      if (response.message !== 'User will get invite!') {
+        throw response;
+      }
+
+      showSnackbar(response.message, 'success');
+    } catch (e) {
+      showSnackbar(e.message, 'error');
+    }
+  };
 
   useEffect(() => setUsers(data), [data]);
 
@@ -56,9 +106,15 @@ const BoardHeaderUsers = ({ data }) => {
       <Button
         color="inherit"
         className={classes.boardHeader__element}
+        onClick={handleClickOpen}
       >
         Invite
       </Button>
+      <InviteUserPopap
+        isOpen={open}
+        close={handleClose}
+        createAction={inviteUser}
+      />
     </Box>
   );
 };
@@ -67,10 +123,12 @@ BoardHeaderUsers.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.objectOf(PropTypes.string),
   ),
+  boardId: PropTypes.string,
 };
 
 BoardHeaderUsers.defaultProps = {
   data: [],
+  boardId: '',
 };
 
 export default BoardHeaderUsers;

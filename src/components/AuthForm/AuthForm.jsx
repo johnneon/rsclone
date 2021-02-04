@@ -10,6 +10,7 @@ const AuthForm = ({ activeTab, action }) => {
     password: '',
     fullName: '',
   });
+
   const [formValidity, setFormValidity] = useState({
     fullName: true,
     email: true,
@@ -107,7 +108,7 @@ const AuthForm = ({ activeTab, action }) => {
           onKeyPress={pressHandler}
         />
       </Grid>
-      <Grid item xs={6} sm={5}>
+      <Grid item xs={12} sm={5}>
         <Button
           variant="contained"
           color="primary"
