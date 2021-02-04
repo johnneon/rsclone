@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     overflowWrap: 'anywhere',
   },
   card__edit: {
-    // visibility: 'hidden',
+    visibility: 'hidden',
     fontSize: theme.typography.h3.fontSize,
     backgroundColor: '#ffffffc4',
     border: '1px solid #808080ab',
@@ -135,7 +135,6 @@ const TaskCard = ({ data, index }) => {
       />
     );
   }
-  console.log(card);
 
   return (
     <>

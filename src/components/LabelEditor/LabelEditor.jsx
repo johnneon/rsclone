@@ -1,7 +1,3 @@
-/* eslint-disable react/jsx-curly-newline */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-/* eslint-disable arrow-body-style */
 import React, {
   useState, useRef, useContext, useCallback,
 } from 'react';
@@ -43,7 +39,7 @@ const useStyles = ({ color, textColor }) => (makeStyles(() => ({
   },
 })))();
 
-const LabelEditor = ({ onClick, styles, cardId }) => {
+const LabelEditor = ({ styles, cardId }) => {
   const [value, setValue] = useState(styles.name);
   const [isEdited, setIsEdited] = useState(false);
 
@@ -130,7 +126,6 @@ const LabelEditor = ({ onClick, styles, cardId }) => {
         onChange={handlerOnChange}
       />
       <IconButton
-        // className={classes.card__edit}
         aria-label="edit"
         onClick={toggleEditor}
         size="small"
@@ -147,6 +142,16 @@ const LabelEditor = ({ onClick, styles, cardId }) => {
       </IconButton>
     </Box>
   );
+};
+
+LabelEditor.propTypes = {
+  styles: PropTypes.objectOf(PropTypes.string),
+  cardId: PropTypes.string,
+};
+
+LabelEditor.defaultProps = {
+  styles: {},
+  cardId: '',
 };
 
 export default LabelEditor;

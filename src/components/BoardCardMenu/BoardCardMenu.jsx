@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -6,10 +5,9 @@ import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
 import { makeStyles } from '@material-ui/core/styles';
 import LabelsMenu from '../LabelsMenu/LabelsMenu';
+import BoardCardMenuList from '../BoardCardMenuList/BoardCardMenuList';
 
 const useStyles = makeStyles(() => ({
   menu: {
@@ -20,8 +18,33 @@ const useStyles = makeStyles(() => ({
 const BoardCardMenu = ({
   open, handleClose, anchorEl, deleteCard, cardId,
 }) => {
-  const [opened, setOpen] = useState('');
+  const [opened, setOpen] = useState('menu');
   const classes = useStyles();
+
+  const toggleMenuType = (menu) => {
+    setOpen(menu);
+  };
+
+  const menu = () => {
+    switch (opened) {
+      case 'menu':
+        return (
+          <BoardCardMenuList
+            toggleMenuType={toggleMenuType}
+            deleteCard={deleteCard}
+          />
+        );
+      case 'labels':
+        return (
+          <LabelsMenu
+            close={toggleMenuType}
+            cardId={cardId}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Popper
@@ -41,31 +64,7 @@ const BoardCardMenu = ({
           <Paper className={classes.card__menu}>
             <ClickAwayListener onClickAway={handleClose}>
               <Box>
-                {opened === 'menu'
-                  ? (
-                    <MenuList autoFocusItem={open}>
-                      <MenuItem
-                        className={classes.card__menuItem}
-                        onClick={handleClose}
-                      >
-                        Edit members
-                      </MenuItem>
-                      <MenuItem
-                        className={classes.card__menuItem}
-                        onClick={handleClose}
-                      >
-                        Change labels
-                      </MenuItem>
-                      <MenuItem
-                        className={classes.card__menuItem}
-                        onClick={deleteCard}
-                      >
-                        Delete
-                      </MenuItem>
-                    </MenuList>
-                  ) : (
-                    <LabelsMenu onClick={null} cardId={cardId} />
-                  )}
+                {menu()}
               </Box>
             </ClickAwayListener>
           </Paper>

@@ -1,17 +1,11 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-/* eslint-disable arrow-body-style */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-// import variables from '../../variables';
 import LabelEditor from '../LabelEditor/LabelEditor';
 import { BoardDataContext } from '../../context/BoardDataContext';
 
@@ -32,12 +26,14 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const LabelsMenu = ({ onClick, cardId }) => {
+const LabelsMenu = ({ close, cardId }) => {
   const { boardData } = useContext(BoardDataContext);
   const { labels } = boardData;
   const classes = useStyles();
 
-  // console.log('boardData', boardData);
+  const handleClick = () => {
+    close('menu');
+  };
 
   return (
     <Box className={classes.menu}>
@@ -45,7 +41,7 @@ const LabelsMenu = ({ onClick, cardId }) => {
         <IconButton
           className={classes.back}
           aria-label="return"
-          onClick={null}
+          onClick={handleClick}
           size="small"
         >
           <ArrowBackIosIcon fontSize="inherit" />
@@ -56,19 +52,26 @@ const LabelsMenu = ({ onClick, cardId }) => {
       </Box>
       <Divider />
       <Box>
-        {labels.map((styles) => {
-          return (
-            <LabelEditor
-              onClick={onClick}
-              styles={styles}
-              cardId={cardId}
-              key={styles.color}
-            />
-          );
-        })}
+        {labels.map((styles) => (
+          <LabelEditor
+            styles={styles}
+            cardId={cardId}
+            key={styles.color}
+          />
+        ))}
       </Box>
     </Box>
   );
+};
+
+LabelsMenu.propTypes = {
+  close: PropTypes.func,
+  cardId: PropTypes.string,
+};
+
+LabelsMenu.defaultProps = {
+  close: null,
+  cardId: '',
 };
 
 export default LabelsMenu;

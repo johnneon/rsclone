@@ -17,10 +17,10 @@ import {
 } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles';
-
 import { useSnackbar } from 'notistack';
 import CardPopupField from '../CardPopupField/CardPopupField';
 import CardPopupTextField from '../CardPopupTextField/CardPopupTextField';
+import CardPopupLabels from '../CardPopupLabels/CardPopupLabels';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
 import useStyles from '../../hooks/style.hook';
@@ -91,7 +91,7 @@ const CardPopup = ({
   const [data, setData] = useState([]);
   const classes = { ...useStyles(), ...currentStyles() };
 
-  const { _id: idCard } = data;
+  const { _id: idCard, labels } = data;
 
   const { enqueueSnackbar } = useSnackbar();
   const showSnackbar = useCallback((message, variant) => (
@@ -133,6 +133,10 @@ const CardPopup = ({
           name="name"
           value={data.name}
           action={updateCard}
+        />
+        <CardPopupLabels
+          idCard={idCard}
+          labels={labels}
         />
         <CardPopupTextField
           name="content"
