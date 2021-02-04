@@ -112,12 +112,12 @@ const BackgroundButton = ({ openMenu, color }) => {
 };
 
 BackgroundButton.propTypes = {
-  openMenu: PropTypes.bool,
-  color: PropTypes.arrayOf(PropTypes.string),
+  openMenu: PropTypes.func,
+  color: PropTypes.string,
 };
 
 BackgroundButton.defaultProps = {
-  openMenu: false,
+  openMenu: () => {},
   color: '#f44336',
 };
 

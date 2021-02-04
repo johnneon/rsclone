@@ -125,7 +125,14 @@ const BoardColumnTaskList = ({ data, columnId, users }) => {
 
 BoardColumnTaskList.propTypes = {
   data: PropTypes.arrayOf(
-    PropTypes.objectOf(PropTypes.string),
+    PropTypes.shape({
+      columnId: PropTypes.string,
+      name: PropTypes.string,
+      _id: PropTypes.string,
+      labels: PropTypes.arrayOf(
+        PropTypes.objectOf(PropTypes.string),
+      ),
+    }),
   ),
   users: PropTypes.arrayOf(PropTypes.object),
   columnId: PropTypes.string,

@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import BoardCardCreator from '../BoardCardCreator/BoardCardCreator';
 import CardPopup from '../CardPopup/CardPopup';
+import Label from '../Label/Label';
 import useHttp from '../../hooks/http.hook';
 import AuthContext from '../../context/AuthContext';
 import { BoardDataContext } from '../../context/BoardDataContext';
@@ -21,9 +22,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.main,
     borderRadius: '5px',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     cursor: 'pointer',
+    position: 'relative',
     '&:hover [class*=card__edit]': {
       visibility: 'visible',
     },
@@ -36,6 +39,15 @@ const useStyles = makeStyles((theme) => ({
   card__edit: {
     visibility: 'hidden',
     fontSize: theme.typography.h3.fontSize,
+    backgroundColor: '#ffffffc4',
+    border: '1px solid #808080ab',
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    '&:hover': {
+      backgroundColor: '#fff',
+      borderColor: '#808080',
+    },
   },
 }));
 
@@ -47,9 +59,9 @@ const TaskCard = ({ data, index, users }) => {
   const { token } = useContext(AuthContext);
   const { request } = useHttp();
   const { enqueueSnackbar } = useSnackbar();
-  const { updateBoardData } = useContext(BoardDataContext);
+  const { updateBoardData, boardData } = useContext(BoardDataContext);
 
-  const { _id: id } = card;
+  const { _id: id, labels } = card;
 
   const classes = useStyles();
 
@@ -78,7 +90,6 @@ const TaskCard = ({ data, index, users }) => {
         url: `https://rsclone-back-end.herokuapp.com/api/cards/${id}`,
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       };
@@ -119,8 +130,8 @@ const TaskCard = ({ data, index, users }) => {
         request={updateCard}
         type="editor"
         close={closeEditor}
-        value={card.name}
         deleteCard={deleteCard}
+        cardData={card}
       />
     );
   }
@@ -149,6 +160,22 @@ const TaskCard = ({ data, index, users }) => {
                 className={classes.card}
                 onClick={toggleCardPopup}
               >
+
+                <Box>
+                  {labels.map(({ color }) => {
+                    const { textColor, name } = boardData.labels.find((label) => (
+                      color === label.color
+                    ));
+                    return (
+                      <Label
+                        text={name}
+                        color={color}
+                        textColor={textColor}
+                        key={color}
+                      />
+                    );
+                  })}
+                </Box>
                 <Typography
                   className={classes.card__header}
                   variant="h5"
@@ -183,7 +210,15 @@ const TaskCard = ({ data, index, users }) => {
 };
 
 TaskCard.propTypes = {
-  data: PropTypes.objectOf(PropTypes.string),
+  data: PropTypes.shape({
+    columnId: PropTypes.string,
+    name: PropTypes.string,
+    _id: PropTypes.string,
+    labels: PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.string),
+    ),
+    users: PropTypes.arrayOf(PropTypes.object),
+  }),
   users: PropTypes.arrayOf(PropTypes.object),
   index: PropTypes.number,
 };

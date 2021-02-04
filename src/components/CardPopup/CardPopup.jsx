@@ -17,10 +17,10 @@ import {
 } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles';
-
 import { useSnackbar } from 'notistack';
 import CardPopupField from '../CardPopupField/CardPopupField';
 import CardPopupTextField from '../CardPopupTextField/CardPopupTextField';
+import CardPopupLabels from '../CardPopupLabels/CardPopupLabels';
 import UsersLabels from '../UsersLabels/UsersLabels';
 import AuthContext from '../../context/AuthContext';
 import useHttp from '../../hooks/http.hook';
@@ -91,7 +91,8 @@ const CardPopup = ({
   const { request } = useHttp();
   const [data, setData] = useState([]);
   const classes = { ...useStyles(), ...currentStyles() };
-  const { _id: idCard } = data;
+
+  const { _id: idCard, labels } = data;
 
   const { enqueueSnackbar } = useSnackbar();
   const showSnackbar = useCallback((message, variant) => (
@@ -139,6 +140,10 @@ const CardPopup = ({
           users={users}
           idCard={idCard}
         />
+        <CardPopupLabels
+          idCard={idCard}
+          labels={labels}
+        />
         <CardPopupTextField
           name="content"
           value={data.content}
@@ -153,7 +158,15 @@ CardPopup.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   updateCardData: PropTypes.func.isRequired,
-  cardData: PropTypes.objectOf(PropTypes.string),
+  cardData: PropTypes.shape({
+    columnId: PropTypes.string,
+    name: PropTypes.string,
+    _id: PropTypes.string,
+    users: PropTypes.arrayOf(PropTypes.object),
+    labels: PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.string),
+    ),
+  }),
   users: PropTypes.arrayOf(PropTypes.object),
 };
 CardPopup.defaultProps = {

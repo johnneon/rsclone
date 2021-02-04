@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Paper, Box, Button, Collapse, IconButton, OutlinedInput,
@@ -7,6 +7,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { makeStyles } from '@material-ui/core/styles';
 import BoardCardMenu from '../BoardCardMenu/BoardCardMenu';
+import { BoardDataContext } from '../../context/BoardDataContext';
+import Label from '../Label/Label';
 
 const useStyles = makeStyles((theme) => ({
   creator: {
@@ -56,15 +58,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BoardCardCreator = ({
-  request, type, close, value, deleteCard,
+  request, type, close, cardData, deleteCard,
 }) => {
   const [isBoardCardCreatorVisible, setBoardCardCreatorVisibility] = useState(type === 'editor');
-  const [inputValue, setInputValue] = useState(value);
+  const [inputValue, setInputValue] = useState(cardData?.name);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { boardData } = useContext(BoardDataContext);
 
   const anchorRef = useRef(null);
   const inputRef = useRef(null);
+
   const classes = useStyles();
+  const { labels, _id: id } = cardData;
 
   const showBoardCardCreator = () => {
     setBoardCardCreatorVisibility(true);
@@ -111,6 +117,7 @@ const BoardCardCreator = ({
     <Paper
       className={isBoardCardCreatorVisible ? classes.creator_visible : classes.creator}
       variant="outlined"
+      ref={anchorRef}
     >
       <Collapse in={isBoardCardCreatorVisible} collapsedHeight={34}>
         {isBoardCardCreatorVisible
@@ -118,7 +125,19 @@ const BoardCardCreator = ({
             <>
               <Box className={classes.board__header}>
                 <Box>
-                  {/* Tags */}
+                  {labels && labels.map(({ color }) => {
+                    const { textColor, name } = boardData.labels.find((data) => (
+                      color === data.color
+                    ));
+                    return (
+                      <Label
+                        text={name}
+                        color={color}
+                        textColor={textColor}
+                        key={color}
+                      />
+                    );
+                  })}
                 </Box>
                 <OutlinedInput
                   fullWidth
@@ -133,9 +152,6 @@ const BoardCardCreator = ({
                   autoFocus
                   multiline
                 />
-                <Box>
-                  {/* People */}
-                </Box>
               </Box>
               <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box>
@@ -157,14 +173,15 @@ const BoardCardCreator = ({
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                <IconButton
-                  aria-label="options"
-                  onClick={openMenu}
-                  size="small"
-                  ref={anchorRef}
-                >
-                  <MoreHorizIcon />
-                </IconButton>
+                {type === 'editor' && (
+                  <IconButton
+                    aria-label="options"
+                    onClick={openMenu}
+                    size="small"
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
+                )}
               </Box>
             </>
           ) : (
@@ -182,6 +199,7 @@ const BoardCardCreator = ({
         handleClose={closeMenu}
         anchorEl={anchorRef.current}
         deleteCard={deleteCard}
+        cardId={id}
       />
     </Paper>
   );
@@ -191,16 +209,23 @@ BoardCardCreator.propTypes = {
   request: PropTypes.func,
   type: PropTypes.string,
   close: PropTypes.func,
-  value: PropTypes.string,
   deleteCard: PropTypes.func,
+  cardData: PropTypes.shape({
+    columnId: PropTypes.string,
+    name: PropTypes.string,
+    _id: PropTypes.string,
+    labels: PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.string),
+    ),
+  }),
 };
 
 BoardCardCreator.defaultProps = {
   request: () => {},
   type: '',
   close: () => {},
-  value: '',
   deleteCard: () => {},
+  cardData: {},
 };
 
 export default BoardCardCreator;

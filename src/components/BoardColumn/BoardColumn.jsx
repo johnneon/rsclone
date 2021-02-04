@@ -63,7 +63,14 @@ BoardColumn.propTypes = {
   data: PropTypes.shape({
     boardId: PropTypes.string,
     cards: PropTypes.arrayOf(
-      PropTypes.objectOf(PropTypes.string),
+      PropTypes.shape({
+        columnId: PropTypes.string,
+        name: PropTypes.string,
+        _id: PropTypes.string,
+        labels: PropTypes.arrayOf(
+          PropTypes.objectOf(PropTypes.string),
+        ),
+      }),
     ),
     name: PropTypes.string,
     _id: PropTypes.string,

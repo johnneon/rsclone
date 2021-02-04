@@ -123,11 +123,12 @@ BoardHeaderUsers.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.objectOf(PropTypes.string),
   ),
-  boardId: PropTypes.string.isRequired,
+  boardId: PropTypes.string,
 };
 
 BoardHeaderUsers.defaultProps = {
   data: [],
+  boardId: '',
 };
 
 export default BoardHeaderUsers;
