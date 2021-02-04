@@ -17,7 +17,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     '& .MuiPopover-paper': {
       width: 'max-content',
-      minWidth: 'fit-content',
       overflowY: 'hidden',
       minHeight: '20px',
       display: 'flex',
@@ -55,11 +54,11 @@ const BoardBackgroundMenu = ({
       className={classes.popover}
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'left',
+        horizontal: 'center',
       }}
       transformOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
+        vertical: 'top',
+        horizontal: 'center',
       }}
     >
       <BoardCreatePopupMenu

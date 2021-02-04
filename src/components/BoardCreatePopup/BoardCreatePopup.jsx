@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   wrapper: {
     minWidth: '55%',
   },
+  title: {
+    paddingBottom: 0,
+  },
   name: {
     padding: '0 24px',
     minWidth: '50%',
@@ -103,7 +106,10 @@ const BoardCreatePopup = ({ isOpen, close, createAction }) => {
         <Paper className={classes.form}>
           <Box className={classes.content}>
             <Box className={classes.wrapper}>
-              <DialogTitle id="alert-dialog-slide-title">
+              <DialogTitle
+                className={classes.title}
+                id="alert-dialog-slide-title"
+              >
                 Create a new board
               </DialogTitle>
               <DialogContent className={classes.name}>

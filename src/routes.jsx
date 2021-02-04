@@ -9,21 +9,16 @@ const useRouts = (isAuthenticated) => {
   if (isAuthenticated) {
     return (
       <Switch>
-
         <Route path="/home" exact>
           <HomePage />
         </Route>
-
         <Route path="/boards" exact>
           <BoardPage />
         </Route>
-
         <Route path="/board_:id" exact>
           <Board />
         </Route>
-
         <Redirect to="/home" />
-
       </Switch>
     );
   }
