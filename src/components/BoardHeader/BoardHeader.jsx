@@ -46,12 +46,6 @@ const BoardHeader = ({ boardName, users, boardId }) => {
             />
           </Button>
         </Link>
-        <Button
-          color="inherit"
-          className={classes.boardHeader__element}
-        >
-          Boards
-        </Button>
         <BoardHeaderName boardId={boardId} boardName={boardName} />
         <BoardHeaderUsers data={users} />
       </Box>
