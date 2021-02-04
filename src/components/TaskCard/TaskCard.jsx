@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start',
     cursor: 'pointer',
     position: 'relative',
-    '&:hover [class*=card__edit]': {
+    '&:hover button': {
       visibility: 'visible',
     },
   },

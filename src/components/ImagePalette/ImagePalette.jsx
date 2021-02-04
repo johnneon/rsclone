@@ -15,26 +15,40 @@ const ImagePalette = ({ onClick }) => {
     enqueueSnackbar(message, { variant })
   ), [enqueueSnackbar]);
 
-  const getImages = useCallback(async (requestPage = 0) => {
+  const getImages = useCallback(async (requestPage) => {
     try {
       const response = await getImagesRequest(requestPage + 1);
 
-      setImages((data) => [...data, ...response.hits]);
+      const newImages = response.hits.map((img, ind) => {
+        const { id, largeImageURL } = img;
+        return {
+          id: `${id}-page${page}-numb${ind}`,
+          largeImageURL,
+        };
+      });
+
+      setImages((data) => [...data, ...newImages]);
     } catch (e) {
       showSnackbar(e.message, 'error');
     }
-  }, [showSnackbar]);
+  }, [showSnackbar, page]);
 
   const handlerOnClick = () => {
     getImages(page);
     setPage(page + 1);
   };
 
-  useEffect(() => getImages(), [getImages]);
+  useEffect(() => {
+    if (images.length) {
+      return;
+    }
+
+    getImages(0);
+  }, [getImages, images]);
 
   const paletteImages = images.map((image) => ({
     value: `url(${image.largeImageURL})`,
-    key: `${image.id}`,
+    key: image.id,
   }));
 
   return (

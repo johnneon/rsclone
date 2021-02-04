@@ -38,10 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
   accordion: {
     margin: 0,
-    width: '100%',
     border: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
-    minHeight: 46,
+    minHeight: 40,
     display: 'flex',
     flexDirection: 'column',
     '&:not(:last-child)': {
@@ -61,13 +60,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'rgba(0, 0, 0, .03)',
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     marginBottom: -1,
-    minHeight: 45,
+    minHeight: 40,
     fontSize: theme.typography.pxToRem(15),
     '&.Mui-expanded': {
-      minHeight: 45,
+      minHeight: 40,
+    },
+    '& .MuiAccordionSummary-content': {
+      margin: 0,
     },
     '& .MuiAccordionSummary-content.Mui-expanded': {
-      margin: '12px 0',
+      margin: '2px 0',
+    },
+    '& .MuiIconButton-root': {
+      padding: 8,
     },
   },
   palette__wrapper: {
