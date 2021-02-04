@@ -25,27 +25,6 @@ const BoardCardMenu = ({
     setOpen(menu);
   };
 
-  const menu = () => {
-    switch (opened) {
-      case 'menu':
-        return (
-          <BoardCardMenuList
-            toggleMenuType={toggleMenuType}
-            deleteCard={deleteCard}
-          />
-        );
-      case 'labels':
-        return (
-          <LabelsMenu
-            close={toggleMenuType}
-            cardId={cardId}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <Popper
       open={open}
@@ -64,7 +43,18 @@ const BoardCardMenu = ({
           <Paper className={classes.card__menu}>
             <ClickAwayListener onClickAway={handleClose}>
               <Box>
-                {menu()}
+                {opened === 'menu'
+                  ? (
+                    <BoardCardMenuList
+                      toggleMenuType={toggleMenuType}
+                      deleteCard={deleteCard}
+                    />
+                  ) : (
+                    <LabelsMenu
+                      close={toggleMenuType}
+                      cardId={cardId}
+                    />
+                  )}
               </Box>
             </ClickAwayListener>
           </Paper>

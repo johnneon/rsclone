@@ -22,13 +22,6 @@ const BoardCardMenuList = ({ toggleMenuType, deleteCard }) => {
       <MenuItem
         className={classes.card__menuItem}
         onClick={handleClick}
-        data-menu="members"
-      >
-        Edit members
-      </MenuItem>
-      <MenuItem
-        className={classes.card__menuItem}
-        onClick={handleClick}
         data-menu="labels"
       >
         Change labels
