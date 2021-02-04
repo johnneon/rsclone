@@ -39,6 +39,9 @@ const useCurrentStyles = makeStyles((theme) => ({
       minHeight: '50vw',
     },
   },
+  videoContainer: {
+    marginBottom: 12,
+  },
 }));
 
 const HomePage = () => {
@@ -93,6 +96,7 @@ const HomePage = () => {
               <Grid
                 item
                 xs={12}
+                className={classes.videoContainer}
               >
                 <iframe
                   className={currentClasses.video}

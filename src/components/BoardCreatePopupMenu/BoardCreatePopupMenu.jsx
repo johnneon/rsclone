@@ -38,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
   },
   accordion: {
     margin: 0,
-    // width: '100%',
     border: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
     minHeight: 40,
@@ -65,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     '&.Mui-expanded': {
       minHeight: 40,
+    },
+    '& .MuiAccordionSummary-content': {
+      margin: 0,
     },
     '& .MuiAccordionSummary-content.Mui-expanded': {
       margin: '2px 0',
