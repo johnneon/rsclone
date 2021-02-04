@@ -32,6 +32,9 @@ const useStyles = makeStyles({
   MarginRightSmall: {
     marginRight: '15px',
   },
+  MarginLeftAuto: {
+    marginLeft: 'auto',
+  },
   navColor: {
     color: '#3e3a3a',
     textDecoration: 'none',
