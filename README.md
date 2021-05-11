@@ -2,6 +2,10 @@
 
 RS Tasktracker - это приложение для организации задач и управления проектами небольших групп.
 
+1. Deploy: https://rsclone-rstasktracker.netlify.app/
+3. Back-end repo: https://github.com/johnneon/rsclone-backend
+4. Review: https://youtu.be/GeYg37AtWUc
+
 ##  Установка
 ### Клиентская часть
 ```
